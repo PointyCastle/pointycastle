@@ -1,0 +1,8 @@
+name: cipher
+version: 0.0.0
+author: izaera@gmail.com
+description: A cipher library based on Bouncy Castle
+dependencies:
+  meta: any
+dev_dependencies:
+  unittest: any
