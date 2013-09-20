@@ -45,7 +45,7 @@ class AESFastEngine implements BlockCipher {
   String get algorithmName => "AES";
   
   int get blockSize => _BLOCK_SIZE;
-
+  
   void reset() {
     _ROUNDS = 0;
     _C0 = _C1 = _C2 = _C3 = 0;
@@ -233,14 +233,27 @@ class AESFastEngine implements BlockCipher {
 
   /*
   void _printCs( String desc ) {
-    print("Cs ($desc): ${wordToHex(_C0)} ${wordToHex(_C1)} ${wordToHex(_C2)} ${wordToHex(_C3)}");
+    print("Cs ($desc): ${_wordToHex(_C0)} ${_wordToHex(_C1)} ${_wordToHex(_C2)} ${_wordToHex(_C3)}");
   }
 
   void _printRs( String desc, int r0, int r1, int r2, int r3 ) {
-    print("Rs ($desc): ${wordToHex(r0)} ${wordToHex(r1)} ${wordToHex(r2)} ${wordToHex(r3)}");
+    print("Rs ($desc): ${_wordToHex(r0)} ${_wordToHex(r1)} ${_wordToHex(r2)} ${_wordToHex(r3)}");
+  }
+  
+  String _wordToHex( int val ) {
+    var bytes = new ByteData(4);
+    bytes.setUint32(0, val, Endianness.LITTLE_ENDIAN);
+    var sb = new StringBuffer();
+    for( int i=0 ; i<4 ; i++ ) {
+      var b = bytes.getUint8(i);
+      if( b<16 ) {
+        sb.write("0");
+      }
+      sb.write( b.toRadixString(16) );
+    }
+    return sb.toString();
   }
   */
-
 
 }
 
