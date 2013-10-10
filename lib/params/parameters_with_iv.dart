@@ -4,10 +4,10 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 
-class ParametersWithIV implements CipherParameters {
+class ParametersWithIV<UnderlyingParameters extends CipherParameters> implements CipherParameters {
   
     final Uint8List iv;
-    final CipherParameters parameters;
+    final UnderlyingParameters parameters;
 
     ParametersWithIV( this.parameters, this.iv );
 

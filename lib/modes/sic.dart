@@ -8,6 +8,9 @@ import "package:cipher/params/parameters_with_iv.dart";
 /**
  * Implements the Segmented Integer Counter (SIC) mode on top of a simple
  * block cipher. This mode is also known as CTR mode.
+ * 
+ * TODO: test for limit exceeded condition as in Salsa20
+ * 
  */
 class SICBlockCipher implements BlockCipher {
 

@@ -14,6 +14,19 @@ abstract class BlockCipher {
   
 }
 
+/** The interface stream ciphers conform to. */
+abstract class StreamCipher {
+
+  String get algorithmName;
+
+  void reset();
+  void init(bool forEncryption, CipherParameters params);
+  int returnByte(int inp);
+  void processBytes( Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
+
+}
+
+
 /** All parameter classes implement this. */
 abstract class CipherParameters {
 }

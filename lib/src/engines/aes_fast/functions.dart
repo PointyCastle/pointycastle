@@ -1,7 +1,7 @@
 part of cipher_engines_aes_fast;
 
 int _shift(int r, int shift) {
-  return _lsr( r, shift ) | (r << 32-shift);
+  return lsr( r, shift ) | (r << 32-shift);
 }
 
 /* multiply four bytes in GF(2^8) by 'x' {02} in parallel */
@@ -11,7 +11,7 @@ const int _m2 = 0x7f7f7f7f;
 const int _m3 = 0x0000001b;
 
 int FFmulX(int x) {
-  return (((x & _m2) << 1) ^ (_lsr((x & _m1) , 7) * _m3));
+  return (((x & _m2) << 1) ^ lsr((x & _m1) , 7) * _m3);
 }
 
 /* 
@@ -39,17 +39,4 @@ int _subWord(int x) {
 }
 
 
-/**
- * Compute 32-bit logical shift right of a value. This emulates the JavaScript >>> operator.
- * Source: https://code.google.com/p/dart/issues/detail?id=1169
- */
-int _lsr(int n, int shift) {
-  int shift5 = shift & 0x1f;
-  int n32 = 0xffffffff & n;
-  if (shift5 == 0) {
-    return n32;
-  } else {
-    return (n32 >> shift5) & ((0x7fffffff >> (shift5-1)));
-  }
-}
 
