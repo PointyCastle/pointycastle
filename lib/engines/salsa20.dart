@@ -28,7 +28,7 @@ class Salsa20Engine implements StreamCipher {
   Uint8List _workingKey  = null;
   Uint8List _workingIV   = null;
   var _initialised = false;
-  
+
   /*
    * internal counter
    */
@@ -41,9 +41,9 @@ class Salsa20Engine implements StreamCipher {
   }
 
   void init( bool forEncryption, ParametersWithIV<KeyParameter> params ) {
-    /* 
+    /*
     * Salsa20 encryption and decryption is completely
-    * symmetrical, so the 'forEncryption' is 
+    * symmetrical, so the 'forEncryption' is
     * irrelevant. (Like 90% of stream ciphers)
     */
 
@@ -172,7 +172,7 @@ class Salsa20Engine implements StreamCipher {
 
   void _generateKeyStream( Uint8List output ) {
       _salsaCore(20, _engineState, _x);
-      Pack.intToLittleEndian(_x, output, 0);
+      Pack.intToLittleEndianList(_x, output, 0);
   }
 
   void _salsaCore( int rounds, List<int> input, List<int> x ) {
@@ -233,5 +233,5 @@ class Salsa20Engine implements StreamCipher {
       _counter += len;
       return _counter==_BYTE_LIMIT;
   }
-  
+
 }

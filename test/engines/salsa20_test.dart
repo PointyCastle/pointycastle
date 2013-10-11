@@ -1,9 +1,10 @@
-library aes_fast_test;
+library salsa20_test;
 
 import "dart:typed_data";
 
-import "package:cipher/engines/aes_fast.dart";
+import "package:cipher/engines/salsa20.dart";
 import "package:cipher/params/key_parameter.dart";
+import "package:cipher/params/parameters_with_iv.dart";
 
 import "package:unittest/unittest.dart";
 
@@ -15,17 +16,19 @@ import "../helpers.dart";
  */
 void main() {
 
-  final key = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
-  final params = new KeyParameter(key);
+  final _key = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final key = new KeyParameter(_key);
+  final iv = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77] );
+  final params = new ParametersWithIV(key,iv);
 
-  group( "AES:", () {
+  group( "Salsa20:", () {
 
     group( "well known results cipher tests:", () {
 
       void runCipherTest( String plainTextString, String expectedHexCipherText ) {
         var plainText = asUint8List_String( plainTextString );
-        var aes = new AESFastEngine()..init(true, params);
-        var cipherText = processBlocks( aes, plainText );
+        var salsa20 = new Salsa20Engine()..init(true, params);
+        var cipherText = processStream( salsa20, plainText );
         var hexCipherText = toHexString_Uint8List(cipherText);
 
         expect( hexCipherText, equals(expectedHexCipherText) );
@@ -33,13 +36,13 @@ void main() {
 
       test( "'Lorem ipsum' cipher test", () {
         var plainText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........";
-        var expectedHexCipherText = "75020e0812adb36f32b1503e0de7a59691e0db8fd1c9efb920695a626cb633d6db0112c007d19d5ea66fe7ab36c766232b3bcb98fd35f06d27d5a2d475d92728";
+        var expectedHexCipherText = "9d8d611ee047b47fc5e2bd5db4284463008aa89c174093d3ce4b3e8cc2594acfe9a62a84388fe060f75247d425c2fe0cd283cfce887f5c6b5dfea86d927efb36";
         runCipherTest( plainText, expectedHexCipherText );
       });
 
       test( "'Quijote' cipher test", () {
         var plainText = "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...";
-        var expectedHexCipherText = "29523a5e73c0ffb7f9aaabc737a09e73219bad5e98768b71e2c985b2d8ce217730b0720e1a215f7843c8c7e07d44c91212fb1d5b90a791dd147f3746cbc0e28b";
+        var expectedHexCipherText = "948c330ee347b17ad1f6a25db4220840138a96940d039adf871f76c9815551c5e3e5308e2198e025b65841843dc4f400ce8bcfca87795a2f12a2eb269c7efb36";
         runCipherTest( plainText, expectedHexCipherText );
       });
 
@@ -49,20 +52,20 @@ void main() {
 
       void runDecipherTest( String hexCipherText, String expectedPlainText ) {
         var cipherText = toUint8List_String(hexCipherText);
-        var aes = new AESFastEngine()..init(false, params);
-        var plainText = processBlocks( aes, cipherText );
+        var salsa20 = new Salsa20Engine()..init(false, params);
+        var plainText = processStream( salsa20, cipherText );
 
         expect( new String.fromCharCodes(plainText), equals(expectedPlainText) );
       }
 
       test( "'Lorem ipsum' cipher test", () {
-        var cipherText = "75020e0812adb36f32b1503e0de7a59691e0db8fd1c9efb920695a626cb633d6db0112c007d19d5ea66fe7ab36c766232b3bcb98fd35f06d27d5a2d475d92728";
+        var cipherText = "9d8d611ee047b47fc5e2bd5db4284463008aa89c174093d3ce4b3e8cc2594acfe9a62a84388fe060f75247d425c2fe0cd283cfce887f5c6b5dfea86d927efb36";
         var expectedPlainText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........";
         runDecipherTest( cipherText, expectedPlainText );
       });
 
       test( "'Quijote' cipher test", () {
-        var cipherText = "29523a5e73c0ffb7f9aaabc737a09e73219bad5e98768b71e2c985b2d8ce217730b0720e1a215f7843c8c7e07d44c91212fb1d5b90a791dd147f3746cbc0e28b";
+        var cipherText = "948c330ee347b17ad1f6a25db4220840138a96940d039adf871f76c9815551c5e3e5308e2198e025b65841843dc4f400ce8bcfca87795a2f12a2eb269c7efb36";
         var expectedPlainText = "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...";
         runDecipherTest( cipherText, expectedPlainText );
       });
@@ -72,12 +75,12 @@ void main() {
     group( "cipher+decipher tests:", () {
 
       void runCipherDecipherTest( Uint8List plainText ) {
-        var aes = new AESFastEngine()..init(true, params);
-        var cipherText = processBlocks( aes, plainText );
+        var salsa20 = new Salsa20Engine()..init(true, params);
+        var cipherText = processStream( salsa20, plainText );
 
-        aes..reset()
+        salsa20..reset()
           ..init( false, params );
-        var plainTextAgain = processBlocks( aes, cipherText );
+        var plainTextAgain = processStream( salsa20, cipherText );
 
         expect( plainTextAgain, equals(plainText) );
       }
@@ -95,6 +98,5 @@ void main() {
     });
 
   });
-
 }
 

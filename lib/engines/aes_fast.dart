@@ -12,30 +12,30 @@ part "../src/engines/aes_fast/words_2d_matrix.dart";
 
 /**
  * An implementation of the AES (Rijndael), from FIPS-197.
- * 
+ *
  * For further details see: [http://csrc.nist.gov/encryption/aes/]
  *
- * This implementation is based on optimizations from Dr. Brian Gladman's paper 
+ * This implementation is based on optimizations from Dr. Brian Gladman's paper
  * and C code at [http://fp.gladman.plus.com/cryptography_technology/rijndael/]
  *
- * There are three levels of tradeoff of speed vs memory and they are written 
+ * There are three levels of tradeoff of speed vs memory and they are written
  * as three separate classes from which to choose.
  *
- * The fastest uses 8Kbytes of static tables to precompute round calculations, 
+ * The fastest uses 8Kbytes of static tables to precompute round calculations,
  * 4 256 word tables for encryption and 4 for decryption.
  *
- * The middle performance version uses only one 256 word table for each, for a 
- * total of 2Kbytes, adding 12 rotate operations per round to compute the values 
+ * The middle performance version uses only one 256 word table for each, for a
+ * total of 2Kbytes, adding 12 rotate operations per round to compute the values
  * contained in the other tables from the contents of the first.
  *
- * The slowest version uses no static tables at all and computes the values in 
+ * The slowest version uses no static tables at all and computes the values in
  * each round.
 
- * This file contains the fast version with 8Kbytes of static tables for round 
+ * This file contains the fast version with 8Kbytes of static tables for round
  * precomputation.
  */
 class AESFastEngine implements BlockCipher {
-    
+
   static const _BLOCK_SIZE = 16;
 
   bool _forEncryption;
@@ -44,9 +44,9 @@ class AESFastEngine implements BlockCipher {
   int _C0, _C1, _C2, _C3;
 
   String get algorithmName => "AES";
-  
+
   int get blockSize => _BLOCK_SIZE;
-  
+
   void reset() {
     _ROUNDS = 0;
     _C0 = _C1 = _C2 = _C3 = 0;
@@ -68,7 +68,7 @@ class AESFastEngine implements BlockCipher {
    */
   void init( bool forEncryption, KeyParameter params ) {
     var key = params.key;
-    
+
     int KC = (key.lengthInBytes / 4).floor();  // key length in words
     if (((KC != 4) && (KC != 6) && (KC != 8)) || ((KC * 4) != key.lengthInBytes)) {
       throw new ArgumentError("Key length must be 128/192/256 bits");
@@ -76,25 +76,25 @@ class AESFastEngine implements BlockCipher {
 
     this._forEncryption = forEncryption;
     _ROUNDS = KC + 6;  // This is not always true for the generalized Rijndael that allows larger block sizes
-    _workingKey = new _Words2dMatrix(_ROUNDS+1,4); // 4 words in a block 
-  
+    _workingKey = new _Words2dMatrix(_ROUNDS+1,4); // 4 words in a block
+
     // copy the key into the round key array
     var keyView = new ByteData.view( params.key.buffer );
     for( var i=0, t=0 ; i<key.lengthInBytes ; i+=4, t++ ) {
-      var value = keyView.getUint32( i, Endianness.LITTLE_ENDIAN ); 
+      var value = keyView.getUint32( i, Endianness.LITTLE_ENDIAN );
       _workingKey.setWord( t>>2, t&3, value );
     }
-  
+
     // while not enough round key material calculated calculate new values
     int k = (_ROUNDS + 1) << 2;
-    for( var i=KC ; i<k ; i++ ) {
+    for( int i=KC ; i<k ; i++ ) {
       int temp = _workingKey.getWord( (i-1)>>2, (i-1)&3 );
       if( (i%KC) == 0 ) {
         temp = _subWord( _shift(temp,8) ) ^ _rcon[((i / KC) - 1).floor()];
       } else if( (KC > 6) && ((i % KC) == 4) ) {
         temp = _subWord(temp);
       }
-    
+
       var value = _workingKey.getWord( (i-KC)>>2, (i-KC)&3 ) ^ temp;
       _workingKey.setWord( i>>2, i&3, value);
     }
@@ -112,7 +112,7 @@ class AESFastEngine implements BlockCipher {
   }
 
   int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
-    
+
       if( _workingKey == null ) {
           throw new StateError("AES engine not initialised");
       }
@@ -134,14 +134,14 @@ class AESFastEngine implements BlockCipher {
           _decryptBlock(_workingKey);
           _packBlock(out,outOff);
       }
-      
+
       return _BLOCK_SIZE;
 
   }
 
   void _encryptBlock( _Words2dMatrix KW ) {
       int r, r0, r1, r2, r3;
-      
+
       //print("before encrypt = $KW");
       //_printCs("pre");
       _C0 ^= KW.getWord( 0, 0 );
@@ -149,7 +149,7 @@ class AESFastEngine implements BlockCipher {
       _C2 ^= KW.getWord( 0, 2 );
       _C3 ^= KW.getWord( 0, 3 );
       //_printCs("initial");
-      
+
       r = 1;
       while( r < _ROUNDS-1 ) {
           r0  = _T0[_C0&255] ^ _T1[(_C1>>8)&255] ^ _T2[(_C2>>16)&255] ^ _T3[(_C3>>24)&255] ^ KW.getWord(r, 0);
@@ -171,7 +171,7 @@ class AESFastEngine implements BlockCipher {
       r2 = _T0[_C2&255] ^ _T1[(_C3>>8)&255] ^ _T2[(_C0>>16)&255] ^ _T3[(_C1>>24)&255] ^ KW.getWord(r, 2);
       r3 = _T0[_C3&255] ^ _T1[(_C0>>8)&255] ^ _T2[(_C1>>16)&255] ^ _T3[(_C2>>24)&255] ^ KW.getWord(r, 3);
       r++;
-      
+
       // the final round's table is a simple function of S so we don't use a whole other four tables for it
       _C0 = (_S[r0&255]&255) ^ ((_S[(r1>>8)&255]&255)<<8) ^ ((_S[(r2>>16)&255]&255)<<16) ^ (_S[(r3>>24)&255]<<24) ^ KW.getWord(r, 0);
       _C1 = (_S[r1&255]&255) ^ ((_S[(r2>>8)&255]&255)<<8) ^ ((_S[(r3>>16)&255]&255)<<16) ^ (_S[(r0>>24)&255]<<24) ^ KW.getWord(r, 1);
@@ -188,7 +188,7 @@ class AESFastEngine implements BlockCipher {
       _C2 ^= KW.getWord(_ROUNDS,2);
       _C3 ^= KW.getWord(_ROUNDS,3);
 
-      r = _ROUNDS-1; 
+      r = _ROUNDS-1;
       while( r > 1 ) {
           r0 = _Tinv0[_C0&255] ^ _Tinv1[(_C3>>8)&255] ^ _Tinv2[(_C2>>16)&255] ^ _Tinv3[(_C1>>24)&255] ^ KW.getWord(r, 0);
           r1 = _Tinv0[_C1&255] ^ _Tinv1[(_C0>>8)&255] ^ _Tinv2[(_C3>>16)&255] ^ _Tinv3[(_C2>>24)&255] ^ KW.getWord(r, 1);
@@ -206,7 +206,7 @@ class AESFastEngine implements BlockCipher {
       r1 = _Tinv0[_C1&255] ^ _Tinv1[(_C0>>8)&255] ^ _Tinv2[(_C3>>16)&255] ^ _Tinv3[(_C2>>24)&255] ^ KW.getWord(r, 1);
       r2 = _Tinv0[_C2&255] ^ _Tinv1[(_C1>>8)&255] ^ _Tinv2[(_C0>>16)&255] ^ _Tinv3[(_C3>>24)&255] ^ KW.getWord(r, 2);
       r3 = _Tinv0[_C3&255] ^ _Tinv1[(_C2>>8)&255] ^ _Tinv2[(_C1>>16)&255] ^ _Tinv3[(_C0>>24)&255] ^ KW.getWord(r, 3);
-      
+
       // the final round's table is a simple function of Si so we don't use a whole other four tables for it
       _C0 = (_Si[r0&255]&255) ^ ((_Si[(r3>>8)&255]&255)<<8) ^ ((_Si[(r2>>16)&255]&255)<<16) ^ (_Si[(r1>>24)&255]<<24) ^ KW.getWord(0, 0);
       _C1 = (_Si[r1&255]&255) ^ ((_Si[(r0>>8)&255]&255)<<8) ^ ((_Si[(r3>>16)&255]&255)<<16) ^ (_Si[(r2>>24)&255]<<24) ^ KW.getWord(0, 1);
@@ -222,7 +222,7 @@ class AESFastEngine implements BlockCipher {
     _C3 = bytesView.getUint32( off+12, Endianness.LITTLE_ENDIAN );
     //_printCs("unpackBlock");
   }
-  
+
   void _packBlock( Uint8List bytes, int off ) {
     var bytesView = new ByteData.view( bytes.buffer );
     //_printCs("packBlock");
@@ -240,7 +240,7 @@ class AESFastEngine implements BlockCipher {
   void _printRs( String desc, int r0, int r1, int r2, int r3 ) {
     print("Rs ($desc): ${_wordToHex(r0)} ${_wordToHex(r1)} ${_wordToHex(r2)} ${_wordToHex(r3)}");
   }
-  
+
   String _wordToHex( int val ) {
     var bytes = new ByteData(4);
     bytes.setUint32(0, val, Endianness.LITTLE_ENDIAN);

@@ -1,5 +1,5 @@
 name: cipher
-version: 0.0.1
+version: 0.0.2
 author: Iván Zaera Avellón <izaera@gmail.com>
 description: |-
   A Dart library for encryption/decryption mainly based on Bouncy Castle Java library. Most of the classes are ports of Bouncy Castle from Java to Dart. The porting is almost always direct except for some classes that had been added to ease the use of low level data.

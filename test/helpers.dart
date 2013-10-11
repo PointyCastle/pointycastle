@@ -5,13 +5,13 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 
 String toHumanSize( num size ) {
-  if( size<1024 ) return "$size B"; 
-  if( size<1024*1024 ) return "${_format(size/1024)} KB"; 
-  if( size<1024*1024*1024 ) return "${_format(size/(1024*1024))} MB"; 
-  return "${_format(size/(1024*1024*1024))} GB"; 
+  if( size<1024 ) return "$size B";
+  if( size<1024*1024 ) return "${_format(size/1024)} KB";
+  if( size<1024*1024*1024 ) return "${_format(size/(1024*1024))} MB";
+  return "${_format(size/(1024*1024*1024))} GB";
 }
 
-String _format( double val ) { 
+String _format( double val ) {
   if( val.isInfinite ) {
     return "INF";
   } else if( val.isNaN ) {
@@ -53,6 +53,11 @@ Uint8List processBlocks( BlockCipher cipher, Uint8List inp ) {
   return out;
 }
 
+Uint8List processStream( StreamCipher cipher, Uint8List inp ) {
+  var out = new Uint8List(inp.lengthInBytes);
+  cipher.processBytes(inp, 0, inp.length, out, 0);
+  return out;
+}
 
 String toHexString_Uint8List(Uint8List bytes) {
   var result = new StringBuffer();

@@ -10,7 +10,7 @@ int lsr(int n, int shift) {
   if( shift<0 ) {
     shift = 32+(shift%32);
   }
-  
+
   int shift5 = shift & 0x1f;
   int n32 = 0xffffffff & n;
   if (shift5 == 0) {
@@ -21,7 +21,7 @@ int lsr(int n, int shift) {
 }
 
 class Pack {
-  
+
   static int littleEndianToInt( Uint8List bs, int off ) {
     var n = bs[off];
     n |= bs[++off] << 8;
@@ -35,6 +35,13 @@ class Pack {
     bs[++off] = lsr( n, 8 );
     bs[++off] = lsr( n, 16 );
     bs[++off] = lsr( n, 24 );
+  }
+
+  static void intToLittleEndianList( List<int> n, Uint8List bs, int off ) {
+    for (int i = 0; i < n.length; ++i) {
+      intToLittleEndian(n[i], bs, off);
+      off += 4;
+    }
   }
 
   /*
