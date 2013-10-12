@@ -9,3 +9,12 @@ ease the use of low level data.
 Tests and benchmarks for every algorithm are also provided. The expected results
 for the tests are computed with the Bouncy Castle Java version and matched
 against the results got from Dart.
+
+Currently the following algorithms are implemented:
+
+* AES (block cipher)
+* SIC (mode of operation)
+* Salsa20 (stream cipher)
+
+See file HISTORY.md for detailed information on the history of the project.
+
