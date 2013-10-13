@@ -19,3 +19,6 @@ implemented in the last release.
 
 **Block cipher modes of operation:**
 * SIC (a.k.a. CTR)
+
+**Digests:**
+* RIPEMD160

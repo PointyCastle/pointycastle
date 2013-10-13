@@ -3,10 +3,20 @@ library cipher_util;
 import "dart:typed_data";
 
 /**
- * Compute 32-bit logical shift right of a value. This emulates the JavaScript >>> operator.
- * Source: https://code.google.com/p/dart/issues/detail?id=1169
+ * Convert an arbitrary length int to a 32 bit word.
  */
-int lsr(int n, int shift) {
+int toUint32( int n ) => n & 0xFFFFFFFF;
+
+/**
+ * Compute 32-bit logical shift left of a value.
+ */
+int lsl( int n, int shift ) => toUint32(n << shift);
+
+/**
+ * Compute 32-bit logical shift right of a value. This emulates the JavaScript
+ * >>> operator. Source: https://code.google.com/p/dart/issues/detail?id=1169
+ */
+int lsr( int n, int shift ) {
   if( shift<0 ) {
     shift = 32+(shift%32);
   }
@@ -19,6 +29,15 @@ int lsr(int n, int shift) {
     return (n32 >> shift5) & ((0x7fffffff >> (shift5-1)));
   }
 }
+
+/**
+ * Compute 32-bit cyclic logical shift left of a value.
+ */
+int clsl( int x, int n ) {
+  x = toUint32(x);
+  return toUint32(x << n) | lsr( x, 32-n );
+}
+
 
 class Pack {
 
