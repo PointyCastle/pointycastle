@@ -7,10 +7,12 @@ import "./engines/salsa20_test.dart" as salsa20;
 
 import "./modes/sic_test.dart" as sic;
 
+import "./src/util_test.dart" as util;
 
 void main() {
   ripemd160.main();
   aes.main();
   salsa20.main();
   sic.main();
+  util.main();
 }

@@ -7,7 +7,7 @@ import "package:cipher/params/key_parameter.dart";
 
 import "package:unittest/unittest.dart";
 
-import "../helpers.dart";
+import "../test_helpers/test_helpers.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java
@@ -15,7 +15,7 @@ import "../helpers.dart";
  */
 void main() {
 
-  final key = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final key = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new KeyParameter(key);
 
   group( "AES:", () {
@@ -23,10 +23,10 @@ void main() {
     group( "well known results cipher tests:", () {
 
       void runCipherTest( String plainTextString, String expectedHexCipherText ) {
-        var plainText = asUint8List_String( plainTextString );
+        var plainText = createUint8ListFromString( plainTextString );
         var aes = new AESFastEngine()..init(true, params);
         var cipherText = processBlocks( aes, plainText );
-        var hexCipherText = toHexString_Uint8List(cipherText);
+        var hexCipherText = formatBytesAsHexString(cipherText);
 
         expect( hexCipherText, equals(expectedHexCipherText) );
       }
@@ -48,7 +48,7 @@ void main() {
     group( "well known results decipher tests:", () {
 
       void runDecipherTest( String hexCipherText, String expectedPlainText ) {
-        var cipherText = toUint8List_String(hexCipherText);
+        var cipherText = createUint8ListFromHexString(hexCipherText);
         var aes = new AESFastEngine()..init(false, params);
         var plainText = processBlocks( aes, cipherText );
 
@@ -83,12 +83,12 @@ void main() {
       }
 
       test( "'Quijote' well known text",  () {
-        var plainText = asUint8List_String("En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...");
+        var plainText = createUint8ListFromString("En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...");
         runCipherDecipherTest( plainText );
       });
 
       test( "1KB of sequential numbers test",  () {
-        var plainText = createSequentialInput(1024);
+        var plainText = createUint8ListFromSequentialNumbers(1024);
         runCipherDecipherTest( plainText );
       });
 

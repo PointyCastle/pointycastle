@@ -12,13 +12,13 @@ against the results got from Dart. Following is a list of the algorithms
 implemented in the last release.
 
 **Stream ciphers:**
-* Salsa 20
+- Salsa 20
 
 **Block ciphers:**
-* AES (fast version)
+- AES (fast version)
 
 **Block cipher modes of operation:**
-* SIC (a.k.a. CTR)
+- SIC (a.k.a. CTR)
 
 **Digests:**
-* RIPEMD160
+- RIPEMD160

@@ -4,7 +4,7 @@ import "dart:typed_data";
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/params/key_parameter.dart";
 
-import "../helpers.dart";
+import "../test_helpers/test_helpers.dart";
 
 void main() {
   const CIPHER_BLOCKS = 20 * 1024 * 1024;
@@ -15,14 +15,14 @@ void main() {
 }
 
 void benchmark( int blocks, bool forEncryption ) {
-  var key = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  var key = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   var params = new KeyParameter(key);
   var aes = new AESFastEngine()..init(forEncryption, params);
-  var plainText = createSequentialInput(aes.blockSize);
+  var plainText = createUint8ListFromSequentialNumbers(aes.blockSize);
   var out = new Uint8List(plainText.length);
  
   var bytes = blocks*aes.blockSize;
-  var bmsize = toHumanSize(bytes);
+  var bmsize = formatAsHumanSize(bytes);
   
   print("Benchmarking ${forEncryption?'encryption':'decryption'} of ${bmsize} of data");
   
@@ -35,7 +35,7 @@ void benchmark( int blocks, bool forEncryption ) {
   var lap = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
   
   print( "    Lap time:   $lap ms" );
-  print( "    Throughput: ${toHumanSize(1000*bytes/lap)}/s" );
+  print( "    Throughput: ${formatAsHumanSize(1000*bytes/lap)}/s" );
   print( "" );
 
 }

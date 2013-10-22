@@ -8,7 +8,7 @@ import "package:cipher/params/parameters_with_iv.dart";
 
 import "package:unittest/unittest.dart";
 
-import "../helpers.dart";
+import "../test_helpers/test_helpers.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java
@@ -16,7 +16,7 @@ import "../helpers.dart";
  */
 void main() {
 
-  final iv = asUint8List_ListOfInt( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final iv = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);
   final underlyingCipher = new NullBlockCipher(iv.length);
 
@@ -25,10 +25,10 @@ void main() {
     group( "well known results cipher tests:", () {
 
       void runCipherTest( String plainTextString, String expectedHexCipherText ) {
-        var plainText = asUint8List_String( plainTextString );
+        var plainText = createUint8ListFromString( plainTextString );
         var sic = new SICBlockCipher(underlyingCipher)..init(true, params);
         var cipherText = processBlocks( sic, plainText );
-        var hexCipherText = toHexString_Uint8List(cipherText);
+        var hexCipherText = formatBytesAsHexString(cipherText);
 
         expect( hexCipherText, equals(expectedHexCipherText) );
       }
@@ -50,7 +50,7 @@ void main() {
     group( "well known results decipher tests:", () {
 
       void runDecipherTest( String hexCipherText, String expectedPlainText ) {
-        var cipherText = toUint8List_String(hexCipherText);
+        var cipherText = createUint8ListFromHexString(hexCipherText);
         var sic = new SICBlockCipher(underlyingCipher)..init(false, params);
         var plainText = processBlocks( sic, cipherText );
 
@@ -85,12 +85,12 @@ void main() {
       }
 
       test( "'Quijote' well known text",  () {
-        var plainText = asUint8List_String("En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...");
+        var plainText = createUint8ListFromString("En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...");
         runCipherDecipherTest( plainText );
       });
 
       test( "1KB of sequential numbers test",  () {
-        var plainText = createSequentialInput(1024);
+        var plainText = createUint8ListFromSequentialNumbers(1024);
         runCipherDecipherTest( plainText );
       });
 

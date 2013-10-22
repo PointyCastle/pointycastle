@@ -6,7 +6,7 @@ import "package:cipher/digests/ripemd160.dart";
 
 import "package:unittest/unittest.dart";
 
-import "../helpers.dart";
+import "../test_helpers/test_helpers.dart";
 
 
 /**
@@ -21,14 +21,14 @@ void main() {
     group( "well known results tests:", () {
 
       void runTest( String messageString, String expectedOut ) {
-        var message = asUint8List_String( messageString );
+        var message = createUint8ListFromString( messageString );
         var ripemd = new RIPEMD160Digest();
 
         var out = new Uint8List(ripemd.digestSize);
         ripemd.update( message, 0, message.length );
         ripemd.doFinal( out, 0 );
 
-        var hexOut = toHexString_Uint8List(out);
+        var hexOut = formatBytesAsHexString(out);
 
         expect( hexOut, equals(expectedOut) );
       }
