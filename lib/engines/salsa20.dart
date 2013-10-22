@@ -37,7 +37,9 @@ class Salsa20Engine implements StreamCipher {
   String get algorithmName => "Salsa20";
 
   void reset() {
+    if( _workingKey!=null ) {
       _setKey(_workingKey, _workingIV);
+    }
   }
 
   void init( bool forEncryption, ParametersWithIV<KeyParameter> params ) {

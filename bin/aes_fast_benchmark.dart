@@ -1,10 +1,17 @@
 
+/* TODO: prepare benchmark framework and integrate it with command line tool
+ * (see: https://github.com/izaera/cipher/issues/11)
+ */
+
+
+
+/*
 import "dart:typed_data";
 
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/params/key_parameter.dart";
 
-import "../test_helpers/test_helpers.dart";
+import '../test/test/helpers.dart';
 
 void main() {
   const CIPHER_BLOCKS = 20 * 1024 * 1024;
@@ -39,3 +46,4 @@ void benchmark( int blocks, bool forEncryption ) {
   print( "" );
 
 }
+*/

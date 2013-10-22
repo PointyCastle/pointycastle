@@ -1,5 +1,16 @@
 part of cipher_test_helpers;
 
+String formatAsTruncated( String str ) {
+  if( str.length>26 ) {
+    return str.substring(0, 26)+"[...]";
+  } else if( str.length==0 ) {
+    return "(empty string)";
+  } else {
+    return str;
+  }
+}
+    
+  
 String formatAsHumanSize( num size ) {
   if( size<1024 ) return "$size B";
   if( size<1024*1024 ) return "${_format(size/1024)} KB";

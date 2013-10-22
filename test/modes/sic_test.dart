@@ -6,9 +6,8 @@ import "package:cipher/api.dart";
 import "package:cipher/modes/sic.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-import "package:unittest/unittest.dart";
-
-import "../test_helpers/test_helpers.dart";
+import "../test/helpers.dart";
+import "../test/block_cipher_tests.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java
@@ -18,94 +17,27 @@ void main() {
 
   final iv = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);
-  final underlyingCipher = new NullBlockCipher(iv.length);
+  final underlyingCipher = new _MockBlockCipher(iv.length);
+  
+  runBlockCipherTests( new SICBlockCipher(underlyingCipher), params, [
+                                               
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
+    "4c7e505629750f07fbecc79ba8b282907231515a3075071aeded869bafb281736572565630201457e9fdc3cba5ae8c686e760256283c1257a6b78495e2f3c12c",
 
-  group( "SIC:", () {
-
-    group( "well known results cipher tests:", () {
-
-      void runCipherTest( String plainTextString, String expectedHexCipherText ) {
-        var plainText = createUint8ListFromString( plainTextString );
-        var sic = new SICBlockCipher(underlyingCipher)..init(true, params);
-        var cipherText = processBlocks( sic, plainText );
-        var hexCipherText = formatBytesAsHexString(cipherText);
-
-        expect( hexCipherText, equals(expectedHexCipherText) );
-      }
-
-      test( "'Lorem ipsum' cipher test", () {
-        var plainText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........";
-        var expectedHexCipherText = "4c7e505629750f07fbecc79ba8b282907231515a3075071aeded869bafb281736572565630201457e9fdc3cba5ae8c686e760256283c1257a6b78495e2f3c12c";
-        runCipherTest( plainText, expectedHexCipherText );
-      });
-
-      test( "'Quijote' cipher test", () {
-        var plainText = "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...";
-        var expectedHexCipherText = "457f02462a750a02eff8d89ba8b8ceb361316f522a360e16a4b9cedeecbe9a796f314c5c29371412a8f7c59bbda88664727e0252273a1413e9ebc7deecf3c12c";
-        runCipherTest( plainText, expectedHexCipherText );
-      });
-
-    });
-
-    group( "well known results decipher tests:", () {
-
-      void runDecipherTest( String hexCipherText, String expectedPlainText ) {
-        var cipherText = createUint8ListFromHexString(hexCipherText);
-        var sic = new SICBlockCipher(underlyingCipher)..init(false, params);
-        var plainText = processBlocks( sic, cipherText );
-
-        expect( new String.fromCharCodes(plainText), equals(expectedPlainText) );
-      }
-
-      test( "'Lorem ipsum' cipher test", () {
-        var cipherText = "4c7e505629750f07fbecc79ba8b282907231515a3075071aeded869bafb281736572565630201457e9fdc3cba5ae8c686e760256283c1257a6b78495e2f3c12c";
-        var expectedPlainText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........";
-        runDecipherTest( cipherText, expectedPlainText );
-      });
-
-      test( "'Quijote' cipher test", () {
-        var cipherText = "457f02462a750a02eff8d89ba8b8ceb361316f522a360e16a4b9cedeecbe9a796f314c5c29371412a8f7c59bbda88664727e0252273a1413e9ebc7deecf3c12c";
-        var expectedPlainText = "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...";
-        runDecipherTest( cipherText, expectedPlainText );
-      });
-
-    });
-
-    group( "cipher+decipher tests:", () {
-
-      void runCipherDecipherTest( Uint8List plainText ) {
-        var sic = new SICBlockCipher(underlyingCipher)..init(true, params);
-        var cipherText = processBlocks( sic, plainText );
-
-        sic..reset()
-          ..init( false, params );
-        var plainTextAgain = processBlocks( sic, cipherText );
-
-        expect( plainTextAgain, equals(plainText) );
-      }
-
-      test( "'Quijote' well known text",  () {
-        var plainText = createUint8ListFromString("En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...");
-        runCipherDecipherTest( plainText );
-      });
-
-      test( "1KB of sequential numbers test",  () {
-        var plainText = createUint8ListFromSequentialNumbers(1024);
-        runCipherDecipherTest( plainText );
-      });
-
-    });
-
-  });
+    "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
+    "457f02462a750a02eff8d89ba8b8ceb361316f522a360e16a4b9cedeecbe9a796f314c5c29371412a8f7c59bbda88664727e0252273a1413e9ebc7deecf3c12c",
+                                               
+  ] );
+  
 }
 
-class NullBlockCipher implements BlockCipher {
+class _MockBlockCipher implements BlockCipher {
 
   final int blockSize;
 
-  NullBlockCipher(this.blockSize);
+  _MockBlockCipher(this.blockSize);
 
-  String get algorithmName => "NULL";
+  String get algorithmName => "Mock";
 
   void reset() {
   }
