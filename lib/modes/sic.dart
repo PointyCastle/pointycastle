@@ -12,7 +12,7 @@ import "package:cipher/params/parameters_with_iv.dart";
  * TODO: test for limit exceeded condition as in Salsa20
  * 
  */
-class SICBlockCipher implements BlockCipher {
+class SICBlockCipher implements ChainingBlockCipher {
 
   final BlockCipher underlyingCipher;
   

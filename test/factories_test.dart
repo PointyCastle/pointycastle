@@ -1,6 +1,7 @@
 library factories_tests;
 
 import "package:cipher/all.dart";
+import "package:cipher/engines/null.dart";
 
 import "package:unittest/unittest.dart";
 import "package:unittest/matcher.dart";
@@ -12,10 +13,14 @@ void main() {
   test( "BlockCipher returns valid implementations", () {
   
     expect( new BlockCipher("AES"), new isInstanceOf<BlockCipher>("BlockCipher") );
-    // TODO: chain block algorithms 
-    // TODO: expect( new BlockCipher("SIC"), new isInstanceOf<BlockCipher>("BlockCipher") );
-    // TODO: expect( new BlockCipher("CTR"), new isInstanceOf<BlockCipher>("BlockCipher") );
 
+  });
+
+  test( "ChainingBlockCipher returns valid implementations", () {
+
+    expect( new ChainingBlockCipher("SIC",new NullBlockCipher()), new isInstanceOf<BlockCipher>("BlockCipher") );
+    expect( new ChainingBlockCipher("CTR",new NullBlockCipher()), new isInstanceOf<BlockCipher>("BlockCipher") );
+    
   });
 
   test( "StreamCipher returns valid implementations", () {
@@ -31,3 +36,4 @@ void main() {
   });
 
 }
+

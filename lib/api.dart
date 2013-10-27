@@ -29,6 +29,25 @@ abstract class BlockCipher {
 
 }
 
+/** Factory function to create [ChainingBlockCipher]s */
+typedef ChainingBlockCipher ChainingBlockCipherFactory(BlockCipher underlyingCipher);
+
+/** 
+ * Chaining block cipher (i.e.:modes of operation) are expected to conform 
+ * to this interface. 
+ */
+abstract class ChainingBlockCipher implements BlockCipher {
+  
+  static void register( String algorithmName, ChainingBlockCipherFactory creator ) 
+    => _registerChainingBlockCipher(algorithmName,creator);
+
+  factory ChainingBlockCipher( String algorithmName, BlockCipher underlyingCipher ) 
+    => _createChainingBlockCipher(algorithmName,underlyingCipher);
+
+  BlockCipher get underlyingCipher;
+
+}
+
 /** Factory function to create [StreamCipher]s */
 typedef StreamCipher StreamCipherFactory();
 
@@ -44,9 +63,9 @@ abstract class StreamCipher {
   String get algorithmName;
 
   void reset();
-  void init(bool forEncryption, CipherParameters params);
-  int returnByte(int inp);
-  void processBytes( Uint8List inp, int inpOff, int len, Uint8List out, int outOff);
+  void init( bool forEncryption, CipherParameters params );
+  int returnByte( int inp );
+  void processBytes( Uint8List inp, int inpOff, int len, Uint8List out, int outOff );
 
 }
 
@@ -62,8 +81,6 @@ abstract class Digest {
   factory Digest( String algorithmName ) 
     => _createDigest(algorithmName);
 
-  Digest._();
-  
   String get algorithmName;
   int get digestSize;
 
@@ -74,9 +91,7 @@ abstract class Digest {
 
 }
 
-abstract class ExtendedDigest extends Digest {
-  
-  ExtendedDigest() : super._();
+abstract class ExtendedDigest implements Digest {
   
   int get byteLength;
   
