@@ -1,5 +1,7 @@
 library all_tests;
 
+import "./factories_test.dart" as factories;
+
 import "./digests/ripemd160_test.dart" as ripemd160;
 
 import "./engines/aes_fast_test.dart" as aes_fast;
@@ -11,6 +13,9 @@ import "./src/util_test.dart" as util;
 
 void main() {
   
+  // generic
+  factories.main();
+
   // digests
   ripemd160.main();
   

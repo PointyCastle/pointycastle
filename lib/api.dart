@@ -2,9 +2,24 @@ library cipher_api;
 
 import "dart:typed_data";
 
+part "./src/factories.dart";
+
+/** All parameter classes implement this. */
+abstract class CipherParameters {
+}
+
+/** Factory function to create [BlockCipher]s */
+typedef BlockCipher BlockCipherFactory();
+
 /** Block cipher engines are expected to conform to this interface. */
 abstract class BlockCipher {
+  
+  static void register( String algorithmName, BlockCipherFactory creator ) 
+    => _registerBlockCipher(algorithmName,creator);
 
+  factory BlockCipher( String algorithmName ) 
+    => _createBlockCipher(algorithmName);
+  
   String get algorithmName;
   int get blockSize;
 
@@ -14,8 +29,17 @@ abstract class BlockCipher {
 
 }
 
+/** Factory function to create [StreamCipher]s */
+typedef StreamCipher StreamCipherFactory();
+
 /** The interface stream ciphers conform to. */
 abstract class StreamCipher {
+
+  static void register( String algorithmName, StreamCipherFactory creator ) 
+    => _registerStreamCipher(algorithmName,creator);
+
+  factory StreamCipher( String algorithmName ) 
+    => _createStreamCipher(algorithmName);
 
   String get algorithmName;
 
@@ -26,24 +50,34 @@ abstract class StreamCipher {
 
 }
 
-
-/** All parameter classes implement this. */
-abstract class CipherParameters {
-}
+/** Factory function to create [Digest]s */
+typedef Digest DigestFactory();
 
 /** The interface that a message digest conforms to. */
 abstract class Digest {
 
-    String get algorithmName;
-    int get digestSize;
+  static void register( String algorithmName, dynamic creator ) 
+    => _registerDigest(algorithmName,creator);
 
-    void reset();
-    void updateByte( int inp );
-    void update( Uint8List inp, int inpOff, int len );
-    int doFinal( Uint8List out, int outOff );
+  factory Digest( String algorithmName ) 
+    => _createDigest(algorithmName);
+
+  Digest._();
+  
+  String get algorithmName;
+  int get digestSize;
+
+  void reset();
+  void updateByte( int inp );
+  void update( Uint8List inp, int inpOff, int len );
+  int doFinal( Uint8List out, int outOff );
 
 }
 
 abstract class ExtendedDigest extends Digest {
-    int get byteLength;
+  
+  ExtendedDigest() : super._();
+  
+  int get byteLength;
+  
 }

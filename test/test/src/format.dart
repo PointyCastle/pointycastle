@@ -9,8 +9,7 @@ String formatAsTruncated( String str ) {
     return str;
   }
 }
-    
-  
+      
 String formatAsHumanSize( num size ) {
   if( size<1024 ) return "$size B";
   if( size<1024*1024 ) return "${_format(size/1024)} KB";
