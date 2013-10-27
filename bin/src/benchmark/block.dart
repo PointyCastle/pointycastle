@@ -33,16 +33,11 @@ int _adjustBenchmarkBlocks(BlockCipher cipher, int desiredLengthInSeconds, bool 
 }
 
 int _benchmarkBlock( bool verbose, BlockCipher cipher, int blocks, bool forEncryption ) {
-  var key = new Uint8List.fromList([0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF]);
-  var params = new KeyParameter(key);
   var plainText = new Uint8List(cipher.blockSize);
   var out = new Uint8List(plainText.length);
  
   var bytes = blocks*cipher.blockSize;
   var bmsize = _formatAsHumanSize(bytes);
-  
-  cipher.reset();
-  cipher.init(forEncryption, params);
   
   if( verbose ) {
     print(
@@ -52,6 +47,7 @@ int _benchmarkBlock( bool verbose, BlockCipher cipher, int blocks, bool forEncry
   }
   
   var start = new DateTime.now();
+  _initBlock(cipher,forEncryption);
   for( var i=0 ; i<blocks ; i++ ) {
     cipher.processBlock(plainText, 0, out, 0);
   }
@@ -66,5 +62,27 @@ int _benchmarkBlock( bool verbose, BlockCipher cipher, int blocks, bool forEncry
   }
   
   return lap;
+}
+
+void _initBlock(BlockCipher cipher, bool forEncryption) {
+  var cipherClass = reflectClass(cipher.runtimeType);
+  var initMethod = cipherClass.methods[new Symbol("init")];
+  var paramsType = initMethod.parameters[1].type;
+  var params;
+  
+  if( paramsType == reflectType(CipherParameters) ) {
+    params = null;
+    
+  } else if( paramsType == reflectType(KeyParameter) ) {
+    var key = new Uint8List.fromList([0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF]);
+    params = new KeyParameter(key);
+    
+  } else {
+    throw new UnsupportedError("No initializer for algorithm '${cipher.algorithmName}' found");
+    
+  }
+  
+  cipher.reset();
+  cipher.init(forEncryption, params);
 }
 

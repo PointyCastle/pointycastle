@@ -1,6 +1,7 @@
 library cipher_cmd_benchmark;
 
 import "dart:typed_data";
+import "dart:mirrors";
 
 import "package:cipher/all.dart";
 
