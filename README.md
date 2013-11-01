@@ -1,24 +1,29 @@
 cipher
 ======
 
-A Dart library for encryption/decryption mainly based on Bouncy Castle Java
-library. Most of the classes are ports of Bouncy Castle from Java to Dart. The
-porting is almost always direct except for some classes that had been added to
-ease the use of low level data.
+A Dart library for encryption and decryption. As of today, most of the classes 
+are ports of Bouncy Castle from Java to Dart. The porting is almost always 
+direct except for some classes that had been added to ease the use of low level 
+data.
 
-Tests and benchmarks for every algorithm are also provided. The expected results
-for the tests are computed with the Bouncy Castle Java version and matched
-against the results got from Dart. Following is a list of the algorithms
-implemented in the last release.
+To make sure nothing fails, tests and benchmarks for every algorithm are 
+provided. The expected results are taken from the Bouncy Castle Java version 
+and also from standards, and matched against the results got from cipher.
+
+As of the last release, the following algorithms are implemented:
+
 
 **Stream ciphers:**
-- Salsa 20
+  * Salsa 20
+
 
 **Block ciphers:**
-- AES (fast version)
+  * AES (fast version)
+
 
 **Block cipher modes of operation:**
-- SIC (a.k.a. CTR)
+  * SIC (a.k.a. CTR)
+
 
 **Digests:**
-- RIPEMD160
+  * RIPEMD160
