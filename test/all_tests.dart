@@ -13,6 +13,7 @@ import "./engines/null_cipher_test.dart" as null_cipher;
 import "./engines/salsa20_test.dart" as salsa20;
 
 import "./modes/sic_test.dart" as sic;
+import "./modes/cbc_test.dart" as cbc;
 
 import "./src/util_test.dart" as util;
 
@@ -31,6 +32,7 @@ void main() {
   
   // modes
   sic.main();
+  cbc.main();
   
   // src
   util.main();
