@@ -1,0 +1,1 @@
+dartdoc --out=/Users/Ivan/Documents/Dart/veltesta/cipher-pages/doc --exclude-lib=cipher.src.util --exclude-lib=meta --exclude-lib=fixnum --package-root=../packages --no-code --link-api ../lib/cipher.dart
