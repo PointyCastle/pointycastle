@@ -28,7 +28,7 @@ class NullBlockCipher implements BlockCipher {
   }
 
   int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
-      out.setAll( outOff, inp.sublist(inpOff) );
+      out.setRange( outOff, outOff+_BLOCK_SIZE, inp.sublist(inpOff) );
       return _BLOCK_SIZE;
   }
 
