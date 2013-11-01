@@ -1,10 +1,10 @@
 name: cipher
-version: 0.2.0
+version: 0.3.0
 author: Iván Zaera Avellón <izaera@gmail.com>
-description: A Dart library for encryption/decryption mainly based on Bouncy Castle Java library.
+description: A Dart library for encryption and decryption.
 homepage: http://izaera.github.io/cipher/
+documentation: http://izaera.github.io/cipher/doc/
 dependencies:
-  fixnum: 0.8.1
-  meta: 0.7.3+1
+  fixnum: 0.8.7
 dev_dependencies:
-  unittest: 0.7.3+1
+  unittest: 0.8.7
