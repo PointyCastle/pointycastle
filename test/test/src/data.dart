@@ -4,14 +4,6 @@
 
 part of cipher.test.test.helpers;
 
-Uint8List createUint8ListFromListOfInts( List<int> bytes ) {
-  var data = new Uint8List(bytes.length);
-  for( var i=0 ; i<bytes.length ; i++ ) {
-    data[i] = bytes[i];
-  }
-  return data;
-}
-
 Uint8List createUint8ListFromString( String s ) {
   var ret = new Uint8List(s.length);
   for( var i=0 ; i<s.length ; i++ ) {

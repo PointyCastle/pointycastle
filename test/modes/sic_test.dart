@@ -6,11 +6,10 @@ library cipher.test.modes.sic_test;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
+import "package:cipher/engines/null_cipher.dart";
 import "package:cipher/modes/sic.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-import "../test/helpers.dart";
 import "../test/block_cipher_tests.dart";
 
 /**
@@ -19,9 +18,9 @@ import "../test/block_cipher_tests.dart";
  */
 void main() {
 
-  final iv = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final iv = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);
-  final underlyingCipher = new _MockBlockCipher(iv.length);
+  final underlyingCipher = new NullBlockCipher();
   
   runBlockCipherTests( new SICBlockCipher(underlyingCipher), params, [
                                                
@@ -34,25 +33,3 @@ void main() {
   ] );
   
 }
-
-class _MockBlockCipher implements BlockCipher {
-
-  final int blockSize;
-
-  _MockBlockCipher(this.blockSize);
-
-  String get algorithmName => "Mock";
-
-  void reset() {
-  }
-
-  void init(bool forEncryption, CipherParameters params) {
-  }
-
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    out.setAll( 0, inp );
-    return blockSize;
-  }
-
-}
-

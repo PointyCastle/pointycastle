@@ -4,10 +4,11 @@
 
 library cipher.test.engines.aes_fast_test;
 
+import "dart:typed_data";
+
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/params/key_parameter.dart";
 
-import "../test/helpers.dart";
 import "../test/block_cipher_tests.dart";
 
 /**
@@ -16,7 +17,7 @@ import "../test/block_cipher_tests.dart";
  */
 void main() {
 
-  final key = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final key = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new KeyParameter(key);
   
   runBlockCipherTests( new AESFastEngine(), params, [

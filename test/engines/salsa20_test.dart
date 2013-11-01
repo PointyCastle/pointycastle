@@ -4,11 +4,12 @@
 
 library cipher.test.engines.salsa20_test;
 
+import "dart:typed_data";
+
 import "package:cipher/engines/salsa20.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-import "../test/helpers.dart";
 import "../test/stream_ciphers_tests.dart";
 
 /**
@@ -17,9 +18,9 @@ import "../test/stream_ciphers_tests.dart";
  */
 void main() {
   
-  final keyBytes = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
+  final keyBytes = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final key = new KeyParameter(keyBytes);
-  final iv = createUint8ListFromListOfInts( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77] );
+  final iv = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77] );
   final params = new ParametersWithIV(key,iv);
 
   runStreamCipherTests( new Salsa20Engine(), params, [
