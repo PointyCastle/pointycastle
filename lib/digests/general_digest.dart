@@ -1,4 +1,8 @@
-library cipher_digests_general_digest;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+library cipher.digests.general_digest;
 
 import "dart:typed_data";
 
@@ -8,9 +12,7 @@ import "package:cipher/api.dart";
  * Base implementation of MD4 family style digest as outlined in "Handbook of
  * Applied Cryptography", pages 344 - 347.
  */
-abstract class GeneralDigest implements ExtendedDigest {
-
-  static const _BYTE_LENGTH = 64;
+abstract class GeneralDigest implements Digest {
 
   Uint8List _xBuf;
   int _xBufOff;
@@ -20,29 +22,6 @@ abstract class GeneralDigest implements ExtendedDigest {
     _xBuf = new Uint8List(4);
     _xBufOff = 0;
   }
-
-  /*
-  /**
-   * Copy constructor.  We are using copy constructors in place
-   * of the Object.clone() interface as this interface is not
-   * supported by J2ME.
-   */
-  protected GeneralDigest(GeneralDigest t)
-  {
-    xBuf = new byte[t.xBuf.length];
-
-    _copyIn(t);
-  }
-
-  void _copyIn(GeneralDigest t) {
-    _xBuf.setAll( 0, t._xBuf );
-
-    _xBufOff = t._xBufOff;
-    _byteCount = t._byteCount;
-  }
-  */
-
-  int get byteLength => _BYTE_LENGTH;
 
   void reset() {
     _byteCount = 0;

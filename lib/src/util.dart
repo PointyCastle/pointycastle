@@ -1,4 +1,8 @@
-library cipher_util;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+library cipher.src.util;
 
 import "dart:typed_data";
 
@@ -13,8 +17,8 @@ int toUint32( int n ) => n & 0xFFFFFFFF;
 int lsl( int n, int shift ) => toUint32(n << shift);
 
 /**
- * Compute 32-bit logical shift right of a value. This emulates the JavaScript
- * >>> operator. Source: https://code.google.com/p/dart/issues/detail?id=1169
+ * Compute 32-bit logical shift right of a value. (Source taken from: 
+ * [https://code.google.com/p/dart/issues/detail?id=1169])
  */
 int lsr( int n, int shift ) {
   if( shift<0 ) {

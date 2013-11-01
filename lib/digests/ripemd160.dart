@@ -1,4 +1,8 @@
-library cipher_digests_ripemd160;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+library cipher.digests.ripemd160;
 
 import "dart:typed_data";
 
@@ -13,7 +17,7 @@ part "../src/digests/ripemd160/functions.dart";
 // http://homes.esat.kuleuven.be/~bosselae/ripemd160.html (description)
 // http://homes.esat.kuleuven.be/~bosselae/ripemd/rmd160.txt (pseudocode)
 
-class RIPEMD160Digest extends GeneralDigest implements ExtendedDigest {
+class RIPEMD160Digest extends GeneralDigest implements Digest {
 
   static const _DIGEST_LENGTH = 20;
 

@@ -1,9 +1,13 @@
-library cipher_cmd_benchmark;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+library cipher.bin.src.benchmark;
 
 import "dart:typed_data";
 import "dart:mirrors";
 
-import "package:cipher/all.dart";
+import "package:cipher/cipher.dart";
 
 import '../util.dart';
 

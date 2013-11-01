@@ -1,4 +1,8 @@
-part of cipher_engines_aes_fast;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+part of cipher.engines.aes_fast;
 
 /**
  * A 2D matrix of words of 32 bits stored in big endian (natural binary order).

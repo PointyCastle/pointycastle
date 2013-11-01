@@ -1,4 +1,8 @@
-library salsa20_test;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+library cipher.test.engines.salsa20_test;
 
 import "package:cipher/engines/salsa20.dart";
 import "package:cipher/params/key_parameter.dart";

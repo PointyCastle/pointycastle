@@ -1,6 +1,10 @@
-library null_test;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
 
-import "package:cipher/engines/null.dart";
+library cipher.test.engines.null_cipher_test;
+
+import "package:cipher/engines/null_cipher.dart";
 
 import "../test/helpers.dart";
 import "../test/block_cipher_tests.dart";

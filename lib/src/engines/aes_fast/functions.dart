@@ -1,4 +1,8 @@
-part of cipher_engines_aes_fast;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+part of cipher.engines.aes_fast;
 
 int _shift(int r, int shift) {
   return lsr( r, shift ) | (r << 32-shift);
@@ -10,7 +14,7 @@ const int _m1 = 0x80808080;
 const int _m2 = 0x7f7f7f7f;
 const int _m3 = 0x0000001b;
 
-int FFmulX(int x) {
+int _FFmulX(int x) {
   return (((x & _m2) << 1) ^ lsr((x & _m1) , 7) * _m3);
 }
 
@@ -25,9 +29,9 @@ private int FFmulX(int x) { int u = x & m1; return ((x & m2) << 1) ^ ((u - (u >>
 */
 
 int _inv_mcol(int x) {
-  int f2 = FFmulX(x);
-  int f4 = FFmulX(f2);
-  int f8 = FFmulX(f4);
+  int f2 = _FFmulX(x);
+  int f4 = _FFmulX(f2);
+  int f8 = _FFmulX(f4);
   int f9 = x ^ f8;
   
   return f2 ^ f4 ^ f8 ^ _shift(f2 ^ f9, 8) ^ _shift(f4 ^ f9, 16) ^ _shift(f9, 24);

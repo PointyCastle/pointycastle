@@ -1,4 +1,8 @@
-part of cipher_digests_ripemd160;
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
+// Use of this source code is governed by a LGPL v3 license. 
+// See the LICENSE file for more information.
+
+part of cipher.digests.ripemd160;
 
 /** Cyclic logical shift left for 32 bit signed integers */
 Int32 _clsl( Int32 x, int n ) {
