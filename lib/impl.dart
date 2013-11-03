@@ -28,17 +28,17 @@ import "package:cipher/modes/sic.dart";
 void initCipher() {
   
   // Register block ciphers
-  BlockCipher.register( "AES", () => new AESFastEngine() );
-  BlockCipher.register( "Null", () => new NullBlockCipher() );
+  BlockCipher.registry["AES"] = () => new AESFastEngine();
+  BlockCipher.registry["Null"] = () => new NullBlockCipher();
 
   // Register chaining block ciphers
-  ChainingBlockCipher.register( "SIC", (underlyingCipher) => new SICBlockCipher(underlyingCipher) );
-  ChainingBlockCipher.register( "CTR", (underlyingCipher) => new SICBlockCipher(underlyingCipher) );
+  ChainingBlockCipher.registry["SIC"] = (underlyingCipher) => new SICBlockCipher(underlyingCipher);
+  ChainingBlockCipher.registry["CTR"] = (underlyingCipher) => new SICBlockCipher(underlyingCipher);
   
   // Register stream ciphers
-  StreamCipher.register( "Salsa20", () => new Salsa20Engine() );
+  StreamCipher.registry["Salsa20"] = () => new Salsa20Engine();
   
   // Register digests
-  Digest.register( "RIPEMD-160", () => new RIPEMD160Digest() );
+  Digest.registry["RIPEMD-160"] = () => new RIPEMD160Digest();
   
 }

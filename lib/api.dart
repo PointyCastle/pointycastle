@@ -13,26 +13,22 @@ library cipher.api;
 
 import "dart:typed_data";
 
-part "./src/factories.dart";
+part "./src/registry.dart";
 
 /// All cipher initialization parameters classes implement this.
 abstract class CipherParameters {
 }
 
-/// Factory function to create [BlockCipher]s. 
-typedef BlockCipher BlockCipherFactory();
-
 /// Block cipher engines are expected to conform to this interface. 
 abstract class BlockCipher {
   
-  /// Register an algorithm by its standard name.
-  static void register( String algorithmName, BlockCipherFactory creator ) 
-    => _registerBlockCipher(algorithmName,creator);
+  /// The [Registry] for [BlockCipher] algorithms
+  static final registry = new Registry<BlockCipher,BlockCipherFactory>();
 
   /// Create the cipher specified by the standard [algorithmName]. 
   factory BlockCipher( String algorithmName ) 
-    => _createBlockCipher(algorithmName);
-  
+    => registry[algorithmName]();
+
   /// Get this cipher's standard algorithm name.
   String get algorithmName;
   
@@ -65,9 +61,6 @@ abstract class BlockCipher {
 
 }
 
-/// Factory function to create [ChainingBlockCipher]s. 
-typedef ChainingBlockCipher ChainingBlockCipherFactory(BlockCipher underlyingCipher);
-
 /** 
  * Chaining block cipher are expected to conform to this interface.
  * 
@@ -78,36 +71,31 @@ typedef ChainingBlockCipher ChainingBlockCipherFactory(BlockCipher underlyingCip
  * as described in [http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation].
  */
 abstract class ChainingBlockCipher implements BlockCipher {
-  
-  /// Register an algorithm by its standard name.
-  static void register( String algorithmName, ChainingBlockCipherFactory creator ) 
-    => _registerChainingBlockCipher(algorithmName,creator);
+
+  /// The [Registry] for [ChainingBlockCipher] algorithms
+  static final registry = new Registry<ChainingBlockCipher,ChainingBlockCipherFactory>();
 
   /**
    *  Create the cipher specified by the standard [algorithmName] using the
    *  provided [underlyingCipher]. 
    */
   factory ChainingBlockCipher( String algorithmName, BlockCipher underlyingCipher ) 
-    => _createChainingBlockCipher(algorithmName,underlyingCipher);
-
+    => registry[algorithmName]( underlyingCipher );
+        
   /// Get the underlying [BlockCipher] wrapped by this cipher.
   BlockCipher get underlyingCipher;
 
 }
 
-/// Factory function to create [StreamCipher]s. 
-typedef StreamCipher StreamCipherFactory();
-
 /// The interface stream ciphers conform to. 
 abstract class StreamCipher {
 
-  /// Register an algorithm by its standard name.
-  static void register( String algorithmName, StreamCipherFactory creator ) 
-    => _registerStreamCipher(algorithmName,creator);
+  /// The [Registry] for [StreamCipher] algorithms
+  static final registry = new Registry<StreamCipher,StreamCipherFactory>();
 
   /// Create the cipher specified by the standard [algorithmName]. 
-  factory StreamCipher( String algorithmName ) 
-    => _createStreamCipher(algorithmName);
+  factory StreamCipher( String algorithmName )
+    => registry[algorithmName]();
 
   /// Get this cipher's standard algorithm name.
   String get algorithmName;
@@ -136,19 +124,15 @@ abstract class StreamCipher {
 
 }
 
-/// Factory function to create [Digest]s. 
-typedef Digest DigestFactory();
-
 /// The interface that a message digest conforms to.
 abstract class Digest {
 
-  /// Register an algorithm by its standard name.
-  static void register( String algorithmName, DigestFactory creator ) 
-    => _registerDigest(algorithmName,creator);
+  /// The [Registry] for [Digest] algorithms
+  static final registry = new Registry<Digest,DigestFactory>();
 
   /// Create the digest specified by the standard [algorithmName].
-  factory Digest( String algorithmName ) 
-    => _createDigest(algorithmName);
+  factory Digest( String algorithmName )
+    => registry[algorithmName]();
 
   /// Get this digest's standard algorithm name.
   String get algorithmName;
