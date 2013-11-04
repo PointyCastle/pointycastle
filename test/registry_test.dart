@@ -39,5 +39,11 @@ void main() {
 
   });
 
+  test( "Padding returns valid implementations", () {
+    
+    expect( new Padding("PKCS7"), new isInstanceOf<Padding>("Padding") );
+
+  });
+
 }
 

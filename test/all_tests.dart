@@ -4,7 +4,7 @@
 
 library cpiher.test.all_tests;
 
-import "./factories_test.dart" as factories;
+import "./registry_test.dart" as factories;
 
 import "./digests/ripemd160_test.dart" as ripemd160;
 
@@ -14,6 +14,8 @@ import "./engines/salsa20_test.dart" as salsa20;
 
 import "./modes/sic_test.dart" as sic;
 import "./modes/cbc_test.dart" as cbc;
+
+import "./paddings/pkcs7_test.dart" as pkcs7;
 
 import "./src/util_test.dart" as util;
 
@@ -33,6 +35,9 @@ void main() {
   // modes
   sic.main();
   cbc.main();
+  
+  // paddings
+  pkcs7.main();
   
   // src
   util.main();

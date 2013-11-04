@@ -21,6 +21,8 @@ import "package:cipher/engines/null_cipher.dart";
 
 import "package:cipher/modes/sic.dart";
 
+import "package:cipher/paddings/pkcs7.dart";
+
 /**
  *  This is the initializer method for this library. It must be called prior 
  *  to use any of the implementations.
@@ -40,5 +42,8 @@ void initCipher() {
   
   // Register digests
   Digest.registry["RIPEMD-160"] = () => new RIPEMD160Digest();
+  
+  // Register paddings
+  Padding.registry["PKCS7"] = () => new PKCS7Padding();
   
 }
