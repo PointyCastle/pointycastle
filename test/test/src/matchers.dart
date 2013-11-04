@@ -2,11 +2,6 @@
 // Use of this source code is governed by a LGPL v3 license. 
 // See the LICENSE file for more information.
 
-library cipher.test.test.helpers;
+part of cipher.test.test.helpers;
 
-import "dart:typed_data";
-
-part "src/format.dart";
-part "src/data.dart";
-part "src/matchers.dart";
 

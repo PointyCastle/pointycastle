@@ -68,7 +68,7 @@ void _runStreamCipherTest( StreamCipher cipher, CipherParameters params, String 
   var plainText = createUint8ListFromString( plainTextString );
 
   _resetCipher( cipher, true, params );
-  var cipherText = processStream( cipher, plainText );
+  var cipherText = _processStream( cipher, plainText );
   var hexCipherText = formatBytesAsHexString(cipherText);
 
   expect( hexCipherText, equals(expectedHexCipherText) );
@@ -78,7 +78,7 @@ void _runStreamDecipherTest( StreamCipher cipher, CipherParameters params, Strin
   var cipherText = createUint8ListFromHexString(hexCipherText);
 
   _resetCipher( cipher, false, params );
-  var plainText = processStream( cipher, cipherText );
+  var plainText = _processStream( cipher, cipherText );
 
   expect( new String.fromCharCodes(plainText), equals(expectedPlainText) );
 }
@@ -86,12 +86,17 @@ void _runStreamDecipherTest( StreamCipher cipher, CipherParameters params, Strin
 void _runStreamCipherDecipherTest( StreamCipher cipher, CipherParameters params, Uint8List plainText ) {
 
   _resetCipher( cipher, true, params );
-  var cipherText = processStream( cipher, plainText );
+  var cipherText = _processStream( cipher, plainText );
 
   _resetCipher( cipher, false, params );
-  var plainTextAgain = processStream( cipher, cipherText );
+  var plainTextAgain = _processStream( cipher, cipherText );
 
   expect( plainTextAgain, equals(plainText) );
   
 }
 
+Uint8List _processStream( StreamCipher cipher, Uint8List inp ) {
+  var out = new Uint8List(inp.lengthInBytes);
+  cipher.processBytes(inp, 0, inp.length, out, 0);
+  return out;
+}

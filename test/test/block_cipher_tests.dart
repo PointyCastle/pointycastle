@@ -68,7 +68,7 @@ void _runBlockCipherTest( BlockCipher cipher, CipherParameters params, String pl
   var plainText = createUint8ListFromString( plainTextString );
 
   _resetCipher( cipher, true, params );
-  var cipherText = processBlocks( cipher, plainText );
+  var cipherText = _processBlocks( cipher, plainText );
   var hexCipherText = formatBytesAsHexString(cipherText);
 
   expect( hexCipherText, equals(expectedHexCipherText) );
@@ -78,7 +78,7 @@ void _runBlockDecipherTest( BlockCipher cipher, CipherParameters params, String 
   var cipherText = createUint8ListFromHexString(hexCipherText);
 
   _resetCipher( cipher, false, params );
-  var plainText = processBlocks( cipher, cipherText );
+  var plainText = _processBlocks( cipher, cipherText );
 
   expect( new String.fromCharCodes(plainText), equals(expectedPlainText) );
 }
@@ -86,12 +86,20 @@ void _runBlockDecipherTest( BlockCipher cipher, CipherParameters params, String 
 void _runBlockCipherDecipherTest( BlockCipher cipher, CipherParameters params, Uint8List plainText ) {
 
   _resetCipher( cipher, true, params );
-  var cipherText = processBlocks( cipher, plainText );
+  var cipherText = _processBlocks( cipher, plainText );
 
   _resetCipher( cipher, false, params );
-  var plainTextAgain = processBlocks( cipher, cipherText );
+  var plainTextAgain = _processBlocks( cipher, cipherText );
 
   expect( plainTextAgain, equals(plainText) );
   
+}
+
+Uint8List _processBlocks( BlockCipher cipher, Uint8List inp ) {
+  var out = new Uint8List(inp.lengthInBytes);
+  for( var offset=0 ; offset<inp.lengthInBytes ; offset+=cipher.blockSize ) {
+    cipher.processBlock( inp, offset, out, offset );
+  }
+  return out;
 }
 
