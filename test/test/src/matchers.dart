@@ -4,4 +4,25 @@
 
 part of cipher.test.test.helpers;
 
+const isAllZeros = const _IsAllZeros();
+
+class _IsAllZeros extends Matcher {
+  
+  const _IsAllZeros();
+  
+  bool matches( Iterable<int> item, Map matchState ) {
+    for( var i in item ) {
+      if( i!=0 ) return false;
+    }
+    return true;
+  }
+
+  Description describe( Description description ) =>
+      description.add( 'is all zeros' );
+
+  Description describeMismatch( item, Description mismatchDescription,
+                                 Map matchState, bool verbose ) 
+    => mismatchDescription.add( "is not all zeros" );
+  
+}
 

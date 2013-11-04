@@ -6,6 +6,8 @@ library cipher.test.test.helpers;
 
 import "dart:typed_data";
 
+import "package:unittest/unittest.dart";
+
 part "src/format.dart";
 part "src/data.dart";
 part "src/matchers.dart";

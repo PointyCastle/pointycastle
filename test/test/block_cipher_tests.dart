@@ -97,9 +97,17 @@ void _runBlockCipherDecipherTest( BlockCipher cipher, CipherParameters params, U
 
 Uint8List _processBlocks( BlockCipher cipher, Uint8List inp ) {
   var out = new Uint8List(inp.lengthInBytes);
-  for( var offset=0 ; offset<inp.lengthInBytes ; offset+=cipher.blockSize ) {
-    cipher.processBlock( inp, offset, out, offset );
+  for( var offset=0 ; offset<inp.lengthInBytes ; ) {
+    var len = cipher.processBlock( inp, offset, out, offset );
+    offset += len;
+    _assertRemainingBufferIsZero(out, offset);
   }
   return out;
+}
+
+void _assertRemainingBufferIsZero( Uint8List out, int offset ) {
+  if( offset<out.lengthInBytes ) {
+    expect( out.sublist(offset), isAllZeros );
+  }
 }
 
