@@ -23,11 +23,10 @@ abstract class CipherParameters {
 abstract class BlockCipher {
   
   /// The [Registry] for [BlockCipher] algorithms
-  static final registry = new Registry<BlockCipher,BlockCipherFactory>();
+  static final registry = new Registry<BlockCipher>();
 
   /// Create the cipher specified by the standard [algorithmName]. 
-  factory BlockCipher( String algorithmName ) 
-    => registry[algorithmName]();
+  factory BlockCipher( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this cipher's standard algorithm name.
   String get algorithmName;
@@ -73,15 +72,16 @@ abstract class BlockCipher {
 abstract class ChainingBlockCipher implements BlockCipher {
 
   /// The [Registry] for [ChainingBlockCipher] algorithms
-  static final registry = new Registry<ChainingBlockCipher,ChainingBlockCipherFactory>();
+  static final registry = new Registry<ChainingBlockCipher>();
 
   /**
-   *  Create the cipher specified by the standard [algorithmName] using the
-   *  provided [underlyingCipher]. 
+   * Create the chaining block cipher specified by the standard [algorithmName].
+   * 
+   * Standard algorithms can be chained using / as a separator. For example: you
+   * can ask for "AES/CBC". 
    */
-  factory ChainingBlockCipher( String algorithmName, BlockCipher underlyingCipher ) 
-    => registry[algorithmName]( underlyingCipher );
-        
+  factory ChainingBlockCipher( String algorithmName ) => registry.create(algorithmName);
+  
   /// Get the underlying [BlockCipher] wrapped by this cipher.
   BlockCipher get underlyingCipher;
 
@@ -91,11 +91,10 @@ abstract class ChainingBlockCipher implements BlockCipher {
 abstract class StreamCipher {
 
   /// The [Registry] for [StreamCipher] algorithms
-  static final registry = new Registry<StreamCipher,StreamCipherFactory>();
+  static final registry = new Registry<StreamCipher>();
 
   /// Create the cipher specified by the standard [algorithmName]. 
-  factory StreamCipher( String algorithmName )
-    => registry[algorithmName]();
+  factory StreamCipher( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this cipher's standard algorithm name.
   String get algorithmName;
@@ -128,11 +127,10 @@ abstract class StreamCipher {
 abstract class Digest {
 
   /// The [Registry] for [Digest] algorithms
-  static final registry = new Registry<Digest,DigestFactory>();
+  static final registry = new Registry<Digest>();
 
   /// Create the digest specified by the standard [algorithmName].
-  factory Digest( String algorithmName )
-    => registry[algorithmName]();
+  factory Digest( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this digest's standard algorithm name.
   String get algorithmName;
@@ -164,11 +162,10 @@ abstract class Digest {
 abstract class Padding {
 
   /// The [Registry] for [Padding] algorithms
-  static final registry = new Registry<Padding,PaddingFactory>();
+  static final registry = new Registry<Padding>();
 
   /// Create the digest specified by the standard [algorithmName].
-  factory Padding( String algorithmName )
-    => registry[algorithmName]();
+  factory Padding( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this padding's standard algorithm name.
   String get algorithmName;

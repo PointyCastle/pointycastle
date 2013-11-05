@@ -20,7 +20,9 @@ import "package:cipher/engines/salsa20.dart";
 import "package:cipher/engines/null_cipher.dart";
 
 import "package:cipher/modes/sic.dart";
+import "package:cipher/modes/cbc.dart";
 
+import "package:cipher/paddings/padded_block_cipher.dart";
 import "package:cipher/paddings/pkcs7.dart";
 
 /**
@@ -30,20 +32,65 @@ import "package:cipher/paddings/pkcs7.dart";
 void initCipher() {
   
   // Register block ciphers
-  BlockCipher.registry["AES"] = () => new AESFastEngine();
-  BlockCipher.registry["Null"] = () => new NullBlockCipher();
+  BlockCipher.registry["AES"] = (_) => new AESFastEngine();
+  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
   // Register chaining block ciphers
-  ChainingBlockCipher.registry["SIC"] = (underlyingCipher) => new SICBlockCipher(underlyingCipher);
-  ChainingBlockCipher.registry["CTR"] = (underlyingCipher) => new SICBlockCipher(underlyingCipher);
+  ChainingBlockCipher.registry.registerDynamicFactory( (String algorithmName) {
+    var parts = algorithmName.split("/");
+    
+    if( parts.length!=2 ) return null;
+
+    var underlyingCipher = _createOrNull( () => 
+        new BlockCipher(parts[0]) 
+    );
+    
+    switch( parts[1] ) {
+      
+      case "SIC":
+      case "CTR":
+        return new SICBlockCipher(underlyingCipher);
+        
+      case "CBC":
+        return new CBCBlockCipher(underlyingCipher);
+        
+      default: 
+        return null;
+    }
+    
+  });
   
   // Register stream ciphers
-  StreamCipher.registry["Salsa20"] = () => new Salsa20Engine();
+  StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
   
   // Register digests
-  Digest.registry["RIPEMD-160"] = () => new RIPEMD160Digest();
+  Digest.registry["RIPEMD-160"] = (_) => new RIPEMD160Digest();
   
   // Register paddings
-  Padding.registry["PKCS7"] = () => new PKCS7Padding();
+  Padding.registry["PKCS7"] = (_) => new PKCS7Padding();
   
+  // Register PaddedBlockCipher
+  PaddedBlockCipher.registry.registerDynamicFactory( (String algorithmName) {
+    var lastSepIndex = algorithmName.lastIndexOf("/");
+
+    if( lastSepIndex==-1 ) return null;
+      
+    var padding = _createOrNull( () =>
+      new Padding(algorithmName.substring(lastSepIndex+1))
+    );
+    var underlyingCipher = _createOrNull( () => 
+      new ChainingBlockCipher(algorithmName.substring(0,lastSepIndex)) 
+    );
+    
+    return new PaddedBlockCipherImpl(padding, underlyingCipher);
+  });
+  
+}
+
+dynamic _createOrNull( closure() ) {
+  try {
+   return closure();
+  } on ArgumentError catch( e ) {
+    return null;
+  }
 }

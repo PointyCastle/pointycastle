@@ -4,41 +4,51 @@
 
 part of cipher.api;
 
-/// A registry holds the factories indexed by algorithm names.
-class Registry<Algorithm,AlgorithmFactory> {
+/// A registry holds the map of factories indexed by algorithm names.
+class Registry<Algorithm> {
   
-  final _factories = new Map<String,AlgorithmFactory>();
+  final _staticFactories = new Map<String,Function>();
+  final _dynamicFactories = new List<Function>();
   
-  /// Shorthand for [put] method
-  operator []=( String algorithName, AlgorithmFactory creator ) 
-    => put(algorithName,creator);
+  /// Shorthand for [registerStaticFactory]
+  operator []= (String algorithmName, Algorithm factory(String) )
+    => registerStaticFactory(algorithmName, factory);
   
-  /// Shorthand for [get] method
-  AlgorithmFactory operator []( String algorithmName ) 
-    => get(algorithmName);
-  
-  /// Register an algorithm by its standard name. 
-  void put( String algorithmName, AlgorithmFactory creator ) {
-    _factories[algorithmName] = creator;
-  }
-  
-  /// Get the factory for algorithm with name [algorithName]
-  AlgorithmFactory get( String algorithmName ) {
-    var factory = _factories[algorithmName];
-    if( factory==null ) {
-      throw new UnsupportedError("No algorithm with that name registered: ${algorithmName}");
-    } else {
-      return factory;
-    }
+  /// Register an algorithm by its name. 
+  void registerStaticFactory( String algorithmName, Algorithm factory(String) ) {
+    _staticFactories[algorithmName] = factory;
   }
 
+  /// Register an algorithm by its name. 
+  void registerDynamicFactory( Algorithm factory(String) ) {
+    _dynamicFactories.add(factory);
+  }
+  
+  /// Create an algorithm given its name
+  Algorithm create( String algorithmName ) {
+    var factory = _staticFactories[algorithmName];
+    if( factory!=null ) {
+      return factory(algorithmName);
+    } else {
+      for( factory in _dynamicFactories ) {
+        var algorithm = factory(algorithmName);
+        if( algorithm!=null ) {
+          return algorithm;
+        }
+      }
+    }
+    throw new UnsupportedError("No algorithm with that name registered: ${algorithmName}");
+  }
+  
 }
 
+
+/*
 /// Factory function to create [BlockCipher]s. 
 typedef BlockCipher BlockCipherFactory();
 
 /// Factory function to create [ChainingBlockCipher]s. 
-typedef ChainingBlockCipher ChainingBlockCipherFactory(BlockCipher underlyingCipher);
+typedef ChainingBlockCipher ChainingBlockCipherFactory( BlockCipher underlyingCipher );
 
 /// Factory function to create [StreamCipher]s. 
 typedef StreamCipher StreamCipherFactory();
@@ -49,3 +59,6 @@ typedef Digest DigestFactory();
 /// Factory function to create [Padding]s. 
 typedef Padding PaddingFactory();
 
+/// Factory function to create [PaddedBlockCipher]s. 
+typedef PaddedBlockCipher PaddedBlockCipherFactory( BlockCipher underlyingCipher );
+*/
