@@ -4,42 +4,41 @@
 
 library cpiher.test.all_tests;
 
-import "./registry_test.dart" as factories;
+import "./digests/ripemd160_test.dart" as ripemd160_test;
 
-import "./digests/ripemd160_test.dart" as ripemd160;
+import "./engines/aes_fast_test.dart" as aes_fast_test;
+import "./engines/null_cipher_test.dart" as null_cipher_test;
+import "./engines/salsa20_test.dart" as salsa20_test;
 
-import "./engines/aes_fast_test.dart" as aes_fast;
-import "./engines/null_cipher_test.dart" as null_cipher;
-import "./engines/salsa20_test.dart" as salsa20;
+import "./modes/sic_test.dart" as sic_test;
+import "./modes/cbc_test.dart" as cbc_test;
 
-import "./modes/sic_test.dart" as sic;
-import "./modes/cbc_test.dart" as cbc;
+import "./paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
+import "./paddings/pkcs7_test.dart" as pkcs7_test;
 
-import "./paddings/pkcs7_test.dart" as pkcs7;
-
-import "./src/util_test.dart" as util;
+import "./src/registry_test.dart" as registry_test;
+import "./src/util_test.dart" as util_test;
 
 void main() {
   
-  // generic
-  factories.main();
-
   // digests
-  ripemd160.main();
+  ripemd160_test.main();
   
   // engines
-  aes_fast.main();
-  null_cipher.main();
-  salsa20.main();
+  aes_fast_test.main();
+  null_cipher_test.main();
+  salsa20_test.main();
   
   // modes
-  sic.main();
-  cbc.main();
+  sic_test.main();
+  cbc_test.main();
   
   // paddings
-  pkcs7.main();
+  padded_block_cipher_test.main();
+  pkcs7_test.main();
   
   // src
-  util.main();
+  registry_test.main();
+  util_test.main();
 
 }

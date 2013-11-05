@@ -17,7 +17,7 @@ void runPaddingTest( Padding pad, CipherParameters params,
   
   group( "${pad.algorithmName}:", () {
 
-    test( "addPadding()", () { 
+    test( "addPadding: $unpadData", () { 
       
       var expectedBytes = createUint8ListFromHexString( padData );
       var dataBytes = new Uint8List( padLength )
@@ -32,7 +32,7 @@ void runPaddingTest( Padding pad, CipherParameters params,
 
     });
 
-    test( "padCount()", () { 
+    test( "padCount: $padData", () { 
       
       var dataBytes = createUint8ListFromHexString( padData );
 

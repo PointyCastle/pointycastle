@@ -189,3 +189,39 @@ abstract class Padding {
   int padCount( Uint8List data );
   
 }
+
+/**
+ * All padded block ciphers conform to this interface. 
+ * 
+ * A padded block cipher is a wrapper around a [BlockCipher] or a 
+ * [ChainingBlockCipher] that allows padding the last procesed block if it is 
+ * smaller than the [blockSize].
+ */
+abstract class PaddedBlockCipher implements ChainingBlockCipher {
+
+  /// The [Registry] for [PaddedBlockCipher] algorithms
+  static final registry = new Registry<PaddedBlockCipher>();
+
+  /**
+   * Create the padded block cipher specified by the standard [algorithmName].
+   * 
+   * Standard algorithms can be chained using / as a separator. For example: you
+   * can ask for "AES/CBC/PKCS7". 
+   */
+  factory PaddedBlockCipher( String algorithmName ) => registry.create(algorithmName);
+  
+  /// Get the underlying [Padding] used by this cipher.
+  Padding get padding;
+
+  /**
+   * Process the last block of data given by [inp] and starting at offset
+   * [inpOff] and pad it if necessary (i.e: if it is smaller than [blockSize]). 
+   * 
+   * The resulting cipher text is put in [out] beginning at position [outOff].
+   * 
+   * This method returns the total bytes processed (which is the same as the 
+   * block size of the algorithm).
+   */
+  int doFinal( Uint8List inp, int inpOff, Uint8List out, int outOff );
+
+}
