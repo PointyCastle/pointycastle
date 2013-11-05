@@ -32,7 +32,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     reset();
   }
 
-  String get algorithmName => "RIPEMD160";
+  String get algorithmName => "RIPEMD-160";
   int get digestSize => _DIGEST_LENGTH;
 
   void reset() {
