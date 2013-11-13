@@ -13,11 +13,13 @@ library cipher.impl;
 
 import "package:cipher/api.dart";
 
+import "package:cipher/adapters/stream_cipher_adapters.dart";
+
 import "package:cipher/digests/ripemd160.dart";
 
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/engines/salsa20.dart";
-import "package:cipher/engines/null_cipher.dart";
+import "package:cipher/engines/null_block_cipher.dart";
 
 import "package:cipher/modes/sic.dart";
 import "package:cipher/modes/cbc.dart";
@@ -30,61 +32,109 @@ import "package:cipher/paddings/pkcs7.dart";
  *  to use any of the implementations.
  */
 void initCipher() {
-  
-  // Register block ciphers
+  _registerBlockCiphers();
+  _registerChainingBlockCiphers();
+  _registerStreamCiphers();
+  _registerDigests();
+  _registerPaddings();
+  _registerPaddedBlockCiphers();
+}
+
+void _registerBlockCiphers() {
   BlockCipher.registry["AES"] = (_) => new AESFastEngine();
   BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
+}
 
-  // Register chaining block ciphers
-  ChainingBlockCipher.registry.registerDynamicFactory( (String algorithmName) {
+void _registerChainingBlockCiphers() {
+  ChainingBlockCipher.registry.registerDynamicFactory( ( String algorithmName ) {
     var parts = algorithmName.split("/");
-    
+
     if( parts.length!=2 ) return null;
 
-    var underlyingCipher = _createOrNull( () => 
-        new BlockCipher(parts[0]) 
+    var underlyingCipher = _createOrNull( () =>
+        new BlockCipher(parts[0])
     );
-    
-    switch( parts[1] ) {
-      
-      case "SIC":
-      case "CTR":
-        return new SICBlockCipher(underlyingCipher);
-        
-      case "CBC":
-        return new CBCBlockCipher(underlyingCipher);
-        
-      default: 
-        return null;
+
+    if( underlyingCipher!=null ) {
+      switch( parts[1] ) {
+
+        case "SIC":
+          return new StreamCipherAsChainingBlockCipher(
+              underlyingCipher.blockSize,
+              new SICStreamCipher(underlyingCipher),
+              underlyingCipher
+          );
+
+        case "CTR":
+          return new StreamCipherAsChainingBlockCipher(
+              underlyingCipher.blockSize,
+              new CTRStreamCipher(underlyingCipher),
+              underlyingCipher
+          );
+
+        case "CBC":
+          return new CBCBlockCipher( underlyingCipher );
+
+        default:
+          return null;
+      }
     }
-    
+
   });
-  
-  // Register stream ciphers
+}
+
+void _registerStreamCiphers() {
   StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
-  
-  // Register digests
+  StreamCipher.registry.registerDynamicFactory( ( String algorithmName ) {
+    var parts = algorithmName.split("/");
+
+    if( parts.length!=2 ) return null;
+    if( parts[1]!="SIC" && parts[1]!="CTR" ) return null;
+
+    var underlyingCipher = _createOrNull( () =>
+        new BlockCipher(parts[0])
+    );
+
+    if( underlyingCipher!=null ) {
+      switch( parts[1] ) {
+
+        case "SIC":
+          return new SICStreamCipher( underlyingCipher );
+
+        case "CTR":
+          return new CTRStreamCipher( underlyingCipher );
+
+        default:
+          return null;
+      }
+    }
+
+  });
+}
+
+void _registerDigests() {
   Digest.registry["RIPEMD-160"] = (_) => new RIPEMD160Digest();
-  
-  // Register paddings
+}
+
+void _registerPaddings() {
   Padding.registry["PKCS7"] = (_) => new PKCS7Padding();
-  
-  // Register PaddedBlockCipher
+}
+
+void _registerPaddedBlockCiphers() {
   PaddedBlockCipher.registry.registerDynamicFactory( (String algorithmName) {
     var lastSepIndex = algorithmName.lastIndexOf("/");
 
     if( lastSepIndex==-1 ) return null;
-      
+
     var padding = _createOrNull( () =>
       new Padding(algorithmName.substring(lastSepIndex+1))
     );
-    var underlyingCipher = _createOrNull( () => 
-      new ChainingBlockCipher(algorithmName.substring(0,lastSepIndex)) 
+    var underlyingCipher = _createOrNull( () =>
+      new ChainingBlockCipher(algorithmName.substring(0,lastSepIndex))
     );
-    
+
     return new PaddedBlockCipherImpl(padding, underlyingCipher);
   });
-  
 }
 
 dynamic _createOrNull( closure() ) {

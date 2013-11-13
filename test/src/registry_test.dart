@@ -22,6 +22,7 @@ void main() {
   test( "ChainingBlockCipher returns valid implementations", () {
 
     _testChainingBlockCipher( "Null/SIC" );
+    _testChainingBlockCipher( "Null/CTR" );
     _testChainingBlockCipher( "Null/CBC" );
     
   });
@@ -29,6 +30,8 @@ void main() {
   test( "StreamCipher returns valid implementations", () {
     
     _testStreamCipher( "Salsa20" );
+    _testStreamCipher( "Null/SIC" );
+    _testStreamCipher( "Null/CTR" );
 
   });
 

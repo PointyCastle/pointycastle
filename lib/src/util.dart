@@ -6,14 +6,13 @@ library cipher.src.util;
 
 import "dart:typed_data";
 
-/**
- * Convert an arbitrary length int to a 32 bit word.
- */
+/// Convert an arbitrary length int to a 32 bit word.
 int toUint32( int n ) => n & 0xFFFFFFFF;
 
-/**
- * Compute 32-bit logical shift left of a value.
- */
+/// Convert an arbitrary length int to a 32 bit word.
+int toByte( int n ) => n & 0xFF;
+
+/// Compute 32-bit logical shift left of a value.
 int lsl( int n, int shift ) => toUint32(n << shift);
 
 /**
@@ -34,15 +33,13 @@ int lsr( int n, int shift ) {
   }
 }
 
-/**
- * Compute 32-bit cyclic logical shift left of a value.
- */
+/// Compute 32-bit cyclic logical shift left of a value.
 int clsl( int x, int n ) {
   x = toUint32(x);
   return toUint32(x << n) | lsr( x, 32-n );
 }
 
-
+/// This class is copied from Bouncy Castle to ease the port process
 class Pack {
 
   static int littleEndianToInt( Uint8List bs, int off ) {

@@ -11,7 +11,7 @@ import "package:unittest/unittest.dart";
 import "package:cipher/paddings/padded_block_cipher.dart";
 import "package:cipher/params/padded_block_cipher_parameters.dart";
 import "package:cipher/paddings/pkcs7.dart";
-import "package:cipher/engines/null_cipher.dart";
+import "package:cipher/engines/null_block_cipher.dart";
 
 import "../test/helpers.dart";
 

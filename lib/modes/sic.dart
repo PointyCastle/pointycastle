@@ -8,55 +8,76 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_iv.dart";
+import "package:cipher/src/util.dart";
 
 /**
- * Implements the Segmented Integer Counter (SIC) mode on top of a simple
- * block cipher. This mode is also known as CTR mode.
- * 
- * TODO: test for limit exceeded condition as in Salsa20
- * 
+ * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher]
+ * is done using a [StreamCipherAsBlockCipher] adapter (see file
+ * [package:cipher/adapters/stream_cipher_adapters.dart])
  */
-class SICBlockCipher implements ChainingBlockCipher {
+
+/// Implementation of SIC mode of operation as a [StreamCipher]
+class SICStreamCipher implements StreamCipher {
 
   final BlockCipher underlyingCipher;
-  
+
   Uint8List _iv;
   Uint8List _counter;
   Uint8List _counterOut;
-  
-  SICBlockCipher(this.underlyingCipher) {
-    _iv = new Uint8List(blockSize);
-    _counter = new Uint8List(blockSize);
-    _counterOut = new Uint8List(blockSize);
+  int _consumed;
+
+  SICStreamCipher(this.underlyingCipher) {
+    _iv = new Uint8List(underlyingCipher.blockSize);
+    _counter = new Uint8List(underlyingCipher.blockSize);
+    _counterOut = new Uint8List(underlyingCipher.blockSize);
   }
 
   String get algorithmName => "${underlyingCipher.algorithmName}/SIC";
-  int get blockSize => underlyingCipher.blockSize;
 
   void reset() {
-    _copy(_iv,_counter);
     underlyingCipher.reset();
+    _counter.setAll( 0, _iv );
+    _counterOut.fillRange( 0, _counterOut.length, 0 );
+    _consumed = _counterOut.length;
   }
 
   void init(bool forEncryption, ParametersWithIV params) {
-    _copy( params.iv, _iv );
-
+    _iv.setAll( 0, params.iv );
     reset();
-
     underlyingCipher.init( true, params.parameters );
   }
 
-  int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
-    underlyingCipher.processBlock( _counter, 0, _counterOut, 0 );
-
-    //
-    // XOR the counterOut with the plaintext producing the cipher text
-    //
-    for( var i=0 ; i<_counterOut.lengthInBytes ; i++ ) {
-      out[outOff+i] = _counterOut[i] ^ inp[inpOff+i];
+  void processBytes(Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+    for( var i=0 ; i<len ; i++ ) {
+      out[outOff+i] = returnByte( inp[inpOff+i] );
     }
+  }
 
-    // increment counter by 1.
+  int returnByte(int inp) {
+    _feedCounterIfNeeded();
+    return toByte(inp) ^ _counterOut[_consumed++];
+  }
+
+  /// Calls [_feedCounter] if all [_counterOut] bytes have been consumed
+  void _feedCounterIfNeeded() {
+    if( _consumed>=_counterOut.length ) {
+      _feedCounter();
+    }
+  }
+
+  /**
+   * Fills [_counterOut] with a new value got from encrypting [_counter] with
+   * the [_underlyingCipher], resets [_consumed] to 0 and increments the
+   * [_counter].
+   */
+  void _feedCounter() {
+    underlyingCipher.processBlock( _counter, 0, _counterOut, 0 );
+    _incrementCounter();
+    _consumed = 0;
+  }
+
+  /// Increments [_counter] by 1
+  void _incrementCounter() {
     for( var i=_counter.lengthInBytes-1 ; i>=0 ; i-- )
     {
       var val = _counter[i];
@@ -64,26 +85,12 @@ class SICBlockCipher implements ChainingBlockCipher {
       _counter[i] = val;
       if( _counter[i]!=0 ) break;
     }
-    //_printCounter();
+  }
 
-    return _counter.lengthInBytes;
-  }
-  
-  void _copy( Uint8List source, Uint8List dest ) {
-    dest.setAll(0, source);
-  }
-  
-  /*
-  void _printCounter() {
-    var sb = new StringBuffer();
-    for( var i=0 ; i<_counter.length ; i++ ) {
-      var val = _counter[i];
-      if( val<16 ) {
-        sb.write("0");
-      } 
-      sb.write(val.toRadixString(16));
-    }
-    print(sb.toString());
-  }
-  */
+}
+
+/// Just an alias to be able to create SIC as CTR
+class CTRStreamCipher extends SICStreamCipher {
+  CTRStreamCipher(BlockCipher underlyingCipher) : super(underlyingCipher);
+  String get algorithmName => "${underlyingCipher.algorithmName}/CTR";
 }

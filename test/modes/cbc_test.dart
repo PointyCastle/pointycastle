@@ -6,7 +6,7 @@ library cipher.test.modes.cbc_test;
 
 import "dart:typed_data";
 
-import "package:cipher/engines/null_cipher.dart";
+import "package:cipher/engines/null_block_cipher.dart";
 import "package:cipher/modes/cbc.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
