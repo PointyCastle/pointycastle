@@ -4,8 +4,6 @@
 
 library cipher.bin.cipher;
 
-import "dart:io";
-
 import "package:cipher/cipher.dart";
 
 import "./src/util.dart";
@@ -20,10 +18,8 @@ final COMMANDS = {
   "decipher":  [ doDecipher,  helpDecipher,  "decipher data with a specific algorithm/scheme" ],
 };
 
-void main() {
-  final opts = new Options();
-  final args = opts.arguments;
-  
+void main( List<String> args ) {
+
   initCipher();
   
   if( args.length==0 ) {
