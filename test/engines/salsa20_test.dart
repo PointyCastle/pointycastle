@@ -10,7 +10,7 @@ import "package:cipher/engines/salsa20.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-import "../test/stream_ciphers_tests.dart";
+import "../test/stream_cipher_tests.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java

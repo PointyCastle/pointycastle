@@ -1,8 +1,8 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.test.stream_ciphers_tests;
+library cipher.test.test.stream_cipher_tests;
 
 import "dart:typed_data";
 
@@ -12,50 +12,50 @@ import "package:unittest/unittest.dart";
 
 import "./helpers.dart";
 
-void runStreamCipherTests( StreamCipher cipher, CipherParameters params, 
+void runStreamCipherTests( StreamCipher cipher, CipherParameters params,
                      List<String> plainCipherTextPairs ) {
-  
+
   group( "${cipher.algorithmName}:", () {
 
-    group( "cipher  :", () { 
-      
+    group( "cipher  :", () {
+
       for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-        
+
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i+1];
 
         test( "${formatAsTruncated(plainText)}", () =>
           _runStreamCipherTest( cipher, params, plainText, cipherText )
         );
-        
+
       }
     });
 
-    group( "decipher:", () { 
-      
+    group( "decipher:", () {
+
       for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-      
+
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i+1];
-        
+
         test( "${formatAsTruncated(plainText)}", () =>
           _runStreamDecipherTest( cipher, params, cipherText, plainText )
         );
-        
+
       }
     });
-  
+
     group( "ciph&dec:", () {
-      
-      var plainText = createUint8ListFromSequentialNumbers(1024);
-      test( "1KB of sequential bytes", () =>
+
+      var plainText = createUint8ListFromSequentialNumbers(1021);
+      test( "~1KB of sequential bytes", () =>
         _runStreamCipherDecipherTest(cipher, params, plainText )
       );
-      
+
     });
-  
+
   });
-  
+
 }
 
 void _resetCipher( StreamCipher cipher, bool forEncryption, CipherParameters params ) {
@@ -92,7 +92,7 @@ void _runStreamCipherDecipherTest( StreamCipher cipher, CipherParameters params,
   var plainTextAgain = _processStream( cipher, cipherText );
 
   expect( plainTextAgain, equals(plainText) );
-  
+
 }
 
 Uint8List _processStream( StreamCipher cipher, Uint8List inp ) {
