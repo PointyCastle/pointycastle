@@ -13,6 +13,13 @@ void main() {
   
   initCipher();
   
+  test( "initCipher() can be called several times", () {
+
+    initCipher();
+    initCipher();
+
+  });
+
   test( "BlockCipher returns valid implementations", () {
   
     _testBlockCipher( "AES" );

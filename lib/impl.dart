@@ -27,17 +27,22 @@ import "package:cipher/modes/cbc.dart";
 import "package:cipher/paddings/padded_block_cipher.dart";
 import "package:cipher/paddings/pkcs7.dart";
 
+bool _initialized = false;
+
 /**
  *  This is the initializer method for this library. It must be called prior 
  *  to use any of the implementations.
  */
 void initCipher() {
-  _registerBlockCiphers();
-  _registerChainingBlockCiphers();
-  _registerStreamCiphers();
-  _registerDigests();
-  _registerPaddings();
-  _registerPaddedBlockCiphers();
+  if( !_initialized ) {
+    _initialized = true;
+    _registerBlockCiphers();
+    _registerChainingBlockCiphers();
+    _registerStreamCiphers();
+    _registerDigests();
+    _registerPaddings();
+    _registerPaddedBlockCiphers();
+  }
 }
 
 void _registerBlockCiphers() {
