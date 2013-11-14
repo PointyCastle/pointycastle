@@ -42,7 +42,7 @@ class StreamCipherAsChainingBlockCipher extends StreamCipherAsBlockCipher implem
   /**
    * Create a [ChainingBlockCipher] from [streamCipher] simulating the given [blockSize] and the [underlyingCipher].
    * WARNING: it is the responsibility of the caller to make sure that the three given values altogether make sense and are
-   * correct semantically. The [underlyingCipher] is not used at all, just returned to implement the [ChainingBlockCipher]
+   * semantically correct. The [underlyingCipher] is not used at all, just returned to implement the [ChainingBlockCipher]
    * interface, so make sure it is valid and makes sense.
    */
   StreamCipherAsChainingBlockCipher(int blockSize, StreamCipher streamCipher, this.underlyingCipher) :
