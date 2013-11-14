@@ -9,6 +9,7 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/params/padded_block_cipher_parameters.dart";
 
+/// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
   
   final Padding padding;
@@ -18,11 +19,9 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   PaddedBlockCipherImpl(this.padding,this.underlyingCipher);
   
-  String get algorithmName 
-    => underlyingCipher.algorithmName+"/"+padding.algorithmName;
+  String get algorithmName => underlyingCipher.algorithmName+"/"+padding.algorithmName;
 
-  int get blockSize 
-    => underlyingCipher.blockSize;
+  int get blockSize => underlyingCipher.blockSize;
 
   void reset() {
     _encrypting = null;

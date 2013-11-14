@@ -7,25 +7,30 @@ library cipher.digests.ripemd160;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/digests/general_digest.dart";
+import "package:cipher/digests/md4_family_digest.dart";
 
 import "package:fixnum/fixnum.dart";
 
 part "../src/digests/ripemd160/functions.dart";
 
-// Useful links:
-// http://homes.esat.kuleuven.be/~bosselae/ripemd160.html (description)
-// http://homes.esat.kuleuven.be/~bosselae/ripemd/rmd160.txt (pseudocode)
-
-class RIPEMD160Digest extends GeneralDigest implements Digest {
+/**
+ * Implementation of RIPEMD-160 digest. For more info see links:
+ * 
+ * * [http://homes.esat.kuleuven.be/~bosselae/ripemd160.html (description)]
+ * * [http://homes.esat.kuleuven.be/~bosselae/ripemd/rmd160.txt (pseudocode)]
+ * 
+ */
+class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
 
   static const _DIGEST_LENGTH = 20;
 
-  //Int32 _H0, _H1, _H2, _H3, _H4; // IV's
-  var _H = new List<Int32>(5);//Uint32List(5);
+  /// The 5 32-bit initialization vectors.
+  var _H = new List<Int32>(5);
 
+  /// The working block (16 32-bit words) buffer.
   var _X = new List<Int32>(16);//new int[16];
-  //var _X = new Uint32List(16);
+
+  /// The offset of the next valid data into the [_X] buffer.
   int _xOff;
 
   RIPEMD160Digest() {
@@ -37,31 +42,14 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
 
   void reset() {
     super.reset();
-
-    _H[0] = new Int32(0x67452301);
-    _H[1] = new Int32(0xefcdab89);
-    _H[2] = new Int32(0x98badcfe);
-    _H[3] = new Int32(0x10325476);
-    _H[4] = new Int32(0xc3d2e1f0);
-
-    _xOff = 0;
-
-    for( var i=0 ; i!=_X.length ; i++ ) {
-      _X[i] = Int32.ZERO;
-    }
+    _resetIVs();
+    _resetWorkingBlockAndOffset();
   }
 
   int doFinal( Uint8List out, int outOff ) {
     finish();
-
-    _unpackWord( _H[0], out, outOff );
-    _unpackWord( _H[1], out, outOff+4 );
-    _unpackWord( _H[2], out, outOff+8 );
-    _unpackWord( _H[3], out, outOff+12 );
-    _unpackWord( _H[4], out, outOff+16 );
-
+    _appendIVs(out, outOff);
     reset();
-
     return _DIGEST_LENGTH;
   }
 
@@ -85,8 +73,8 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
 
     var bd = new ByteData.view(new Uint8List(8).buffer);
     bd.setInt64( 0, bitLength, Endianness.BIG_ENDIAN );
-    _X[14] = new Int32( bd.getInt32(4) );//new Int32(bitLength & 0xffffffff);
-    _X[15] = new Int32( bd.getInt32(0) );//lsr( truncatedBitLength, 32 );
+    _X[14] = new Int32( bd.getInt32(4) );
+    _X[15] = new Int32( bd.getInt32(0) );
   }
 
   void processBlock() {
@@ -102,9 +90,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     d = dd = _H[3];
     e = ee = _H[4];
 
-    //
     // Rounds 1 - 16
-    //
     // left
     a = _clsl(a + _f1(b,c,d) + _X[ 0], 11) + e; c = _clsl(c, 10);
     e = _clsl(e + _f1(a,b,c) + _X[ 1], 14) + d; b = _clsl(b, 10);
@@ -141,9 +127,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     bb = _clsl(bb + _f5(cc,dd,ee) + _X[ 3] + 0x50a28be6, 12) + aa; dd = _clsl(dd, 10);
     aa = _clsl(aa + _f5(bb,cc,dd) + _X[12] + 0x50a28be6,  6) + ee; cc = _clsl(cc, 10);
 
-    //
     // Rounds 16-31
-    //
     // left
     e = _clsl(e + _f2(a,b,c) + _X[ 7] + 0x5a827999,  7) + d; b = _clsl(b, 10);
     d = _clsl(d + _f2(e,a,b) + _X[ 4] + 0x5a827999,  6) + c; a = _clsl(a, 10);
@@ -180,9 +164,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     aa = _clsl(aa + _f4(bb,cc,dd) + _X[ 1] + 0x5c4dd124, 13) + ee; cc = _clsl(cc, 10);
     ee = _clsl(ee + _f4(aa,bb,cc) + _X[ 2] + 0x5c4dd124, 11) + dd; bb = _clsl(bb, 10);
 
-    //
     // Rounds 32-47
-    //
     // left
     d = _clsl(d + _f3(e,a,b) + _X[ 3] + 0x6ed9eba1, 11) + c; a = _clsl(a, 10);
     c = _clsl(c + _f3(d,e,a) + _X[10] + 0x6ed9eba1, 13) + b; e = _clsl(e, 10);
@@ -219,9 +201,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     ee = _clsl(ee + _f3(aa,bb,cc) + _X[ 4] + 0x6d703ef3,  7) + dd; bb = _clsl(bb, 10);
     dd = _clsl(dd + _f3(ee,aa,bb) + _X[13] + 0x6d703ef3,  5) + cc; aa = _clsl(aa, 10);
 
-    //
     // Rounds 48-63
-    //
     // left
     c = _clsl(c + _f4(d,e,a) + _X[ 1] + 0x8f1bbcdc, 11) + b; e = _clsl(e, 10);
     b = _clsl(b + _f4(c,d,e) + _X[ 9] + 0x8f1bbcdc, 12) + a; d = _clsl(d, 10);
@@ -258,9 +238,7 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     dd = _clsl(dd + _f2(ee,aa,bb) + _X[10] + 0x7a6d76e9, 15) + cc; aa = _clsl(aa, 10);
     cc = _clsl(cc + _f2(dd,ee,aa) + _X[14] + 0x7a6d76e9,  8) + bb; ee = _clsl(ee, 10);
 
-    //
     // Rounds 64-79
-    //
     // left
     b = _clsl(b + _f5(c,d,e) + _X[ 4] + 0xa953fd4e,  9) + a; d = _clsl(d, 10);
     a = _clsl(a + _f5(b,c,d) + _X[ 0] + 0xa953fd4e, 15) + e; c = _clsl(c, 10);
@@ -304,14 +282,9 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     _H[4] = _H[0] + b + cc;
     _H[0] = dd;
 
-    //
     // reset the offset and clean out the word buffer.
-    //
     _xOff = 0;
-    for (int i = 0; i != _X.length; i++)
-    {
-      _X[i] = Int32.ZERO;
-    }
+    _X.fillRange(0, _X.length, Int32.ZERO );
   }
 
   void _unpackWord( Int32 word, Uint8List out, int outOff ) {
@@ -319,6 +292,30 @@ class RIPEMD160Digest extends GeneralDigest implements Digest {
     out[outOff+1] = _lsr( word, 8 ).toInt();
     out[outOff+2] = _lsr( word, 16 ).toInt();
     out[outOff+3] = _lsr( word, 24 ).toInt();
+  }
+
+  /// Reset the working block [_X] and [_xOff] to all zeros.
+  void _resetWorkingBlockAndOffset() {
+    _xOff = 0;
+    _X.fillRange( 0, _X.length, Int32.ZERO );
+  }
+
+  /// Reset IVs to standard initial values.
+  void _resetIVs() {
+    _H[0] = new Int32(0x67452301);
+    _H[1] = new Int32(0xefcdab89);
+    _H[2] = new Int32(0x98badcfe);
+    _H[3] = new Int32(0x10325476);
+    _H[4] = new Int32(0xc3d2e1f0);
+  }
+
+  /// Append the 5 words in [_H] to the [out] buffer.
+  void _appendIVs(Uint8List out, int outOff) {
+    _unpackWord( _H[0], out, outOff );
+    _unpackWord( _H[1], out, outOff+4 );
+    _unpackWord( _H[2], out, outOff+8 );
+    _unpackWord( _H[3], out, outOff+12 );
+    _unpackWord( _H[4], out, outOff+16 );
   }
 
 }

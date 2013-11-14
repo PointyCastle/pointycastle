@@ -11,12 +11,16 @@ import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/src/util.dart";
 
 /**
- * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher]
- * is done using a [StreamCipherAsBlockCipher] adapter (see file
- * [package:cipher/adapters/stream_cipher_adapters.dart])
+ * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter 
+ * (see file [package:cipher/adapters/stream_cipher_adapters.dart] for more info).
  */
 
-/// Implementation of SIC mode of operation as a [StreamCipher]
+/**
+ * Implementation of SIC mode of operation as a [StreamCipher]. This implementation uses the IV as the initial nonce value and
+ * keeps incrementing it by 1 for every new block. The counter may overflow and rotate, and that would cause a two-time-pad 
+ * error, but this is so unlikely to happen for usual block sizes that we don't check for that event. It is the responsibility
+ * of the caller to make sure the counter does not overflow.
+ */
 class SICStreamCipher implements StreamCipher {
 
   final BlockCipher underlyingCipher;
@@ -78,7 +82,8 @@ class SICStreamCipher implements StreamCipher {
 
   /// Increments [_counter] by 1
   void _incrementCounter() {
-    for( var i=_counter.lengthInBytes-1 ; i>=0 ; i-- )
+    var i;
+    for( i=_counter.lengthInBytes-1 ; i>=0 ; i-- )
     {
       var val = _counter[i];
       val++;

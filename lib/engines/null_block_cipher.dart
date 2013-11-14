@@ -9,9 +9,8 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 
 /**
- * An implementation of a null cipher, that is, a cipher that does not encrypt,
- * neither decrypt. It can be used for testing or benchmarking chaining
- * algorithms.
+ * An implementation of a null [BlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for 
+ * testing or benchmarking chaining algorithms.
  */
 class NullBlockCipher implements BlockCipher {
 

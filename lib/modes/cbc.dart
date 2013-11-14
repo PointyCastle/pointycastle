@@ -9,9 +9,7 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-/**
- * implements Cipher-Block-Chaining (CBC) mode on top of a simple cipher.
- */
+/// Implementations of Cipher-Block-Chaining (CBC) mode on top of a [BlockCipher].
 class CBCBlockCipher implements ChainingBlockCipher {
   
   final BlockCipher underlyingCipher;
@@ -31,7 +29,6 @@ class CBCBlockCipher implements ChainingBlockCipher {
   String get algorithmName => "${underlyingCipher.algorithmName}/CBC";
   int get blockSize => underlyingCipher.blockSize;
 
-  /// Reset the chaining vector back to the IV and reset the underlying cipher.
   void reset() {
     _cbcV.setAll( 0, _IV );                                                       
     _cbcNextV.fillRange( 0, _cbcNextV.length, 0 );                                
@@ -52,8 +49,9 @@ class CBCBlockCipher implements ChainingBlockCipher {
   }
 
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) 
-    => (_encrypting) ? _encryptBlock( inp, inpOff, out, outOff ) 
-                    : _decryptBlock( inp, inpOff, out, outOff );
+    => _encrypting 
+          ? _encryptBlock( inp, inpOff, out, outOff ) 
+          : _decryptBlock( inp, inpOff, out, outOff );
 
   int _encryptBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
     if( (inpOff + blockSize) > inp.length ) {
