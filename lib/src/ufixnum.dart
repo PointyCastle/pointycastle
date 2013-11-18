@@ -79,6 +79,7 @@ abstract class UintX {
   UintX _coerce( int value );
   
   int toInt() => _value;
+  int get hashCode => _value;
 
   bool operator ==(other) => ( _value == _int(other) );
   bool operator < (other) => ( _value <  _int(other) );
