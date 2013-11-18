@@ -23,7 +23,13 @@ As of the last release, the following algorithms are implemented:
 
 **Block cipher modes of operation:**
   * SIC (a.k.a. CTR)
+  * CBC
 
 
 **Digests:**
   * RIPEMD160
+
+
+**Paddings:**
+  * PKCS7
+  
