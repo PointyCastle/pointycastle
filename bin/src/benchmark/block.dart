@@ -4,7 +4,7 @@
 
 part of cipher.bin.src.benchmark;
 
-const BENCHMARK_LENGTH_SECONDS = 2*60;  
+const BENCHMARK_LENGTH_SECONDS = 30;  
 
 void _doBenchmarkBlock(List<String> args) {
   var algorithmName = arg(args,0);
