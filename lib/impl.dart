@@ -20,6 +20,7 @@ import "package:cipher/digests/ripemd160.dart";
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/engines/salsa20.dart";
 import "package:cipher/engines/null_block_cipher.dart";
+import "package:cipher/engines/null_stream_cipher.dart";
 
 import "package:cipher/modes/sic.dart";
 import "package:cipher/modes/cbc.dart";
@@ -89,6 +90,7 @@ void _registerChainingBlockCiphers() {
 }
 
 void _registerStreamCiphers() {
+  StreamCipher.registry["Null"] = (_) => new NullStreamCipher();
   StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
   StreamCipher.registry.registerDynamicFactory( ( String algorithmName ) {
     var parts = algorithmName.split("/");

@@ -22,6 +22,7 @@ void main() {
 
   test( "BlockCipher returns valid implementations", () {
   
+    _testBlockCipher( "Null" );
     _testBlockCipher( "AES" );
 
   });
@@ -36,6 +37,7 @@ void main() {
 
   test( "StreamCipher returns valid implementations", () {
     
+    _testStreamCipher( "Null" );
     _testStreamCipher( "Salsa20" );
     _testStreamCipher( "Null/SIC" );
     _testStreamCipher( "Null/CTR" );
