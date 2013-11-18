@@ -7,7 +7,7 @@ library cipher.engines.salsa20;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/util.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
@@ -122,10 +122,10 @@ class Salsa20Engine implements StreamCipher {
     Uint8List constants;
 
     // Key
-    _engineState[1] = Pack.littleEndianToInt(_workingKey, 0);
-    _engineState[2] = Pack.littleEndianToInt(_workingKey, 4);
-    _engineState[3] = Pack.littleEndianToInt(_workingKey, 8);
-    _engineState[4] = Pack.littleEndianToInt(_workingKey, 12);
+    _engineState[1] = new Uint32.fromLittleEndian(_workingKey,0).toInt();
+    _engineState[2] = new Uint32.fromLittleEndian(_workingKey,4).toInt();
+    _engineState[3] = new Uint32.fromLittleEndian(_workingKey,8).toInt();
+    _engineState[4] = new Uint32.fromLittleEndian(_workingKey,12).toInt();
 
     if( _workingKey.length == 32 ) {
         constants = _sigma;
@@ -134,18 +134,18 @@ class Salsa20Engine implements StreamCipher {
         constants = _tau;
     }
 
-    _engineState[11] = Pack.littleEndianToInt(_workingKey, offset);
-    _engineState[12] = Pack.littleEndianToInt(_workingKey, offset+4);
-    _engineState[13] = Pack.littleEndianToInt(_workingKey, offset+8);
-    _engineState[14] = Pack.littleEndianToInt(_workingKey, offset+12);
-    _engineState[0 ] = Pack.littleEndianToInt(constants, 0);
-    _engineState[5 ] = Pack.littleEndianToInt(constants, 4);
-    _engineState[10] = Pack.littleEndianToInt(constants, 8);
-    _engineState[15] = Pack.littleEndianToInt(constants, 12);
+    _engineState[11] = new Uint32.fromLittleEndian(_workingKey,offset).toInt();
+    _engineState[12] = new Uint32.fromLittleEndian(_workingKey,offset+4).toInt();
+    _engineState[13] = new Uint32.fromLittleEndian(_workingKey,offset+8).toInt();
+    _engineState[14] = new Uint32.fromLittleEndian(_workingKey,offset+12).toInt();
+    _engineState[0 ] = new Uint32.fromLittleEndian(constants,0).toInt();
+    _engineState[5 ] = new Uint32.fromLittleEndian(constants,4).toInt();
+    _engineState[10] = new Uint32.fromLittleEndian(constants,8).toInt();
+    _engineState[15] = new Uint32.fromLittleEndian(constants,12).toInt();
 
     // IV
-    _engineState[6] = Pack.littleEndianToInt(_workingIV, 0);
-    _engineState[7] = Pack.littleEndianToInt(_workingIV, 4);
+    _engineState[6] = new Uint32.fromLittleEndian(_workingIV,0).toInt();
+    _engineState[7] = new Uint32.fromLittleEndian(_workingIV,4).toInt();
     _engineState[8] = _engineState[9] = 0;
 
     _initialised = true;
@@ -153,7 +153,11 @@ class Salsa20Engine implements StreamCipher {
 
   void _generateKeyStream( Uint8List output ) {
     _salsaCore(20, _engineState, _x);
-    Pack.intToLittleEndianList(_x, output, 0);
+    var outOff = 0;
+    for( var x in _x ) {
+      new Uint32(x).toLittleEndian(output, outOff);
+      outOff += 4;
+    }
   }
 
   void _salsaCore( int rounds, List<int> input, List<int> x ) {
@@ -200,7 +204,7 @@ class Salsa20Engine implements StreamCipher {
   }
 
   int _rotl(int x, int y) 
-    => (x << y) | lsr(x, -y);
+    => (x << y) | (new Uint32(x)>>-y).toInt(); //lsr(x, -y);
 
   void _resetCounter() {
     _counter = 0;

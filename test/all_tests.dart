@@ -20,7 +20,6 @@ import "./paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
 import "./paddings/pkcs7_test.dart" as pkcs7_test;
 
 import "./src/registry_test.dart" as registry_test;
-import "./src/util_test.dart" as util_test;
 import "./src/ufixnum_test.dart" as ufixnum_test;
 
 void main() {
@@ -47,7 +46,6 @@ void main() {
   
   // src
   registry_test.main();
-  util_test.main();
   ufixnum_test.main();
 
 }

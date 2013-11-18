@@ -5,7 +5,7 @@
 part of cipher.engines.aes_fast;
 
 int _shift(int r, int shift) {
-  return lsr( r, shift ) | (r << 32-shift);
+  return new Uint32(r).rotr(shift).toInt();
 }
 
 /* multiply four bytes in GF(2^8) by 'x' {02} in parallel */
@@ -15,7 +15,8 @@ const int _m2 = 0x7f7f7f7f;
 const int _m3 = 0x0000001b;
 
 int _FFmulX(int x) {
-  return (((x & _m2) << 1) ^ lsr((x & _m1) , 7) * _m3);
+  Uint32 lsr = new Uint32(x & _m1)>>7;
+  return (((x & _m2) << 1) ^ lsr.toInt() * _m3);
 }
 
 /* 

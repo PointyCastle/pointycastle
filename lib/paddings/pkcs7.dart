@@ -7,7 +7,7 @@ library cipher.paddings.pkcs7;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/util.dart";
+import "package:cipher/src/ufixnum.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding implements Padding {
@@ -30,7 +30,7 @@ class PKCS7Padding implements Padding {
   }
 
   int padCount( Uint8List data ) {
-    var count = toByte( data[data.length - 1] );
+    var count = Uint8.clip( data[data.length - 1] );
     
     if( count > data.length || count == 0 ) {
       throw new ArgumentError("Invalid or corrupted pad block");

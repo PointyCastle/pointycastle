@@ -8,7 +8,7 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_iv.dart";
-import "package:cipher/src/util.dart";
+import "package:cipher/src/ufixnum.dart";
 
 /**
  * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter 
@@ -59,7 +59,7 @@ class SICStreamCipher implements StreamCipher {
 
   int returnByte(int inp) {
     _feedCounterIfNeeded();
-    return toByte(inp) ^ _counterOut[_consumed++];
+    return Uint8.clip(inp) ^ _counterOut[_consumed++];
   }
 
   /// Calls [_feedCounter] if all [_counterOut] bytes have been consumed
