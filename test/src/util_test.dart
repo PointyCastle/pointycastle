@@ -2,6 +2,8 @@
 // Use of this source code is governed by a LGPL v3 license. 
 // See the LICENSE file for more information.
 
+library cipher.test.util_test;
+
 import "package:cipher/src/util.dart";
 
 import "package:unittest/unittest.dart";
@@ -60,5 +62,5 @@ void main() {
     expect( lsr( val1111, -65 ), 0x00000001 );
 
   });
-
 }
+
