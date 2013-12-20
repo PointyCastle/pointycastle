@@ -8,7 +8,6 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/params/key_parameter.dart";
-import "package:cipher/src/ufixnum.dart";
 
 part "../src/engines/aes_fast/tables.dart";
 part "../src/engines/aes_fast/functions.dart";

@@ -1,12 +1,12 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 /**
  * This library contains all out-of-the-box implementations of the interfaces
  * provided in the API.
- * 
- * You must call [initCipher] method before using this library to load all 
+ *
+ * You must call [initCipher] method before using this library to load all
  * implementations into cipher's API factories.
  */
 library cipher.impl;
@@ -16,6 +16,9 @@ import "package:cipher/api.dart";
 import "package:cipher/adapters/stream_cipher_adapters.dart";
 
 import "package:cipher/digests/ripemd160.dart";
+
+import "package:cipher/ecc/ecc.dart";
+import "package:cipher/ecc/ecc_fp.dart" as fp;
 
 import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/engines/salsa20.dart";
@@ -31,7 +34,7 @@ import "package:cipher/paddings/pkcs7.dart";
 bool _initialized = false;
 
 /**
- *  This is the initializer method for this library. It must be called prior 
+ *  This is the initializer method for this library. It must be called prior
  *  to use any of the implementations.
  */
 void initCipher() {
@@ -43,6 +46,7 @@ void initCipher() {
     _registerDigests();
     _registerPaddings();
     _registerPaddedBlockCiphers();
+    _registerEccStandardCurves();
   }
 }
 
@@ -142,6 +146,26 @@ void _registerPaddedBlockCiphers() {
 
     return new PaddedBlockCipherImpl(padding, underlyingCipher);
   });
+}
+
+void _registerEccStandardCurves() {
+  _registerFpStandardCurve("prime192v1",
+      q: new BigInteger("6277101735386680763835789423207666416083908700390324961279"),
+      a: new BigInteger("fffffffffffffffffffffffffffffffefffffffffffffffc", 16),
+      b: new BigInteger("64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1", 16),
+      g: new BigInteger("03188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012", 16),
+      n: new BigInteger("ffffffffffffffffffffffff99def836146bc9b1b4d22831", 16),
+      h: BigInteger.ONE,
+      seed: new BigInteger("3045ae6fc8422f64ed579528d38120eae12196d5", 16)
+  );
+}
+
+void _registerFpStandardCurve( String name, {BigInteger q, BigInteger a, BigInteger b, BigInteger g, BigInteger n,
+  BigInteger h, BigInteger seed } ) {
+
+  var curve = new fp.ECCurve(q,a,b);
+  ECDomainParameters.registry[name] =
+		(_) => new ECDomainParameters.fromValues( curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
 }
 
 dynamic _createOrNull( closure() ) {

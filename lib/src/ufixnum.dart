@@ -2,9 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license. 
 // See the LICENSE file for more information.
 
-library cipher.src.ufixnum;
-
-import "dart:typed_data";
+part of cipher.api;
 
 /// Implementation of unsigned 8-bit size nums
 class Uint8 extends UintX {
@@ -93,8 +91,7 @@ abstract class UintX {
   UintX operator + (other) => _coerce( _value + _int(other) );
   UintX operator - (other) => _coerce( _value - _int(other) );
   UintX operator * (other) => _coerce( _value * _int(other) );
-  UintX operator / (other) => this~/other;
-  UintX operator ~/(other) => _coerce( _value ~/ _int(other) );
+  UintX operator / (other) => _coerce( _value ~/ _int(other) );
   UintX operator % (other) => _coerce( _value % _int(other) );
 
   UintX operator &(other) => _coerce( _value & _int(other) );

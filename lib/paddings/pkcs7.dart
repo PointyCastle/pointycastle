@@ -7,7 +7,6 @@ library cipher.paddings.pkcs7;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/ufixnum.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding implements Padding {
