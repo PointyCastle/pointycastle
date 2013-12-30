@@ -1354,7 +1354,7 @@ class BigInteger {
   BigInteger remainder(BigInteger a) {
     BigInteger r = nbi();
     this.divRemTo(a,null,r);
-    return r;
+    return (r.signum()>=0) ? r : (r+a);
   }
 
   /** [this/a, this%a] returns Map<BigInteger>

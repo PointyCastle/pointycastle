@@ -142,7 +142,7 @@ abstract class ECCurve {
   ECPoint get infinity;
 
   ECFieldElement fromBigInteger( BigInteger x );
-  ECPoint createPoint( BigInteger x, BigInteger y, bool withCompression );
+  ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
   ECPoint decompressPoint( int yTilde, BigInteger X1 );
 
   /**

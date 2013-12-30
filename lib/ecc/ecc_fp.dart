@@ -293,7 +293,7 @@ class ECCurve extends ecc.ECCurve {
   ECPoint get infinity => _infinity;
 
   ECFieldElement fromBigInteger( BigInteger x ) => new ECFieldElement(this.q, x);
-  ECPoint createPoint(BigInteger x, BigInteger y, bool withCompression)
+  ECPoint createPoint(BigInteger x, BigInteger y, [bool withCompression=false] )
     => new ECPoint(this, fromBigInteger(x), fromBigInteger(y), withCompression);
 
   ECPoint decompressPoint(int yTilde, BigInteger X1) {

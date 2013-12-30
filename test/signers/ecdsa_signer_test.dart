@@ -4,63 +4,40 @@
 
 library cipher.test.paddings.ecdsa_signer_test;
 
-import "package:unittest/unittest.dart";
-
 import "package:cipher/api.dart";
-import "package:cipher/impl.dart";
-import "package:cipher/signers/ecdsa_signer.dart";
 import "package:cipher/params/ec_key_parameters.dart";
-import "package:cipher/params/parameters_with_random.dart";
+import "package:cipher/signers/ecdsa_signer.dart";
 import "package:cipher/ecc/ecc.dart";
-//import "package:cipher/ecc/ecc_fp.dart";
+import "package:cipher/impl.dart";
 
-import "../test/helpers.dart";
+import "../test/signer_tests.dart";
 
+/**
+ * NOTE: the expected results for these tests are computed using the Java
+ * version of Bouncy Castle
+ */
 void main() {
 
-  initCipher();
+	initCipher();
 
-  group( "ECDSASigner:", () {
+	var eccDomain = new ECDomainParameters( "prime192v1" );
 
-    test( "generateSignature()", () {
+	var Qx = new BigInteger("1498602238651628509310686451034731914387602356706565103527");
+	var Qy = new BigInteger("6264116558863692852155702059476882343593676720209154057133");
+	var Q = eccDomain.curve.createPoint( Qx, Qy );
+	var pubParams = new ECPublicKeyParameters( Q, eccDomain );
 
-      var plainText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........";
-      var expectedSignature = "(4165461920577864743570110591887661239883413257826890841803,3921818269646681551036727339486031144481055001966973146395)";
+	var d = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
+	var privParams = new ECPrivateKeyParameters( d, eccDomain );
 
-      var message = createUint8ListFromString( plainText );
+	runSignerTests( new ECDSASigner(), privParams, pubParams, [
 
-      var signer = new ECDSASigner();
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
+		"(4165461920577864743570110591887661239883413257826890841803,3921818269646681551036727339486031144481055001966973146395)",
 
-      ECDomainParameters dpar = new ECDomainParameters( "prime192v1" );
+		"En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
+		"(4165461920577864743570110591887661239883413257826890841803,4966480092874390501758979364830358346132047144845401039538)",
 
-      BigInteger D = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
-      BigInteger q = new BigInteger("6277101735386680763835789423207666416083908700390324961279");
-      BigInteger px = new BigInteger("1498602238651628509310686451034731914387602356706565103527");
-      BigInteger py = new BigInteger("6264116558863692852155702059476882343593676720209154057133");
-      ECPrivateKeyParameters privparams = new ECPrivateKeyParameters(D, dpar);
-      SecureRandom secrnd = new NullSecureRandom();
-      ParametersWithRandom params = new ParametersWithRandom( privparams, secrnd );
-      signer.init(true, params);
-
-      var signature = signer.generateSignature(message);
-      expect( signature.toString(), expectedSignature );
-
-    });
-
-  });
-
-}
-
-class NullSecureRandom extends SecureRandomBase {
-
-  var _nextValue=0;
-
-  String get algorithmName => "Null";
-
-  void init(CipherParameters params) {
-  }
-
-  Uint8 nextUint8() => new Uint8(_nextValue++);
-
+	]);
 }
 
