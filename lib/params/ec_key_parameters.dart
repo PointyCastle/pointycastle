@@ -1,15 +1,14 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.params.ec_key_parameters;
 
 import "package:cipher/api.dart";
 import "package:cipher/params/asymmetric_key_parameter.dart";
-import "package:cipher/ecc/ecc.dart";
 
 class ECKeyParameters extends AsymmetricKeyParameter implements CipherParameters {
-  
+
   final ECDomainParameters parameters;
 
   ECKeyParameters( bool private, ECDomainParameters  this.parameters ) : super(private);

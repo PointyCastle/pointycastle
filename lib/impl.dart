@@ -17,19 +17,28 @@ import "package:cipher/adapters/stream_cipher_adapters.dart";
 
 import "package:cipher/digests/ripemd160.dart";
 
-import "package:cipher/ecc/ecc.dart";
+import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
 
 import "package:cipher/engines/aes_fast.dart";
-import "package:cipher/engines/salsa20.dart";
 import "package:cipher/engines/null_block_cipher.dart";
 import "package:cipher/engines/null_stream_cipher.dart";
+import "package:cipher/engines/salsa20.dart";
 
-import "package:cipher/modes/sic.dart";
+import "package:cipher/entropy/dev_random_entropy_source.dart";
+import "package:cipher/entropy/random_org_entropy_source.dart";
+
 import "package:cipher/modes/cbc.dart";
+import "package:cipher/modes/sic.dart";
 
 import "package:cipher/paddings/padded_block_cipher.dart";
 import "package:cipher/paddings/pkcs7.dart";
+
+import "package:cipher/random/auto_reseed_block_ctr_random.dart";
+import "package:cipher/random/block_ctr_random.dart";
+
+import "package:cipher/signers/ecdsa_signer.dart";
+
 
 bool _initialized = false;
 
@@ -47,6 +56,9 @@ void initCipher() {
     _registerPaddings();
     _registerPaddedBlockCiphers();
     _registerEccStandardCurves();
+    _registerSigners();
+    _registerSecureRandoms();
+    _registerEntropySources();
   }
 }
 
@@ -164,8 +176,35 @@ void _registerFpStandardCurve( String name, {BigInteger q, BigInteger a, BigInte
   BigInteger h, BigInteger seed } ) {
 
   var curve = new fp.ECCurve(q,a,b);
-  ECDomainParameters.registry[name] =
-		(_) => new ECDomainParameters.fromValues( curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
+  ECDomainParameters.registry[name] = (_)
+		=> new ECDomainParametersImpl( name, curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
+}
+
+void _registerSigners() {
+	Signer.registry["ECDSA"] = (_) => new ECDSASigner();
+}
+
+void _registerSecureRandoms() {
+	SecureRandom.registry.registerDynamicFactory( (String algorithmName) {
+
+		if( algorithmName.endsWith("/CTR/PRNG") ) {
+			var blockCipherName = algorithmName.substring(0, algorithmName.length-9);
+		  var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
+		  return new BlockCtrRandom(blockCipher);
+
+		} else if( algorithmName.endsWith("/CTR/AUTO_RESEED_PRNG") ) {
+			var blockCipherName = algorithmName.substring(0, algorithmName.length-21);
+		  var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
+		  return new AutoReseedBlockCtrRandom(blockCipher);
+
+		}
+
+	});
+}
+
+void _registerEntropySources() {
+	EntropySource.registry["/dev/random"] = (_) => new DevRandomEntropySource();
+	EntropySource.registry["random.org"] = (_) => new RandomOrgEntropySource();
 }
 
 dynamic _createOrNull( closure() ) {

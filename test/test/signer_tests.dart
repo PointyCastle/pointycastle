@@ -6,7 +6,7 @@ library cipher.test.test.signer_tests;
 
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/random/random_base.dart";
+import "package:cipher/random/secure_random_base.dart";
 
 import "package:unittest/unittest.dart";
 

@@ -7,10 +7,10 @@ library cipher.src.ecc_fp;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/ecc/ecc.dart" hide ECFieldElement, ECPoint, ECCurve;
-import "package:cipher/ecc/ecc.dart" as ecc;
+import "package:cipher/ecc/ecc_base.dart" hide ECFieldElementBase, ECPointBase, ECCurveBase;
+import "package:cipher/ecc/ecc_base.dart" as ecc;
 
-class ECFieldElement extends ecc.ECFieldElement {
+class ECFieldElement extends ecc.ECFieldElementBase {
 
   final BigInteger q;
   final BigInteger x;
@@ -152,7 +152,7 @@ class ECFieldElement extends ecc.ECFieldElement {
 }
 
 /// Elliptic curve points over Fp
-class ECPoint extends ecc.ECPoint {
+class ECPoint extends ecc.ECPointBase {
 
   /**
    * Create a point that encodes with or without point compresion.
@@ -280,7 +280,7 @@ class ECPoint extends ecc.ECPoint {
 }
 
 /// Elliptic curve over Fp
-class ECCurve extends ecc.ECCurve {
+class ECCurve extends ecc.ECCurveBase {
 
   final BigInteger q;
   ECPoint _infinity;

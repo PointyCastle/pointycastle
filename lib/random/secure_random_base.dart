@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.random.random_base;
+library cipher.random.secure_random_base;
 
 import "dart:typed_data";
 
@@ -27,6 +27,14 @@ abstract class SecureRandomBase implements SecureRandom {
 
 	BigInteger nextBigInteger( int bitLength ) {
 		return new BigInteger.fromBytes(1, _randomBits(bitLength));
+	}
+
+	Uint8List nextBytes( int count ) {
+		var bytes = new Uint8List(count);
+		for( var i=0 ; i<count ; i++ ) {
+			bytes[i] = nextUint8().toInt();
+		}
+		return bytes;
 	}
 
 	List<int> _randomBits(int numBits) {

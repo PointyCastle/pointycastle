@@ -10,7 +10,6 @@ import "dart:math";
 import "package:cipher/api.dart";
 import "package:cipher/params/ec_key_parameters.dart";
 import "package:cipher/params/parameters_with_random.dart";
-import 'package:cipher/ecc/ecc.dart';
 
 class ECDSASigner implements Signer {
 

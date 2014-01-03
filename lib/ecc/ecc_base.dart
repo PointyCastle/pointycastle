@@ -2,71 +2,68 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.ecc.ecc;
+library cipher.ecc.ecc_base;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 
-/// Standard curve description
-class ECDomainParameters {
+/// Implementation of [ECDomainParameters]
+class ECDomainParametersImpl implements ECDomainParameters {
 
-	/// The [Registry] for [ECDomainParameters] objects
-	static final registry = new Registry<ECDomainParameters>();
-
+	final String domainName;
 	final ECCurve curve;
-  final List<int> seed;
-  final ECPoint G;
-  final BigInteger n;
-  BigInteger _h;
+	final List<int> seed;
+	final ECPoint G;
+	final BigInteger n;
+	BigInteger _h;
 
-  factory ECDomainParameters( String standardCurveName ) => registry.create(standardCurveName);
-
-  ECDomainParameters.fromValues( this.curve, this.G, this.n, [this._h=null, this.seed=null] ) {
+	ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n, [this._h=null, this.seed=null] ) {
 		if( _h==null ) {
-			_h = BigInteger.ONE;
+		_h = BigInteger.ONE;
 		}
-  }
+	}
 
 	BigInteger get h => _h;
 
 }
 
-/// Type for coordinates of an [ECPoint]
-abstract class ECFieldElement {
+
+/// Base implementation for [ECFieldElement]
+abstract class ECFieldElementBase implements ECFieldElement {
 
   BigInteger toBigInteger();
   String get fieldName;
   int get fieldSize;
   int get byteLength => ((fieldSize + 7) ~/ 8);
 
-  ECFieldElement operator +( ECFieldElement b );
-  ECFieldElement operator -( ECFieldElement b );
-  ECFieldElement operator *( ECFieldElement b );
-  ECFieldElement operator /( ECFieldElement b );
+  ECFieldElementBase operator +( ECFieldElementBase b );
+  ECFieldElementBase operator -( ECFieldElementBase b );
+  ECFieldElementBase operator *( ECFieldElementBase b );
+  ECFieldElementBase operator /( ECFieldElementBase b );
 
-  ECFieldElement operator -(); //ECFieldElement negate();
+  ECFieldElementBase operator -();
 
-  ECFieldElement invert();
-  ECFieldElement square();
-  ECFieldElement sqrt();
+  ECFieldElementBase invert();
+  ECFieldElementBase square();
+  ECFieldElementBase sqrt();
 
-  String toString() => toBigInteger().toString();//toBigInteger().toString(2);
+  String toString() => toBigInteger().toString();
 
 }
 
-/// An elliptic curve point
-abstract class ECPoint {
+/// Base implementation for [ECPoint]
+abstract class ECPointBase implements ECPoint {
 
-  final ECCurve curve;
-  final ECFieldElement x;
-  final ECFieldElement y;
+  final ECCurveBase curve;
+  final ECFieldElementBase x;
+  final ECFieldElementBase y;
   final bool isCompressed;
   final ECMultiplier _multiplier;
 
   PreCompInfo _preCompInfo;
 
-  ECPoint( this.curve, this.x, this.y, this.isCompressed, [this._multiplier=_FpNafMultiplier] );
+  ECPointBase( this.curve, this.x, this.y, this.isCompressed, [this._multiplier=_FpNafMultiplier] );
 
   bool get isInfinity => (x == null && y == null);
 
@@ -75,7 +72,7 @@ abstract class ECPoint {
   }
 
   bool operator ==(other) {
-    if( other is ECPoint ) {
+    if( other is ECPointBase ) {
       if( isInfinity ) {
         return other.isInfinity;
       }
@@ -95,18 +92,18 @@ abstract class ECPoint {
 
   Uint8List getEncoded([bool compressed = true]);
 
-  ECPoint operator +(ECPoint b);
-  ECPoint operator -(ECPoint b);
-  ECPoint operator -();
+  ECPointBase operator +(ECPointBase b);
+  ECPointBase operator -(ECPointBase b);
+  ECPointBase operator -();
 
-  ECPoint twice();
+  ECPointBase twice();
 
   /**
    * Multiplies this <code>ECPoint</code> by the given number.
    * @param k The multiplicator.
    * @return <code>k * this</code>.
    */
-  ECPoint operator *(BigInteger k) {
+  ECPointBase operator *(BigInteger k) {
     if( k.signum() < 0 ) {
       throw new ArgumentError("The multiplicator cannot be negative");
     }
@@ -124,26 +121,26 @@ abstract class ECPoint {
 
 }
 
-/// An elliptic curve
-abstract class ECCurve {
+/// Base implementation for [ECCurve]
+abstract class ECCurveBase implements ECCurve {
 
-  ECFieldElement _a;
-  ECFieldElement _b;
+  ECFieldElementBase _a;
+  ECFieldElementBase _b;
 
-  ECCurve( BigInteger a , BigInteger b ) {
+  ECCurveBase( BigInteger a , BigInteger b ) {
     this._a = fromBigInteger(a);
     this._b = fromBigInteger(b);
   }
 
-  ECFieldElement get a => _a;
-  ECFieldElement get b => _b;
+  ECFieldElementBase get a => _a;
+  ECFieldElementBase get b => _b;
 
   int get fieldSize;
-  ECPoint get infinity;
+  ECPointBase get infinity;
 
-  ECFieldElement fromBigInteger( BigInteger x );
-  ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
-  ECPoint decompressPoint( int yTilde, BigInteger X1 );
+  ECFieldElementBase fromBigInteger( BigInteger x );
+  ECPointBase createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
+  ECPointBase decompressPoint( int yTilde, BigInteger X1 );
 
   /**
    * Decode a point on this curve from its ASN.1 encoding. The different
@@ -151,8 +148,8 @@ abstract class ECCurve {
    * <code>F<sub>p</sub></code> (X9.62 s 4.2.1 pg 17).
    * @return The decoded point.
    */
-  ECPoint decodePoint( List<int> encoded ) {
-      ECPoint p = null;
+  ECPointBase decodePoint( List<int> encoded ) {
+      ECPointBase p = null;
       int expectedLength = (fieldSize + 7) ~/ 8;
 
       switch( encoded[0] ) {
@@ -207,20 +204,20 @@ abstract class PreCompInfo {
 }
 
 /**
- * Interface for functions encapsulating a point multiplication algorithm for [ECPoint]. Multiplies [p] by [k], i.e. [p] is
+ * Interface for functions encapsulating a point multiplication algorithm for [ECPointBase]. Multiplies [p] by [k], i.e. [p] is
  * added [k] times to itself.
  */
-typedef ECPoint ECMultiplier( ECPoint p, BigInteger k, PreCompInfo preCompInfo );
+typedef ECPointBase ECMultiplier( ECPointBase p, BigInteger k, PreCompInfo preCompInfo );
 
 /// Function implementing the NAF (Non-Adjacent Form) multiplication algorithm.
-ECPoint _FpNafMultiplier(ECPoint p, BigInteger k, PreCompInfo preCompInfo) {
+ECPointBase _FpNafMultiplier(ECPointBase p, BigInteger k, PreCompInfo preCompInfo) {
     // TODO Probably should try to add this
     // BigInteger e = k.mod(n); // n == order of p
     BigInteger e = k;
     BigInteger h = e*BigInteger.THREE;
 
-    ECPoint neg = -p;
-    ECPoint R = p;
+    ECPointBase neg = -p;
+    ECPointBase R = p;
 
     for( var i=h.bitLength()-2 ; i>0 ; --i ) {
       R = R.twice();
