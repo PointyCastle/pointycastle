@@ -18,7 +18,7 @@ class UrlEntropySource implements EntropySource {
 
 	UrlEntropySource(this._url);
 
-	void init( CipherParameters params ) {
+	void seed( CipherParameters params ) {
 	}
 
 	Future<Uint8List> getBytes( int count ) {

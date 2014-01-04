@@ -297,8 +297,8 @@ abstract class SecureRandom {
   /// Get this secure random standard algorithm name.
   String get algorithmName;
 
-  /// Initialize the RNG (usually with a seed from an [EntropySource]).
-  void init( CipherParameters params );
+  /// Seed the RNG (usually the seed is obtained from an [EntropySource]).
+  void seed( CipherParameters params );
 
 	/// Get one byte long random int.
   Uint8 nextUint8();
@@ -333,21 +333,10 @@ abstract class EntropySource {
 	/// Get this entropy source name.
 	String get sourceName;
 
-  /// Initialize the [EntropySource] (usually not necessary).
-  void init( CipherParameters params );
+  /// Seed the [EntropySource].
+  void seed( CipherParameters params );
 
 	/// Get [count] random bytes from the entropy source.
 	Future<Uint8List> getBytes( int count );
 
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -26,9 +26,9 @@ class AutoReseedBlockCtrRandom implements SecureRandom {
 		_delegate = new BlockCtrRandom(cipher);
 	}
 
-  void init(ParametersWithIV<KeyParameter> params) {
+  void seed(ParametersWithIV<KeyParameter> params) {
 		_autoReseedKeyLength = params.parameters.key.length;
-		_delegate.init( params );
+		_delegate.seed( params );
   }
 
   Uint8 nextUint8() => _autoReseedIfNeededAfter( () {
@@ -68,7 +68,7 @@ class AutoReseedBlockCtrRandom implements SecureRandom {
 		var newIV = nextBytes(_delegate.cipher.blockSize);
 		var keyParam = new KeyParameter(newKey);
 		var params = new ParametersWithIV(keyParam, newIV);
-		_delegate.init( params );
+		_delegate.seed( params );
   }
 
 }

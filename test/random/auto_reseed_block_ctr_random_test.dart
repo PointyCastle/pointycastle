@@ -28,7 +28,7 @@ void main() {
 			final keyParam = new KeyParameter(key);
 			final params = new ParametersWithIV(keyParam, new Uint8List(16));
 
-			rnd.init(params);
+			rnd.seed(params);
 
 			final firstExpected = [102, 233, 75, 212, 239, 138, 44, 59, 136, 76, 250, 89, 202, 52, 43, 46, 88];
 			var firstBytes = rnd.nextBytes(17);

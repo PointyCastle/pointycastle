@@ -84,7 +84,7 @@ class _NullSecureRandom extends SecureRandomBase {
 
   String get algorithmName => "Null";
 
-  void init(CipherParameters params) {
+  void seed(CipherParameters params) {
   }
 
   Uint8 nextUint8() => new Uint8(_nextValue++);

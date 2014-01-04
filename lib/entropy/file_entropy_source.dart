@@ -18,7 +18,7 @@ class FileEntropySource implements EntropySource {
 
 	FileEntropySource(this._filePath);
 
-	void init( CipherParameters params ) {
+	void seed( CipherParameters params ) {
 	}
 
 	Future<Uint8List> getBytes( int count ) {
