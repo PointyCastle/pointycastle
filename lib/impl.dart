@@ -25,8 +25,8 @@ import "package:cipher/engines/null_block_cipher.dart";
 import "package:cipher/engines/null_stream_cipher.dart";
 import "package:cipher/engines/salsa20.dart";
 
-import "package:cipher/entropy/dev_random_entropy_source.dart";
-import "package:cipher/entropy/random_org_entropy_source.dart";
+import "package:cipher/entropy/file_entropy_source.dart";
+import "package:cipher/entropy/url_entropy_source.dart";
 
 import "package:cipher/modes/cbc.dart";
 import "package:cipher/modes/sic.dart";
@@ -203,8 +203,19 @@ void _registerSecureRandoms() {
 }
 
 void _registerEntropySources() {
-	EntropySource.registry["/dev/random"] = (_) => new DevRandomEntropySource();
-	EntropySource.registry["random.org"] = (_) => new RandomOrgEntropySource();
+	EntropySource.registry.registerDynamicFactory( (String algorithmName) {
+
+	  if( algorithmName.startsWith("file://") ) {
+      var filePath = algorithmName.substring(7);
+      return new FileEntropySource(filePath);
+
+	  } else if( algorithmName.startsWith("http://") || algorithmName.startsWith("https://") ) {
+	    return new UrlEntropySource(algorithmName);
+
+	  }
+
+	});
+
 }
 
 dynamic _createOrNull( closure() ) {

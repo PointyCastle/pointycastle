@@ -2,15 +2,15 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.entropy.dev_random_entropy_source_test;
+library cipher.test.entropy.file_entropy_source_test;
 
-import "package:cipher/entropy/dev_random_entropy_source.dart";
+import "package:cipher/entropy/file_entropy_source.dart";
 
 import "package:unittest/unittest.dart";
 
 void main() {
 
-	var source = new DevRandomEntropySource();
+	var source = new FileEntropySource("/dev/random");
 	const count = 65536;
 
 	group( "${source.sourceName}:", () {

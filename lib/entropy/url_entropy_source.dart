@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.entropy.random_org_entropy_source;
+library cipher.entropy.url_entropy_source;
 
 import "dart:async";
 import "dart:typed_data";
@@ -10,9 +10,13 @@ import "dart:io";
 
 import "package:cipher/api.dart";
 
-class RandomOrgEntropySource implements EntropySource {
+class UrlEntropySource implements EntropySource {
 
-	String get sourceName => "random.org";
+  final String _url;
+
+	String get sourceName => _url;
+
+	UrlEntropySource(this._url);
 
 	void init( CipherParameters params ) {
 	}
@@ -20,7 +24,8 @@ class RandomOrgEntropySource implements EntropySource {
 	Future<Uint8List> getBytes( int count ) {
 		var completer = new Completer<Uint8List>();
 
-		new HttpClient().getUrl(Uri.parse("https://www.random.org/cgi-bin/randbyte?nbytes=${count}&format=f"))
+		var url = _url.replaceAll( "{count}", count.toString() );
+		new HttpClient().getUrl(Uri.parse(url))
 	 		.then( (HttpClientRequest request) {
 	 			return request.close();
 	 		})

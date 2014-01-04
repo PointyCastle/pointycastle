@@ -13,8 +13,8 @@ import "./engines/null_block_cipher_test.dart" as null_block_cipher_test;
 import "./engines/null_stream_cipher_test.dart" as null_stream_cipher_test;
 import "./engines/salsa20_test.dart" as salsa20_test;
 
-import "./entropy/dev_random_entropy_source_test.dart" as dev_random_entropy_source_test;
-import "./entropy/random_org_entropy_source_test.dart" as random_org_entropy_source_test;
+import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
+import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 
 import "./modes/sic_test.dart" as sic_test;
 import "./modes/cbc_test.dart" as cbc_test;

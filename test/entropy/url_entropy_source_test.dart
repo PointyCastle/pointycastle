@@ -2,15 +2,15 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.entropy.random_org_entropy_source_test;
+library cipher.test.entropy.url_entropy_source_test;
 
-import "package:cipher/entropy/random_org_entropy_source.dart";
+import "package:cipher/entropy/url_entropy_source.dart";
 
 import "package:unittest/unittest.dart";
 
 void main() {
 
-	var source = new RandomOrgEntropySource();
+	var source = new UrlEntropySource("https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f");
 	const count = 1024;
 
 	group( "${source.sourceName}:", () {
@@ -21,13 +21,13 @@ void main() {
 				//print(bytes);
 				expect( bytes.length, count );
 
-				/*
+        /*
 				var sum = bytes.fold(0, (prev, element) => prev + element);
 				var avg = sum/bytes.length;
 				print(avg);
 				expect( avg>128-4, true );
 				expect( avg<128+4, true );
-				*/
+        */
 			});
 
 		});

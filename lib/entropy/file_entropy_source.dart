@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.entropy.dev_random_entropy_source;
+library cipher.entropy.file_entropy_source;
 
 import "dart:async";
 import "dart:typed_data";
@@ -10,11 +10,13 @@ import "dart:io";
 
 import "package:cipher/api.dart";
 
-class DevRandomEntropySource implements EntropySource {
+class FileEntropySource implements EntropySource {
 
-	static const _devicePath = "/dev/random";
+	final _filePath;
 
-	String get sourceName => _devicePath;
+	String get sourceName => "file://${_filePath}";
+
+	FileEntropySource(this._filePath);
 
 	void init( CipherParameters params ) {
 	}
@@ -24,7 +26,7 @@ class DevRandomEntropySource implements EntropySource {
 
 		var data = new Uint8List(count);
 		var offset = 0;
-		new File(_devicePath).openRead(0, count).listen(
+		new File(_filePath).openRead(0, count).listen(
 			(bytes) {
 				data.setRange(offset, offset+bytes.length, bytes);
 				offset += bytes.length;
