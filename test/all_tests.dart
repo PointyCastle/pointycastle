@@ -7,6 +7,7 @@ library cpiher.test.all_tests;
 import "./adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
 
 import "./digests/ripemd160_test.dart" as ripemd160_test;
+import "./digests/sha256_test.dart" as sha256_test;
 
 import "./engines/aes_fast_test.dart" as aes_fast_test;
 import "./engines/null_block_cipher_test.dart" as null_block_cipher_test;
@@ -37,6 +38,7 @@ void main() {
 
   // digests
   ripemd160_test.main();
+  sha256_test.main();
 
   // engines
   aes_fast_test.main();

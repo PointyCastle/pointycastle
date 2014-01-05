@@ -1,5 +1,5 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.engines.salsa20;
@@ -10,10 +10,55 @@ import "package:cipher/api.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-/// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005. 
+const _STATE_SIZE = 16; // 16, 32 bit ints = 64 bytes
+
+/// The Salsa20 core function
+void salsa20Core( int rounds, List<int> input, List<int> x ) {
+  x.setAll( 0, input );
+
+  for( var i=rounds ; i>0 ; i-=2 ) {
+    x[ 4] ^= _rotl((x[ 0]+x[12]), 7);
+    x[ 8] ^= _rotl((x[ 4]+x[ 0]), 9);
+    x[12] ^= _rotl((x[ 8]+x[ 4]),13);
+    x[ 0] ^= _rotl((x[12]+x[ 8]),18);
+    x[ 9] ^= _rotl((x[ 5]+x[ 1]), 7);
+    x[13] ^= _rotl((x[ 9]+x[ 5]), 9);
+    x[ 1] ^= _rotl((x[13]+x[ 9]),13);
+    x[ 5] ^= _rotl((x[ 1]+x[13]),18);
+    x[14] ^= _rotl((x[10]+x[ 6]), 7);
+    x[ 2] ^= _rotl((x[14]+x[10]), 9);
+    x[ 6] ^= _rotl((x[ 2]+x[14]),13);
+    x[10] ^= _rotl((x[ 6]+x[ 2]),18);
+    x[ 3] ^= _rotl((x[15]+x[11]), 7);
+    x[ 7] ^= _rotl((x[ 3]+x[15]), 9);
+    x[11] ^= _rotl((x[ 7]+x[ 3]),13);
+    x[15] ^= _rotl((x[11]+x[ 7]),18);
+    x[ 1] ^= _rotl((x[ 0]+x[ 3]), 7);
+    x[ 2] ^= _rotl((x[ 1]+x[ 0]), 9);
+    x[ 3] ^= _rotl((x[ 2]+x[ 1]),13);
+    x[ 0] ^= _rotl((x[ 3]+x[ 2]),18);
+    x[ 6] ^= _rotl((x[ 5]+x[ 4]), 7);
+    x[ 7] ^= _rotl((x[ 6]+x[ 5]), 9);
+    x[ 4] ^= _rotl((x[ 7]+x[ 6]),13);
+    x[ 5] ^= _rotl((x[ 4]+x[ 7]),18);
+    x[11] ^= _rotl((x[10]+x[ 9]), 7);
+    x[ 8] ^= _rotl((x[11]+x[10]), 9);
+    x[ 9] ^= _rotl((x[ 8]+x[11]),13);
+    x[10] ^= _rotl((x[ 9]+x[ 8]),18);
+    x[12] ^= _rotl((x[15]+x[14]), 7);
+    x[13] ^= _rotl((x[12]+x[15]), 9);
+    x[14] ^= _rotl((x[13]+x[12]),13);
+    x[15] ^= _rotl((x[14]+x[13]),18);
+  }
+
+  for (int i = 0; i < _STATE_SIZE; ++i) {
+    x[i] += input[i];
+  }
+}
+
+/// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005.
 class Salsa20Engine implements StreamCipher {
 
-  static const _STATE_SIZE = 16; // 16, 32 bit ints = 64 bytes
   static const _BYTE_LIMIT = 0x400000000000000000;
 
   static final _sigma = new Uint8List.fromList( "expand 32-byte k".codeUnits );
@@ -151,59 +196,13 @@ class Salsa20Engine implements StreamCipher {
   }
 
   void _generateKeyStream( Uint8List output ) {
-    _salsaCore(20, _engineState, _x);
+    salsa20Core(20, _engineState, _x);
     var outOff = 0;
     for( var x in _x ) {
       new Uint32(x).toLittleEndian(output, outOff);
       outOff += 4;
     }
   }
-
-  void _salsaCore( int rounds, List<int> input, List<int> x ) {
-    x.setAll( 0, input );
-
-    for( var i=rounds ; i>0 ; i-=2 ) {
-      x[ 4] ^= _rotl((x[ 0]+x[12]), 7);
-      x[ 8] ^= _rotl((x[ 4]+x[ 0]), 9);
-      x[12] ^= _rotl((x[ 8]+x[ 4]),13);
-      x[ 0] ^= _rotl((x[12]+x[ 8]),18);
-      x[ 9] ^= _rotl((x[ 5]+x[ 1]), 7);
-      x[13] ^= _rotl((x[ 9]+x[ 5]), 9);
-      x[ 1] ^= _rotl((x[13]+x[ 9]),13);
-      x[ 5] ^= _rotl((x[ 1]+x[13]),18);
-      x[14] ^= _rotl((x[10]+x[ 6]), 7);
-      x[ 2] ^= _rotl((x[14]+x[10]), 9);
-      x[ 6] ^= _rotl((x[ 2]+x[14]),13);
-      x[10] ^= _rotl((x[ 6]+x[ 2]),18);
-      x[ 3] ^= _rotl((x[15]+x[11]), 7);
-      x[ 7] ^= _rotl((x[ 3]+x[15]), 9);
-      x[11] ^= _rotl((x[ 7]+x[ 3]),13);
-      x[15] ^= _rotl((x[11]+x[ 7]),18);
-      x[ 1] ^= _rotl((x[ 0]+x[ 3]), 7);
-      x[ 2] ^= _rotl((x[ 1]+x[ 0]), 9);
-      x[ 3] ^= _rotl((x[ 2]+x[ 1]),13);
-      x[ 0] ^= _rotl((x[ 3]+x[ 2]),18);
-      x[ 6] ^= _rotl((x[ 5]+x[ 4]), 7);
-      x[ 7] ^= _rotl((x[ 6]+x[ 5]), 9);
-      x[ 4] ^= _rotl((x[ 7]+x[ 6]),13);
-      x[ 5] ^= _rotl((x[ 4]+x[ 7]),18);
-      x[11] ^= _rotl((x[10]+x[ 9]), 7);
-      x[ 8] ^= _rotl((x[11]+x[10]), 9);
-      x[ 9] ^= _rotl((x[ 8]+x[11]),13);
-      x[10] ^= _rotl((x[ 9]+x[ 8]),18);
-      x[12] ^= _rotl((x[15]+x[14]), 7);
-      x[13] ^= _rotl((x[12]+x[15]), 9);
-      x[14] ^= _rotl((x[13]+x[12]),13);
-      x[15] ^= _rotl((x[14]+x[13]),18);
-    }
-
-    for (int i = 0; i < _STATE_SIZE; ++i) {
-      x[i] += input[i];
-    }
-  }
-
-  int _rotl(int x, int y) 
-    => (x << y) | (new Uint32(x)>>-y).toInt(); //lsr(x, -y);
 
   void _resetCounter() {
     _counter = 0;
@@ -216,3 +215,7 @@ class Salsa20Engine implements StreamCipher {
   }
 
 }
+
+/// Salsa20Core Helper funcion
+int _rotl(int x, int y)  => (x << y) | (new Uint32(x)>>-y).toInt();
+
