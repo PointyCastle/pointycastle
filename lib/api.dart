@@ -388,7 +388,7 @@ abstract class KeyDerivator {
   /// The [Registry] for [KeyDerivator] algorithms
   static final registry = new Registry<KeyDerivator>();
 
-  /// Create the key factory specified by the standard [algorithmName].
+  /// Create the key derivator specified by the standard [algorithmName].
   factory KeyDerivator( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this factory's standard algorithm name.
@@ -398,13 +398,58 @@ abstract class KeyDerivator {
   int get keySize;
 
   /**
-   * Init the factory with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used (see
-   * the documentation of each implementation to find out more).
+   * Init the derivator with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used
+   * (see the documentation of each implementation to find out more).
    */
   void init( CipherParameters params );
 
   /// Derive key from given input and put it in [out] at offset [outOff].
   int deriveKey( Uint8List inp, int inpOff, Uint8List out, int outOff );
+
+}
+
+/// The interface that asymmetric (public and private) keys conform to.
+abstract class AsymmetricKey {
+}
+
+/// The interface that asymmetric public keys conform to.
+abstract class PublicKey implements AsymmetricKey {
+}
+
+/// The interface that asymmetric private keys conform to.
+abstract class PrivateKey implements AsymmetricKey {
+}
+
+/// A pair of public and private asymmetric keys.
+abstract class AsymmetricKeyPair {
+
+  final PublicKey publicKey;
+  final PrivateKey privateKey;
+
+  AsymmetricKeyPair(this.publicKey, this.privateKey);
+
+}
+
+/// The interface that symmetric key generators conform to.
+abstract class AsymmetricKeyGenerator {
+
+  /// The [Registry] for [AsymmetricKeyGenerator] algorithms
+  static final registry = new Registry<AsymmetricKeyGenerator>();
+
+  /// Create the key generator specified by the standard [algorithmName].
+  factory AsymmetricKeyGenerator( String algorithmName ) => registry.create(algorithmName);
+
+  /// Get this generator's standard algorithm name.
+  String get algorithmName;
+
+  /**
+   * Init the generator with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used
+   * (see the documentation of each implementation to find out more).
+   */
+  void init( CipherParameters params );
+
+  /// Derive key from given input and put it in [out] at offset [outOff].
+  AsymmetricKeyPair generateKeyPair();
 
 }
 

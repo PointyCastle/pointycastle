@@ -8,13 +8,13 @@ import "dart:typed_data";
 import "dart:math";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/ec_key_parameters.dart";
+import "package:cipher/params/asymmetric_key_parameters.dart";
 import "package:cipher/params/parameters_with_random.dart";
 
 class ECDSASigner implements Signer {
 
-  ECPublicKeyParameters _pbkey;
-  ECPrivateKeyParameters _pvkey;
+  ECPublicKey _pbkey;
+  ECPrivateKey _pvkey;
   SecureRandom _random;
 
   String get algorithmName => "ECDSA";
@@ -32,21 +32,30 @@ class ECDSASigner implements Signer {
     _pbkey = _pvkey = null;
 
     if (forSigning) {
+      PrivateKeyParameter pvparams;
+
       if( params is ParametersWithRandom ) {
         _random = params.random;
-        _pvkey = params.parameters;
+        pvparams = params.parameters;
       } else {
         _random = new SecureRandom();
-        _pvkey = params;
+        pvparams = params;
       }
-      if( !(_pvkey is ECPrivateKeyParameters) ) {
-        throw new ArgumentError("Unsupported parameters type ${_pvkey.runtimeType}: should be ECPrivateKeyParameters");
+
+      if( pvparams is! PrivateKeyParameter ) {
+        throw new ArgumentError("Unsupported parameters type ${pvparams.runtimeType}: should be PrivateKeyParameter");
       }
+      _pvkey = pvparams.key;
+
     } else {
-      _pbkey = params;
-      if( !(_pbkey is ECPublicKeyParameters) ) {
-        throw new ArgumentError("Unsupported parameters type ${_pvkey.runtimeType}: should be ECPublicKeyParameters");
+      PublicKeyParameter pbparams;
+
+      pbparams = params;
+
+      if( pbparams is! PublicKeyParameter ) {
+        throw new ArgumentError("Unsupported parameters type ${pbparams.runtimeType}: should be PublicKeyParameter");
       }
+      _pbkey = pbparams.key;
     }
   }
 

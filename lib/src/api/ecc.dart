@@ -95,3 +95,31 @@ abstract class ECCurve {
 	ECPoint decodePoint( List<int> encoded );
 
 }
+
+/// Base class for asymmetric keys in ECC
+abstract class ECAsymmetricKey implements AsymmetricKey {
+
+  final ECDomainParameters parameters;
+
+  ECAsymmetricKey(this.parameters);
+
+}
+
+/// Private keys in ECC
+class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
+
+  final BigInteger d;
+
+  ECPrivateKey(this.d, ECDomainParameters parameters) : super(parameters);
+
+}
+
+/// Public keys in ECC
+class ECPublicKey extends ECAsymmetricKey implements PublicKey {
+
+  final ECPoint Q;
+
+  ECPublicKey( this.Q, ECDomainParameters parameters ) : super(parameters);
+
+}
+

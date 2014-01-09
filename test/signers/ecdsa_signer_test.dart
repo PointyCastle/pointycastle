@@ -5,7 +5,7 @@
 library cipher.test.paddings.ecdsa_signer_test;
 
 import "package:cipher/api.dart";
-import "package:cipher/params/ec_key_parameters.dart";
+import "package:cipher/params/asymmetric_key_parameters.dart";
 import "package:cipher/signers/ecdsa_signer.dart";
 import "package:cipher/impl.dart";
 
@@ -24,10 +24,10 @@ void main() {
 	var Qx = new BigInteger("1498602238651628509310686451034731914387602356706565103527");
 	var Qy = new BigInteger("6264116558863692852155702059476882343593676720209154057133");
 	var Q = eccDomain.curve.createPoint( Qx, Qy );
-	var pubParams = new ECPublicKeyParameters( Q, eccDomain );
+	var pubParams = new PublicKeyParameter( new ECPublicKey(Q, eccDomain));
 
 	var d = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
-	var privParams = new ECPrivateKeyParameters( d, eccDomain );
+	var privParams = new PrivateKeyParameter( new ECPrivateKey(d, eccDomain) );
 
 	runSignerTests( new ECDSASigner(), privParams, pubParams, [
 
