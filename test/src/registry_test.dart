@@ -38,17 +38,15 @@ void main() {
 
     test( "BlockCipher returns valid implementations", () {
 
-      _testBlockCipher( "Null" );
       _testBlockCipher( "AES" );
 
     });
 
     test( "StreamCipher returns valid implementations", () {
 
-      _testStreamCipher( "Null" );
       _testStreamCipher( "Salsa20" );
-      _testStreamCipher( "Null/SIC" );
-      _testStreamCipher( "Null/CTR" );
+      _testStreamCipher( "AES/SIC" );
+      _testStreamCipher( "AES/CTR" );
 
     });
 
@@ -77,15 +75,15 @@ void main() {
 
     test( "ChainingBlockCipher returns valid implementations", () {
 
-      _testChainingBlockCipher( "Null/SIC" );
-      _testChainingBlockCipher( "Null/CTR" );
-      _testChainingBlockCipher( "Null/CBC" );
+      _testChainingBlockCipher( "AES/SIC" );
+      _testChainingBlockCipher( "AES/CTR" );
+      _testChainingBlockCipher( "AES/CBC" );
 
     });
 
     test( "PaddedBlockCipher returns valid implementations", () {
 
-      _testPaddedBlockCipher( "Null/SIC/PKCS7" );
+      _testPaddedBlockCipher( "AES/SIC/PKCS7" );
 
     });
 

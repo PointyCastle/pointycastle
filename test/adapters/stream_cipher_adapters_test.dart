@@ -7,11 +7,12 @@ library cipher.test.adapters.stream_cipher_adapters_test;
 import 'package:unittest/unittest.dart';
 
 import "package:cipher/adapters/stream_cipher_adapters.dart";
-import "package:cipher/engines/null_stream_cipher.dart";
-import "package:cipher/engines/null_block_cipher.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/helpers.dart";
+
+import "../test/src/null_stream_cipher.dart";
+import "../test/src/null_block_cipher.dart";
 
 void main() {
 

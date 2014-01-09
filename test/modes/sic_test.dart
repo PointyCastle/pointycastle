@@ -1,5 +1,5 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.test.modes.sic_test;
@@ -9,12 +9,12 @@ import "dart:typed_data";
 import "package:unittest/unittest.dart";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/engines/null_block_cipher.dart";
 import "package:cipher/modes/sic.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/stream_cipher_tests.dart";
+import "../test/src/null_block_cipher.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java
@@ -45,6 +45,7 @@ void main() {
   group( "SIC as block cipher:", () {
 
     initCipher();
+    BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
     runBlockCipherTests( new ChainingBlockCipher("Null/SIC"), params, [
 

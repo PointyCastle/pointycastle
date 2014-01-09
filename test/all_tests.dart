@@ -11,8 +11,6 @@ import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
 import "./engines/aes_fast_test.dart" as aes_fast_test;
-import "./engines/null_block_cipher_test.dart" as null_block_cipher_test;
-import "./engines/null_stream_cipher_test.dart" as null_stream_cipher_test;
 import "./engines/salsa20_test.dart" as salsa20_test;
 
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
@@ -49,8 +47,6 @@ void main() {
 
   // engines
   aes_fast_test.main();
-  null_block_cipher_test.main();
-  null_stream_cipher_test.main();
   salsa20_test.main();
 
   // entropy sources (some commented because they need external resources)

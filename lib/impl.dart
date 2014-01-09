@@ -23,8 +23,6 @@ import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
 
 import "package:cipher/engines/aes_fast.dart";
-import "package:cipher/engines/null_block_cipher.dart";
-import "package:cipher/engines/null_stream_cipher.dart";
 import "package:cipher/engines/salsa20.dart";
 
 import "package:cipher/entropy/file_entropy_source.dart";
@@ -91,11 +89,9 @@ void _registerEccStandardCurves() {
 
 void _registerBlockCiphers() {
   BlockCipher.registry["AES"] = (_) => new AESFastEngine();
-  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 }
 
 void _registerStreamCiphers() {
-  StreamCipher.registry["Null"] = (_) => new NullStreamCipher();
   StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
   StreamCipher.registry.registerDynamicFactory( _ctrStreamCipherFactory );
   StreamCipher.registry.registerDynamicFactory( _sicStreamCipherFactory );
