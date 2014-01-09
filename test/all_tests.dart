@@ -7,6 +7,7 @@ library cpiher.test.all_tests;
 import "./adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
 
 import "./digests/ripemd160_test.dart" as ripemd160_test;
+import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
 import "./engines/aes_fast_test.dart" as aes_fast_test;
@@ -17,13 +18,18 @@ import "./engines/salsa20_test.dart" as salsa20_test;
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
 import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 
+import "./key_factories/pbkdf2_test.dart" as pbkdf2_test;
+import "./key_factories/scrypt_test.dart" as scrypt_test;
+
+import "./macs/hmac_test.dart" as hmac_test;
+
 import "./modes/sic_test.dart" as sic_test;
 import "./modes/cbc_test.dart" as cbc_test;
 
 import "./paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
 import "./paddings/pkcs7_test.dart" as pkcs7_test;
 
-import "./random/auto_reseed_block_ctr_random_test.dart" as auto_reseed_block_ctr_random_test;
+import "./random/auto_seed_block_ctr_random_test.dart" as auto_seed_block_ctr_random_test;
 import "./random/block_ctr_random_test.dart" as block_ctr_random_test;
 
 import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
@@ -38,6 +44,7 @@ void main() {
 
   // digests
   ripemd160_test.main();
+  sha1_test.main();
   sha256_test.main();
 
   // engines
@@ -50,6 +57,13 @@ void main() {
   //dev_random_entropy_source_test.main();
   //random_org_entropy_source_test.main();
 
+  // key factories
+  pbkdf2_test.main();
+  scrypt_test.main();
+
+  // MACs
+  hmac_test.main();
+
   // modes
   sic_test.main();
   cbc_test.main();
@@ -59,7 +73,7 @@ void main() {
   pkcs7_test.main();
 
   // secure randoms
-  auto_reseed_block_ctr_random_test.main();
+  auto_seed_block_ctr_random_test.main();
   block_ctr_random_test.main();
 
   // signers

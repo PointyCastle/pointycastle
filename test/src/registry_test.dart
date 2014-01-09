@@ -10,81 +10,103 @@ import "package:unittest/unittest.dart";
 import "package:unittest/matcher.dart";
 
 void main() {
-  
+
   initCipher();
-  
-  test( "initCipher() can be called several times", () {
 
-    initCipher();
-    initCipher();
+  group( "registry:", () {
 
-  });
+    test( "initCipher() can be called several times", () {
 
-  test( "BlockCipher returns valid implementations", () {
+      initCipher();
+      initCipher();
 
-    _testBlockCipher( "Null" );
-    _testBlockCipher( "AES" );
+    });
 
-  });
+    test( "Digest returns valid implementations", () {
 
-  test( "ChainingBlockCipher returns valid implementations", () {
+      _testDigest( "RIPEMD-160" );
+      _testDigest( "SHA-1" );
+      _testDigest( "SHA-256" );
 
-    _testChainingBlockCipher( "Null/SIC" );
-    _testChainingBlockCipher( "Null/CTR" );
-    _testChainingBlockCipher( "Null/CBC" );
-    
-  });
+    });
 
-  test( "StreamCipher returns valid implementations", () {
-    
-    _testStreamCipher( "Null" );
-    _testStreamCipher( "Salsa20" );
-    _testStreamCipher( "Null/SIC" );
-    _testStreamCipher( "Null/CTR" );
+    test( "ECDomainParameters returns valid implementations", () {
 
-  });
+      _testECDomainParameters( "prime192v1" );
 
-  test( "Digest returns valid implementations", () {
+    });
 
-    _testDigest( "RIPEMD-160" );
+    test( "BlockCipher returns valid implementations", () {
 
-  });
+      _testBlockCipher( "Null" );
+      _testBlockCipher( "AES" );
 
-  test( "Padding returns valid implementations", () {
+    });
 
-    _testPadding( "PKCS7" );
+    test( "StreamCipher returns valid implementations", () {
 
-  });
+      _testStreamCipher( "Null" );
+      _testStreamCipher( "Salsa20" );
+      _testStreamCipher( "Null/SIC" );
+      _testStreamCipher( "Null/CTR" );
 
-  test( "PaddedBlockCipher returns valid implementations", () {
+    });
 
-    _testPaddedBlockCipher( "Null/SIC/PKCS7" );
+    test( "EntropySource returns valid implementations", () {
 
-  });
+      _testEntropySource( "file:///dev/random" );
+      _testEntropySource( "http://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f" );
+      _testEntropySource( "https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f" );
 
-  test( "ECDomainParameters returns valid implementations", () {
+    });
 
-		_testECDomainParameters( "prime192v1" );
+    test( "KeyFactory returns valid implementations", () {
 
-  });
+      _testKeyFactory( "SHA-1/HMAC/PBKDF2" );
+      _testKeyFactory( "scrypt" );
 
-  test( "Signer returns valid implementations", () {
+    });
 
-		_testSigner( "ECDSA" );
+    test( "Mac returns valid implementations", () {
 
-  });
+      _testMac( "SHA-1/HMAC" );
+      _testMac( "SHA-256/HMAC" );
+      _testMac( "RIPEMD-160/HMAC" );
 
-  test( "SecureRandom returns valid implementations", () {
+    });
 
-		_testSecureRandom( "AES/CTR/PRNG" );
-		_testSecureRandom( "AES/CTR/AUTO_RESEED_PRNG" );
+    test( "ChainingBlockCipher returns valid implementations", () {
 
-  });
+      _testChainingBlockCipher( "Null/SIC" );
+      _testChainingBlockCipher( "Null/CTR" );
+      _testChainingBlockCipher( "Null/CBC" );
 
-  test( "EntropySource returns valid implementations", () {
+    });
 
-		_testEntropySource( "/dev/random" );
-		_testEntropySource( "random.org" );
+    test( "PaddedBlockCipher returns valid implementations", () {
+
+      _testPaddedBlockCipher( "Null/SIC/PKCS7" );
+
+    });
+
+    test( "Padding returns valid implementations", () {
+
+      _testPadding( "PKCS7" );
+
+    });
+
+    test( "SecureRandom returns valid implementations", () {
+
+      _testSecureRandom( "AES/CTR/PRNG" );
+      _testSecureRandom( "AES/CTR/AUTO-SEED-PRNG" );
+
+    });
+
+    test( "Signer returns valid implementations", () {
+
+  		_testSigner( "ECDSA" );
+
+    });
 
   });
 
@@ -108,6 +130,18 @@ void _testDigest( String algorithmName ) {
   expect( digest.algorithmName, algorithmName );
 }
 
+void _testKeyFactory( String algorithmName ) {
+  var kf = new KeyFactory(algorithmName);
+  expect( kf, new isInstanceOf<KeyFactory>("KeyFactory") );
+  expect( kf.algorithmName, algorithmName );
+}
+
+void _testMac( String algorithmName ) {
+  var mac = new Mac(algorithmName);
+  expect( mac, new isInstanceOf<Mac>("Mac") );
+  expect( mac.algorithmName, algorithmName );
+}
+
 void _testPadding( String algorithmName ) {
   var padding = new Padding(algorithmName);
   expect( padding, new isInstanceOf<Padding>("Padding") );
@@ -120,7 +154,7 @@ void _testChainingBlockCipher( String algorithmName ) {
   var cbc = new ChainingBlockCipher(algorithmName);
   expect( cbc, new isInstanceOf<ChainingBlockCipher>("ChainingBlockCipher") );
   expect( cbc.algorithmName, equals(algorithmName) );
-  
+
   var bc = cbc.underlyingCipher;
   expect( bc, new isInstanceOf<BlockCipher>("BlockCipher") );
   expect( bc.algorithmName, equals(parts[0]) );
