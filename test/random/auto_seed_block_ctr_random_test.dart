@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.random.auto_reseed_block_ctr_random_test;
+library cipher.test.random.auto_seed_block_ctr_random_test;
 
 import "dart:typed_data";
 
@@ -18,9 +18,9 @@ void main() {
 
 	initCipher();
 
-	group( "AutoReseedBlockCtrRandom:", () {
+	group( "AutoSeedBlockCtrRandom:", () {
 
-		final rnd = new SecureRandom("AES/CTR/AUTO_RESEED_PRNG");
+		final rnd = new SecureRandom("AES/CTR/AUTO-SEED-PRNG");
 
 		test( "${rnd.algorithmName}", () {
 

@@ -1,4 +1,4 @@
-library cipher.random.auto_reseed_block_ctr_random;
+library cipher.random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
 
@@ -13,16 +13,16 @@ import "package:cipher/params/key_parameter.dart";
  * self reseeds itself after each request for data, in order to achieve forward security. See section 4.1 of the paper:
  * Practical Random Number Generation in Software (by John Viega).
  */
-class AutoReseedBlockCtrRandom implements SecureRandom {
+class AutoSeedBlockCtrRandom implements SecureRandom {
 
 	BlockCtrRandom _delegate;
 
 	var _inAutoReseed = false;
 	var _autoReseedKeyLength;
 
-  String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO_RESEED_PRNG";
+  String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
 
-	AutoReseedBlockCtrRandom(BlockCipher cipher) {
+  AutoSeedBlockCtrRandom(BlockCipher cipher) {
 		_delegate = new BlockCtrRandom(cipher);
 	}
 
