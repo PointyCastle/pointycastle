@@ -58,10 +58,10 @@ void main() {
 
     });
 
-    test( "KeyFactory returns valid implementations", () {
+    test( "KeyDerivator returns valid implementations", () {
 
-      _testKeyFactory( "SHA-1/HMAC/PBKDF2" );
-      _testKeyFactory( "scrypt" );
+      _testKeyDerivator( "SHA-1/HMAC/PBKDF2" );
+      _testKeyDerivator( "scrypt" );
 
     });
 
@@ -128,9 +128,9 @@ void _testDigest( String algorithmName ) {
   expect( digest.algorithmName, algorithmName );
 }
 
-void _testKeyFactory( String algorithmName ) {
-  var kf = new KeyFactory(algorithmName);
-  expect( kf, new isInstanceOf<KeyFactory>("KeyFactory") );
+void _testKeyDerivator( String algorithmName ) {
+  var kf = new KeyDerivator(algorithmName);
+  expect( kf, new isInstanceOf<KeyDerivator>("KeyDerivator") );
   expect( kf.algorithmName, algorithmName );
 }
 

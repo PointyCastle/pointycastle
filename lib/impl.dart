@@ -28,8 +28,8 @@ import "package:cipher/engines/salsa20.dart";
 import "package:cipher/entropy/file_entropy_source.dart";
 import "package:cipher/entropy/url_entropy_source.dart";
 
-import "package:cipher/key_factories/pbkdf2.dart";
-import "package:cipher/key_factories/scrypt.dart";
+import "package:cipher/key_derivators/pbkdf2.dart";
+import "package:cipher/key_derivators/scrypt.dart";
 
 import "package:cipher/macs/hmac.dart";
 
@@ -103,8 +103,8 @@ void _registerEntropySources() {
 }
 
 void _registerKeyFactories() {
-  KeyFactory.registry["scrypt"] = (_) => new Scrypt();
-  KeyFactory.registry.registerDynamicFactory( _pbkdf2KeyFactoryFactory );
+  KeyDerivator.registry["scrypt"] = (_) => new Scrypt();
+  KeyDerivator.registry.registerDynamicFactory( _pbkdf2KeyDerivatorFactory );
 }
 
 void _registerMacs() {
@@ -193,7 +193,7 @@ EntropySource _urlEntropySourceFactory(String algorithmName) {
   }
 }
 
-KeyFactory _pbkdf2KeyFactoryFactory(String algorithmName) {
+KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
   var i = algorithmName.lastIndexOf("/");
 
   if( i==-1 ) return null;
@@ -203,7 +203,7 @@ KeyFactory _pbkdf2KeyFactoryFactory(String algorithmName) {
       new Mac(algorithmName.substring(0, i))
   );
   if( mac!=null ) {
-    return new PBKDF2KeyFactory(mac);
+    return new PBKDF2KeyDerivator(mac);
   }
 }
 

@@ -12,9 +12,9 @@ import "package:unittest/unittest.dart";
 
 import "./helpers.dart";
 
-void runKeyFactoryTests( KeyFactory keyFactory, List<dynamic> paramsPasswordKeyTuples ) {
+void runKeyDerivatorTests( KeyDerivator keyDerivator, List<dynamic> paramsPasswordKeyTuples ) {
 
-  group( "${keyFactory.algorithmName}:", () {
+  group( "${keyDerivator.algorithmName}:", () {
 
     group( "deriveKey:", () {
 
@@ -25,7 +25,7 @@ void runKeyFactoryTests( KeyFactory keyFactory, List<dynamic> paramsPasswordKeyT
         var key = paramsPasswordKeyTuples[i+2];
 
         test( "${formatAsTruncated(password)}", () =>
-          _runKeyFactoryTest( keyFactory, params, password, key )
+          _runKeyDerivatorTest( keyDerivator, params, password, key )
         );
 
       }
@@ -35,13 +35,13 @@ void runKeyFactoryTests( KeyFactory keyFactory, List<dynamic> paramsPasswordKeyT
 
 }
 
-void _runKeyFactoryTest( KeyFactory keyFactory, CipherParameters params, String password, String expectedHexKey ) {
+void _runKeyDerivatorTest( KeyDerivator keyDerivator, CipherParameters params, String password, String expectedHexKey ) {
 
-  keyFactory.init(params);
+  keyDerivator.init(params);
 
-  var out = new Uint8List(keyFactory.keySize);
+  var out = new Uint8List(keyDerivator.keySize);
   var passwordBytes = createUint8ListFromString( password );
-  keyFactory.deriveKey(passwordBytes, 0, out, 0);
+  keyDerivator.deriveKey(passwordBytes, 0, out, 0);
 
   var hexOut = formatBytesAsHexString(out);
   expect( hexOut, equals(expectedHexKey) );

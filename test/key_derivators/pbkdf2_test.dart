@@ -2,14 +2,14 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.key_factories.pbkdf2_test;
+library cipher.test.key_derivators.pbkdf2_test;
 
 import 'package:cipher/cipher.dart';
 
-import 'package:cipher/key_factories/pbkdf2.dart';
+import 'package:cipher/key_derivators/pbkdf2.dart';
 import "package:cipher/params/pbkdf2_parameters.dart";
 
-import '../test/key_factories_tests.dart';
+import '../test/key_derivators_tests.dart';
 import '../test/helpers.dart';
 
 
@@ -19,10 +19,10 @@ void main() {
   initCipher();
 
   var salt = createUint8ListFromString("salt");
-  var pkcs = new PBKDF2KeyFactory(new Mac("SHA-1/HMAC"));
+  var pkcs = new PBKDF2KeyDerivator(new Mac("SHA-1/HMAC"));
   var params = new Pbkdf2Parameters(salt, 100, 16);
 
-  runKeyFactoryTests( pkcs, [
+  runKeyDerivatorTests( pkcs, [
 
     params,
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",

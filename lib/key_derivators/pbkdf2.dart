@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.key_factories.pbkdf2;
+library cipher.key_derivators.pbkdf2;
 
 import "dart:typed_data";
 
@@ -17,13 +17,13 @@ import "package:cipher/params/key_parameter.dart";
  * * [http://www.rsasecurity.com/rsalabs/pkcs/pkcs-5/index.html]
  *
  */
-class PBKDF2KeyFactory implements KeyFactory {
+class PBKDF2KeyDerivator implements KeyDerivator {
 
   Pbkdf2Parameters _params;
   Mac _mac;
   Uint8List _state;
 
-  PBKDF2KeyFactory(this._mac) {
+  PBKDF2KeyDerivator(this._mac) {
     _state = new Uint8List(_mac.macSize);
   }
 

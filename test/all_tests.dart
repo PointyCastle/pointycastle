@@ -16,8 +16,8 @@ import "./engines/salsa20_test.dart" as salsa20_test;
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
 import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 
-import "./key_factories/pbkdf2_test.dart" as pbkdf2_test;
-import "./key_factories/scrypt_test.dart" as scrypt_test;
+import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
+import "./key_derivators/scrypt_test.dart" as scrypt_test;
 
 import "./macs/hmac_test.dart" as hmac_test;
 

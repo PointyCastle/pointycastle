@@ -2,14 +2,14 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.key_factories.scrypt_test;
+library cipher.test.key_derivators.scrypt_test;
 
 import 'package:cipher/impl.dart';
 
-import 'package:cipher/key_factories/scrypt.dart';
+import 'package:cipher/key_derivators/scrypt.dart';
 import "package:cipher/params/scrypt_parameters.dart";
 
-import '../test/key_factories_tests.dart';
+import '../test/key_derivators_tests.dart';
 import '../test/helpers.dart';
 
 
@@ -22,7 +22,7 @@ void main() {
 
   var scrypt = new Scrypt();
 
-  runKeyFactoryTests( scrypt, [
+  runKeyDerivatorTests( scrypt, [
 
     new ScryptParameters( 1024, 8, 16, 64, createUint8ListFromString("NaCl") ),
     "password",

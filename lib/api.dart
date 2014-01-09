@@ -382,14 +382,14 @@ abstract class EntropySource {
 
 }
 
-/// The interface that a symmetric key factory conforms to.
-abstract class KeyFactory {
+/// The interface that a symmetric key derivator conforms to.
+abstract class KeyDerivator {
 
-  /// The [Registry] for [KeyFactory] algorithms
-  static final registry = new Registry<KeyFactory>();
+  /// The [Registry] for [KeyDerivator] algorithms
+  static final registry = new Registry<KeyDerivator>();
 
   /// Create the key factory specified by the standard [algorithmName].
-  factory KeyFactory( String algorithmName ) => registry.create(algorithmName);
+  factory KeyDerivator( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this factory's standard algorithm name.
   String get algorithmName;
