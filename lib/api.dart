@@ -381,3 +381,30 @@ abstract class EntropySource {
 	Future<Uint8List> getBytes( int count );
 
 }
+
+/// The interface that a symmetric key factory conforms to.
+abstract class KeyFactory {
+
+  /// The [Registry] for [KeyFactory] algorithms
+  static final registry = new Registry<KeyFactory>();
+
+  /// Create the key factory specified by the standard [algorithmName].
+  factory KeyFactory( String algorithmName ) => registry.create(algorithmName);
+
+  /// Get this factory's standard algorithm name.
+  String get algorithmName;
+
+  /// Get this factory's output size.
+  int get keySize;
+
+  /**
+   * Init the factory with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used (see
+   * the documentation of each implementation to find out more).
+   */
+  void init( CipherParameters params );
+
+  /// Derive key from given input and put it in [out] at offset [outOff].
+  int deriveKey( Uint8List inp, int inpOff, Uint8List out, int outOff );
+
+}
+
