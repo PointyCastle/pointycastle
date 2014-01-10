@@ -6,11 +6,12 @@ library cpiher.test.all_tests;
 
 import "./adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
 
+import "./block/aes_fast_test.dart" as aes_fast_test;
+
 import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
-import "./engines/aes_fast_test.dart" as aes_fast_test;
 import "./engines/salsa20_test.dart" as salsa20_test;
 
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
@@ -42,13 +43,15 @@ void main() {
   // adapters
   stream_cipher_adapters_test.main();
 
+  // block ciphers
+  aes_fast_test.main();
+
   // digests
   ripemd160_test.main();
   sha1_test.main();
   sha256_test.main();
 
   // engines
-  aes_fast_test.main();
   salsa20_test.main();
 
   // entropy sources (some commented because they need external resources)

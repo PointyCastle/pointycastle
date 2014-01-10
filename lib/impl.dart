@@ -15,6 +15,8 @@ import "package:cipher/api.dart";
 
 import "package:cipher/adapters/stream_cipher_adapters.dart";
 
+import "package:cipher/block/aes_fast.dart";
+
 import "package:cipher/digests/ripemd160.dart";
 import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha256.dart";
@@ -22,7 +24,6 @@ import "package:cipher/digests/sha256.dart";
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
 
-import "package:cipher/engines/aes_fast.dart";
 import "package:cipher/engines/salsa20.dart";
 
 import "package:cipher/entropy/file_entropy_source.dart";
@@ -56,9 +57,9 @@ bool _initialized = false;
 void initCipher() {
   if( !_initialized ) {
     _initialized = true;
+    _registerBlockCiphers();
     _registerDigests();
     _registerEccStandardCurves();
-    _registerBlockCiphers();
     _registerStreamCiphers();
     _registerEntropySources();
     _registerKeyDerivators();
@@ -70,6 +71,10 @@ void initCipher() {
     _registerSecureRandoms();
     _registerSigners();
   }
+}
+
+void _registerBlockCiphers() {
+  BlockCipher.registry["AES"] = (_) => new AESFastEngine();
 }
 
 void _registerDigests() {
@@ -88,10 +93,6 @@ void _registerEccStandardCurves() {
       h: BigInteger.ONE,
       seed: new BigInteger("3045ae6fc8422f64ed579528d38120eae12196d5", 16)
   );
-}
-
-void _registerBlockCiphers() {
-  BlockCipher.registry["AES"] = (_) => new AESFastEngine();
 }
 
 void _registerStreamCiphers() {
