@@ -14,9 +14,7 @@ library cipher.api;
 import "dart:async";
 import "dart:typed_data";
 
-//import "package:bignum/bignum.dart" as bn;
-import 'dart:math' as Mathx;
-part "./src/bignum/big_integer.dart";
+import "package:bignum/bignum.dart";
 
 part "./src/registry.dart";
 part "./src/ufixnum.dart";

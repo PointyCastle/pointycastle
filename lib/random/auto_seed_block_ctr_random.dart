@@ -2,6 +2,8 @@ library cipher.random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
 
+import "package:bignum/bignum.dart";
+
 import "package:cipher/api.dart";
 import "package:cipher/random/block_ctr_random.dart";
 import "package:cipher/params/parameters_with_iv.dart";

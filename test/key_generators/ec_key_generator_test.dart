@@ -4,6 +4,8 @@
 
 library cipher.test.key_generators.ec_key_generator_test;
 
+import 'package:bignum/bignum.dart';
+
 import 'package:cipher/api.dart';
 import 'package:cipher/impl.dart';
 

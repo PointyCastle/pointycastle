@@ -6,6 +6,8 @@ library cipher.random.secure_random_base;
 
 import "dart:typed_data";
 
+import "package:bignum/bignum.dart";
+
 import "package:cipher/api.dart";
 
 /// An utility base implementation of [SecureRandom] so that only [nextUint8] method needs to be implemented.

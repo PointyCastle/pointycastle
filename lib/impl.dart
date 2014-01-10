@@ -11,6 +11,8 @@
  */
 library cipher.impl;
 
+import "package:bignum/bignum.dart";
+
 import "package:cipher/api.dart";
 
 import "package:cipher/adapters/stream_cipher_adapters.dart";

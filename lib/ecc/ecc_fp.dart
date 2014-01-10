@@ -6,6 +6,8 @@ library cipher.src.ecc_fp;
 
 import "dart:typed_data";
 
+import 'package:bignum/bignum.dart';
+
 import "package:cipher/api.dart";
 import "package:cipher/ecc/ecc_base.dart" hide ECFieldElementBase, ECPointBase, ECCurveBase;
 import "package:cipher/ecc/ecc_base.dart" as ecc;
