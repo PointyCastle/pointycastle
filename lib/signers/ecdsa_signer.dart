@@ -20,7 +20,6 @@ class ECDSASigner implements Signer {
   String get algorithmName => "ECDSA";
 
   void reset() {
-    // TODO implement this method
   }
 
   /**
