@@ -8,7 +8,7 @@ import "dart:typed_data";
 import "dart:math";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/asymmetric_key_parameters.dart";
+import "package:cipher/params/asymmetric_key_parameter.dart";
 import "package:cipher/params/parameters_with_random.dart";
 
 class ECDSASigner implements Signer {

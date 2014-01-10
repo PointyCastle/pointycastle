@@ -19,10 +19,12 @@ import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_tes
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
 
+import "./key_generators/ec_key_generator_test.dart" as ec_key_generator_test;
+
 import "./macs/hmac_test.dart" as hmac_test;
 
-import "./modes/sic_test.dart" as sic_test;
 import "./modes/cbc_test.dart" as cbc_test;
+import "./modes/sic_test.dart" as sic_test;
 
 import "./paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
 import "./paddings/pkcs7_test.dart" as pkcs7_test;
@@ -53,16 +55,19 @@ void main() {
   //dev_random_entropy_source_test.main();
   //random_org_entropy_source_test.main();
 
-  // key factories
+  // key derivators
   pbkdf2_test.main();
   scrypt_test.main();
+
+  // key generators
+  ec_key_generator_test.main();
 
   // MACs
   hmac_test.main();
 
   // modes
-  sic_test.main();
   cbc_test.main();
+  sic_test.main();
 
   // paddings
   padded_block_cipher_test.main();

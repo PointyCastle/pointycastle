@@ -112,6 +112,16 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
 
   ECPrivateKey(this.d, ECDomainParameters parameters) : super(parameters);
 
+  bool operator ==( other ) {
+    if( other==null ) return false;
+    if( other is! ECPrivateKey ) return false;
+    return (other.parameters==this.parameters) && (other.d==this.d);
+  }
+
+  int get hashCode {
+    return parameters.hashCode+d.hashCode;
+  }
+
 }
 
 /// Public keys in ECC
@@ -120,6 +130,16 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
   final ECPoint Q;
 
   ECPublicKey( this.Q, ECDomainParameters parameters ) : super(parameters);
+
+  bool operator ==( other ) {
+    if( other==null ) return false;
+    if( other is! ECPublicKey ) return false;
+    return (other.parameters==this.parameters) && (other.Q==this.Q);
+  }
+
+  int get hashCode {
+    return parameters.hashCode+Q.hashCode;
+  }
 
 }
 

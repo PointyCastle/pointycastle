@@ -6,10 +6,10 @@ library cipher.test.test.signer_tests;
 
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/random/secure_random_base.dart";
 
 import "package:unittest/unittest.dart";
 
+import "./src/null_secure_random.dart";
 import "./helpers.dart";
 
 void runSignerTests( Signer signer, CipherParameters signParams, CipherParameters verifyParams, List<String> messageSignaturePairs ) {
@@ -51,7 +51,7 @@ void runSignerTests( Signer signer, CipherParameters signParams, CipherParameter
 }
 
 void _runGenerateSignatureTest(Signer signer, CipherParameters params, String message, String expectedSignature) {
-	var paramsWithRandom = new ParametersWithRandom( params, new _NullSecureRandom() );
+	var paramsWithRandom = new ParametersWithRandom( params, new NullSecureRandom() );
 
 	signer.reset();
 	signer.init(true, paramsWithRandom);
@@ -77,19 +77,4 @@ Signature _decodeSignature(String signature) {
 	var s = new BigInteger( parts[1].substring(0, parts[1].length-1) );
 	return new Signature( r, s );
 }
-
-class _NullSecureRandom extends SecureRandomBase {
-
-  var _nextValue=0;
-
-  String get algorithmName => "Null";
-
-  void seed(CipherParameters params) {
-  }
-
-  Uint8 nextUint8() => new Uint8(_nextValue++);
-
-}
-
-
 

@@ -7,8 +7,8 @@ library cipher.key_derivators.scrypt;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/scrypt_parameters.dart";
-import "package:cipher/params/pbkdf2_parameters.dart";
+import "package:cipher/params/key_derivators/scrypt_parameters.dart";
+import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 
 /**
  * Implementation of SCrypt password based key derivation function. See the next link for info on how to choose N, r, and p:

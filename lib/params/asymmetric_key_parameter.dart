@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.params.asymmetric_key_parameters;
+library cipher.params.asymmetric_key_parameter;
 
 import "package:cipher/api.dart";
 

@@ -31,6 +31,8 @@ import "package:cipher/entropy/url_entropy_source.dart";
 import "package:cipher/key_derivators/pbkdf2.dart";
 import "package:cipher/key_derivators/scrypt.dart";
 
+import "package:cipher/key_generators/ec_key_generator.dart";
+
 import "package:cipher/macs/hmac.dart";
 
 import "package:cipher/modes/cbc.dart";
@@ -59,7 +61,8 @@ void initCipher() {
     _registerBlockCiphers();
     _registerStreamCiphers();
     _registerEntropySources();
-    _registerKeyFactories();
+    _registerKeyDerivators();
+    _registerKeyGenerators();
     _registerMacs();
     _registerChainingBlockCiphers();
     _registerPaddedBlockCiphers();
@@ -102,9 +105,13 @@ void _registerEntropySources() {
   EntropySource.registry.registerDynamicFactory( _urlEntropySourceFactory );
 }
 
-void _registerKeyFactories() {
+void _registerKeyDerivators() {
   KeyDerivator.registry["scrypt"] = (_) => new Scrypt();
   KeyDerivator.registry.registerDynamicFactory( _pbkdf2KeyDerivatorFactory );
+}
+
+void _registerKeyGenerators() {
+  KeyGenerator.registry["EC"] = (_) => new ECKeyGenerator();
 }
 
 void _registerMacs() {

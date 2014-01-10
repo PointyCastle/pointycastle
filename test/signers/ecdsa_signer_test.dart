@@ -5,7 +5,7 @@
 library cipher.test.paddings.ecdsa_signer_test;
 
 import "package:cipher/api.dart";
-import "package:cipher/params/asymmetric_key_parameters.dart";
+import "package:cipher/params/asymmetric_key_parameter.dart";
 import "package:cipher/signers/ecdsa_signer.dart";
 import "package:cipher/impl.dart";
 

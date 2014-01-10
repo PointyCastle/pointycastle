@@ -16,7 +16,7 @@ import "dart:typed_data";
 
 //import "package:bignum/bignum.dart" as bn;
 import 'dart:math' as Mathx;
-part "src/bignum/big_integer.dart";
+part "./src/bignum/big_integer.dart";
 
 part "./src/registry.dart";
 part "./src/ufixnum.dart";
@@ -421,7 +421,7 @@ abstract class PrivateKey implements AsymmetricKey {
 }
 
 /// A pair of public and private asymmetric keys.
-abstract class AsymmetricKeyPair {
+class AsymmetricKeyPair {
 
   final PublicKey publicKey;
   final PrivateKey privateKey;
@@ -430,14 +430,14 @@ abstract class AsymmetricKeyPair {
 
 }
 
-/// The interface that symmetric key generators conform to.
-abstract class AsymmetricKeyGenerator {
+/// The interface that asymmetric key generators conform to.
+abstract class KeyGenerator {
 
-  /// The [Registry] for [AsymmetricKeyGenerator] algorithms
-  static final registry = new Registry<AsymmetricKeyGenerator>();
+  /// The [Registry] for [KeyGenerator] algorithms
+  static final registry = new Registry<KeyGenerator>();
 
   /// Create the key generator specified by the standard [algorithmName].
-  factory AsymmetricKeyGenerator( String algorithmName ) => registry.create(algorithmName);
+  factory KeyGenerator( String algorithmName ) => registry.create(algorithmName);
 
   /// Get this generator's standard algorithm name.
   String get algorithmName;

@@ -65,6 +65,12 @@ void main() {
 
     });
 
+    test( "KeyGenerator returns valid implementations", () {
+
+      _testKeyGenerator( "EC" );
+
+    });
+
     test( "Mac returns valid implementations", () {
 
       _testMac( "SHA-1/HMAC" );
@@ -132,6 +138,12 @@ void _testKeyDerivator( String algorithmName ) {
   var kf = new KeyDerivator(algorithmName);
   expect( kf, new isInstanceOf<KeyDerivator>("KeyDerivator") );
   expect( kf.algorithmName, algorithmName );
+}
+
+void _testKeyGenerator( String algorithmName ) {
+  var kg = new KeyGenerator(algorithmName);
+  expect( kg, new isInstanceOf<KeyGenerator>("KeyGenerator") );
+  expect( kg.algorithmName, algorithmName );
 }
 
 void _testMac( String algorithmName ) {

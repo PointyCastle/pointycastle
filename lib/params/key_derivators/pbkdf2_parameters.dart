@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.params.pbkdf2_parameters;
+library cipher.params.key_derivators.pbkdf2_parameters;
 
 import "dart:typed_data";
 

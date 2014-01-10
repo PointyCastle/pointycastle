@@ -14,7 +14,7 @@ library cipher;
 export "package:cipher/api.dart";
 export "package:cipher/impl.dart";
 
-export 'package:cipher/params/asymmetric_key_parameters.dart';
+export 'package:cipher/params/asymmetric_key_parameter.dart';
 export 'package:cipher/params/key_parameter.dart';
 export 'package:cipher/params/padded_block_cipher_parameters.dart';
 export 'package:cipher/params/parameters_with_iv.dart';

@@ -7,7 +7,7 @@ library cipher.key_derivators.pbkdf2;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/pbkdf2_parameters.dart";
+import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 import "package:cipher/params/key_parameter.dart";
 
 /**

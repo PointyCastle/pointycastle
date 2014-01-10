@@ -7,7 +7,7 @@ library cipher.test.key_derivators.scrypt_test;
 import 'package:cipher/impl.dart';
 
 import 'package:cipher/key_derivators/scrypt.dart';
-import "package:cipher/params/scrypt_parameters.dart";
+import "package:cipher/params/key_derivators/scrypt_parameters.dart";
 
 import '../test/key_derivators_tests.dart';
 import '../test/helpers.dart';

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.params.scrypt_parameters;
+library cipher.params.key_derivators.scrypt_parameters;
 
 import "dart:typed_data";
 

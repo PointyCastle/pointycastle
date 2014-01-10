@@ -7,7 +7,7 @@ library cipher.test.key_derivators.pbkdf2_test;
 import 'package:cipher/cipher.dart';
 
 import 'package:cipher/key_derivators/pbkdf2.dart';
-import "package:cipher/params/pbkdf2_parameters.dart";
+import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 
 import '../test/key_derivators_tests.dart';
 import '../test/helpers.dart';

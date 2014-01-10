@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.test.key_factories_tests;
+library cipher.test.test.key_derivators_tests;
 
 import "dart:typed_data";
 
