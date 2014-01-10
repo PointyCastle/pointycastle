@@ -12,8 +12,6 @@ import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
-import "./engines/salsa20_test.dart" as salsa20_test;
-
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
 import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 
@@ -38,6 +36,8 @@ import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 import "./src/registry_test.dart" as registry_test;
 import "./src/ufixnum_test.dart" as ufixnum_test;
 
+import "./stream/salsa20_test.dart" as salsa20_test;
+
 void main() {
 
   // adapters
@@ -50,9 +50,6 @@ void main() {
   ripemd160_test.main();
   sha1_test.main();
   sha256_test.main();
-
-  // engines
-  salsa20_test.main();
 
   // entropy sources (some commented because they need external resources)
   //dev_random_entropy_source_test.main();
@@ -86,5 +83,8 @@ void main() {
   // src
   registry_test.main();
   ufixnum_test.main();
+
+  // stream ciphers
+  salsa20_test.main();
 
 }

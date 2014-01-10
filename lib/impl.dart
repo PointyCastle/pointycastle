@@ -24,8 +24,6 @@ import "package:cipher/digests/sha256.dart";
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
 
-import "package:cipher/engines/salsa20.dart";
-
 import "package:cipher/entropy/file_entropy_source.dart";
 import "package:cipher/entropy/url_entropy_source.dart";
 
@@ -47,6 +45,8 @@ import "package:cipher/random/block_ctr_random.dart";
 
 import "package:cipher/signers/ecdsa_signer.dart";
 
+import "package:cipher/stream/salsa20.dart";
+
 
 bool _initialized = false;
 
@@ -60,7 +60,6 @@ void initCipher() {
     _registerBlockCiphers();
     _registerDigests();
     _registerEccStandardCurves();
-    _registerStreamCiphers();
     _registerEntropySources();
     _registerKeyDerivators();
     _registerKeyGenerators();
@@ -70,6 +69,7 @@ void initCipher() {
     _registerPaddings();
     _registerSecureRandoms();
     _registerSigners();
+    _registerStreamCiphers();
   }
 }
 
@@ -93,12 +93,6 @@ void _registerEccStandardCurves() {
       h: BigInteger.ONE,
       seed: new BigInteger("3045ae6fc8422f64ed579528d38120eae12196d5", 16)
   );
-}
-
-void _registerStreamCiphers() {
-  StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
-  StreamCipher.registry.registerDynamicFactory( _ctrStreamCipherFactory );
-  StreamCipher.registry.registerDynamicFactory( _sicStreamCipherFactory );
 }
 
 void _registerEntropySources() {
@@ -156,37 +150,14 @@ void _registerSigners() {
   Signer.registry["ECDSA"] = (_) => new ECDSASigner();
 }
 
+void _registerStreamCiphers() {
+  StreamCipher.registry["Salsa20"] = (_) => new Salsa20Engine();
+  StreamCipher.registry.registerDynamicFactory( _ctrStreamCipherFactory );
+  StreamCipher.registry.registerDynamicFactory( _sicStreamCipherFactory );
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-StreamCipher _sicStreamCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="SIC" ) return null;
-
-  var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
-  );
-
-  if( underlyingCipher!=null ) {
-    return new SICStreamCipher( underlyingCipher );
-  }
-}
-
-StreamCipher _ctrStreamCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="CTR" ) return null;
-
-  var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
-  );
-
-  if( underlyingCipher!=null ) {
-    return new CTRStreamCipher( underlyingCipher );
-  }
-}
 
 EntropySource _fileEntropySourceFactory(String algorithmName) {
   if( algorithmName.startsWith("file://") ) {
@@ -299,6 +270,36 @@ SecureRandom _ctrAutoSeedPrngSecureRandomFactory( String algorithmName ) {
     var blockCipherName = algorithmName.substring(0, algorithmName.length-19);
     var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
     return new AutoSeedBlockCtrRandom(blockCipher);
+  }
+}
+
+StreamCipher _ctrStreamCipherFactory( String algorithmName ) {
+  var parts = algorithmName.split("/");
+
+  if( parts.length!=2 ) return null;
+  if( parts[1]!="CTR" ) return null;
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(parts[0])
+  );
+
+  if( underlyingCipher!=null ) {
+    return new CTRStreamCipher( underlyingCipher );
+  }
+}
+
+StreamCipher _sicStreamCipherFactory( String algorithmName ) {
+  var parts = algorithmName.split("/");
+
+  if( parts.length!=2 ) return null;
+  if( parts[1]!="SIC" ) return null;
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(parts[0])
+  );
+
+  if( underlyingCipher!=null ) {
+    return new SICStreamCipher( underlyingCipher );
   }
 }
 

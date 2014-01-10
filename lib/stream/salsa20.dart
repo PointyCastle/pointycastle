@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.engines.salsa20;
+library cipher.stream.salsa20;
 
 import "dart:typed_data";
 
