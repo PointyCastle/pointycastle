@@ -12,7 +12,7 @@ import "package:cipher/params/parameters_with_random.dart";
 import "package:unittest/unittest.dart";
 
 import "./src/null_secure_random.dart";
-import "./helpers.dart";
+import "src/helpers.dart";
 
 void runSignerTests( Signer signer, CipherParameters signParams, CipherParameters verifyParams, List<String> messageSignaturePairs ) {
 

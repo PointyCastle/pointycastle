@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.adapters.stream_cipher_adapters;
+library cipher.src.adapters.stream_cipher_adapters;
 
 import "dart:typed_data";
 

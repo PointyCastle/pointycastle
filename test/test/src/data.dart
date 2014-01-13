@@ -1,8 +1,8 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-part of cipher.test.test.helpers;
+part of cipher.test.test.src.helpers;
 
 Uint8List createUint8ListFromString( String s ) {
   var ret = new Uint8List(s.length);

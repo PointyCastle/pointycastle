@@ -1,8 +1,8 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-part of cipher.test.test.helpers;
+part of cipher.test.test.src.helpers;
 
 String formatAsTruncated( String str ) {
   if( str.length>26 ) {
@@ -13,7 +13,7 @@ String formatAsTruncated( String str ) {
     return str;
   }
 }
-      
+
 String formatAsHumanSize( num size ) {
   if( size<1024 ) return "$size B";
   if( size<1024*1024 ) return "${_format(size/1024)} KB";

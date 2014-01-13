@@ -6,10 +6,7 @@ library cipher.test.paddings.ecdsa_signer_test;
 
 import 'package:bignum/bignum.dart';
 
-import "package:cipher/api.dart";
-import "package:cipher/params/asymmetric_key_parameter.dart";
-import "package:cipher/signers/ecdsa_signer.dart";
-import "package:cipher/impl.dart";
+import "package:cipher/cipher.dart";
 
 import "../test/signer_tests.dart";
 
@@ -31,7 +28,7 @@ void main() {
 	var d = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
 	var privParams = new PrivateKeyParameter( new ECPrivateKey(d, eccDomain) );
 
-	runSignerTests( new ECDSASigner(), privParams, pubParams, [
+	runSignerTests( new Signer("ECDSA"), privParams, pubParams, [
 
 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
 		"(4165461920577864743570110591887661239883413257826890841803,3921818269646681551036727339486031144481055001966973146395)",

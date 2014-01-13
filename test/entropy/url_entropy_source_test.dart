@@ -4,13 +4,15 @@
 
 library cipher.test.entropy.url_entropy_source_test;
 
-import "package:cipher/entropy/url_entropy_source.dart";
+import "package:cipher/cipher.dart";
 
 import "package:unittest/unittest.dart";
 
 void main() {
 
-	var source = new UrlEntropySource("https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f");
+  initCipher();
+
+	var source = new EntropySource("https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f");
 	const count = 1024;
 
 	group( "${source.sourceName}:", () {

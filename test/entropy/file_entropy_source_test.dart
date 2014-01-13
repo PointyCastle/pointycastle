@@ -4,13 +4,15 @@
 
 library cipher.test.entropy.file_entropy_source_test;
 
-import "package:cipher/entropy/file_entropy_source.dart";
+import "package:cipher/cipher.dart";
 
 import "package:unittest/unittest.dart";
 
 void main() {
 
-	var source = new FileEntropySource("/dev/random");
+  initCipher();
+
+	var source = new EntropySource("file:///dev/random");
 	const count = 65536;
 
 	group( "${source.sourceName}:", () {

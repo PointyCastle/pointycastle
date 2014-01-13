@@ -2,17 +2,18 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.adapters.stream_cipher_adapters_test;
+library cipher.test.src.adapters.stream_cipher_adapters_test;
 
 import 'package:unittest/unittest.dart';
 
-import "package:cipher/adapters/stream_cipher_adapters.dart";
+import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 
-import "../test/block_cipher_tests.dart";
-import "../test/helpers.dart";
+import "../../test/block_cipher_tests.dart";
 
-import "../test/src/null_stream_cipher.dart";
-import "../test/src/null_block_cipher.dart";
+import "../../test/src/null_stream_cipher.dart";
+import "../../test/src/null_block_cipher.dart";
+import "../../test/src/helpers.dart";
+
 
 void main() {
 
@@ -20,7 +21,7 @@ void main() {
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
     formatBytesAsHexString( createUint8ListFromString (
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........"
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........"
     )),
 
     "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",

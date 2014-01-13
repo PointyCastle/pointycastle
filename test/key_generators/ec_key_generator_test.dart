@@ -6,12 +6,7 @@ library cipher.test.key_generators.ec_key_generator_test;
 
 import 'package:bignum/bignum.dart';
 
-import 'package:cipher/api.dart';
-import 'package:cipher/impl.dart';
-
-import 'package:cipher/key_generators/ec_key_generator.dart';
-import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/params/key_generators/ec_key_generator_parameters.dart";
+import 'package:cipher/cipher.dart';
 
 import "../test/src/null_secure_random.dart";
 import '../test/key_generators_tests.dart';
@@ -28,7 +23,7 @@ void main() {
   var ecParams = new ECKeyGeneratorParameters(domainParams);
   var params = new ParametersWithRandom<ECKeyGeneratorParameters>(ecParams, rnd);
 
-  var keyGenerator = new ECKeyGenerator();
+  var keyGenerator = new KeyGenerator("EC");
   keyGenerator.init(params);
 
   runKeyGeneratorTests( keyGenerator, [

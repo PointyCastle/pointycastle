@@ -4,8 +4,6 @@
 
 library cpiher.test.all_tests;
 
-import "./adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
-
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
 import "./digests/ripemd160_test.dart" as ripemd160_test;
@@ -33,15 +31,13 @@ import "./random/block_ctr_random_test.dart" as block_ctr_random_test;
 
 import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 
-import "./src/registry_test.dart" as registry_test;
-import "./src/ufixnum_test.dart" as ufixnum_test;
-
 import "./stream/salsa20_test.dart" as salsa20_test;
 
-void main() {
+import "./src/registry_test.dart" as registry_test;
+import "./src/ufixnum_test.dart" as ufixnum_test;
+import "./src/adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
 
-  // adapters
-  stream_cipher_adapters_test.main();
+void main() {
 
   // block ciphers
   aes_fast_test.main();
@@ -80,11 +76,14 @@ void main() {
   // signers
   ecdsa_signer_test.main();
 
+  // stream ciphers
+  salsa20_test.main();
+
   // src
   registry_test.main();
   ufixnum_test.main();
 
-  // stream ciphers
-  salsa20_test.main();
+  // src/adapters
+  stream_cipher_adapters_test.main();
 
 }

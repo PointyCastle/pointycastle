@@ -1,5 +1,5 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.test.padded_block_cipher_test;
@@ -8,25 +8,22 @@ import "dart:typed_data";
 
 import "package:unittest/unittest.dart";
 
-import "package:cipher/paddings/padded_block_cipher.dart";
-import "package:cipher/params/padded_block_cipher_parameters.dart";
-import "package:cipher/paddings/pkcs7.dart";
+import "package:cipher/cipher.dart";
 
-import "../test/helpers.dart";
 import "../test/src/null_block_cipher.dart";
-
+import "../test/src/helpers.dart";
 
 void main() {
+
+  initCipher();
+  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
   group( "PaddedBlockCipherTest works", () {
 
     test( "cipher", () {
 
       var params = new PaddedBlockCipherParameters( null, null );
-      var pbc = new PaddedBlockCipherImpl(
-          new PKCS7Padding(),
-          new NullBlockCipher()
-      );
+      var pbc = new PaddedBlockCipher("Null/PKCS7");
 
       var inp = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
       var out = new Uint8List( 2*pbc.blockSize );

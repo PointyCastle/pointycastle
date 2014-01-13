@@ -1,2 +1,2 @@
 export PATH="/opt/dart/dart-sdk/bin:$PATH"
-dartdoc --out=../../cipher-pages/doc --exclude-lib=cipher.src.ufixnum --exclude-lib=meta --exclude-lib=fixnum --package-root=../packages --no-code --link-api ../lib/cipher.dart
+dartdoc --out=../../cipher-pages/doc --exclude-lib=cipher.src.ufixnum --exclude-lib=meta --exclude-lib=fixnum --exclude-lib=bignum --package-root=../packages --no-code --link-api ../lib/cipher.dart

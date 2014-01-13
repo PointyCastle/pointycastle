@@ -6,11 +6,8 @@ library cipher.test.key_derivators.pbkdf2_test;
 
 import 'package:cipher/cipher.dart';
 
-import 'package:cipher/key_derivators/pbkdf2.dart';
-import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
-
 import '../test/key_derivators_tests.dart';
-import '../test/helpers.dart';
+import '../test/src/helpers.dart';
 
 
 /// NOTE: the expected results for these tests are computed using the Java
@@ -19,7 +16,7 @@ void main() {
   initCipher();
 
   var salt = createUint8ListFromString("salt");
-  var pkcs = new PBKDF2KeyDerivator(new Mac("SHA-1/HMAC"));
+  var pkcs = new KeyDerivator("SHA-1/HMAC/PBKDF2");
   var params = new Pbkdf2Parameters(salt, 100, 16);
 
   runKeyDerivatorTests( pkcs, [

@@ -9,8 +9,6 @@ import "dart:typed_data";
 import "package:unittest/unittest.dart";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/modes/sic.dart";
-import "package:cipher/params/parameters_with_iv.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/stream_cipher_tests.dart";
@@ -22,13 +20,15 @@ import "../test/src/null_block_cipher.dart";
  */
 void main() {
 
+  initCipher();
+  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
+
   final iv = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);
-  final underlyingCipher = new NullBlockCipher();
 
   group( "SIC as stream cipher:", () {
 
-    runStreamCipherTests( new SICStreamCipher(underlyingCipher), params, [
+    runStreamCipherTests( new StreamCipher("Null/SIC"), params, [
 
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       "4c7e505629750f07fbecc79ba8b282907231515a3075071aeded869bafb281736572565630201457e9fdc3cba5ae8c686e760256283c12",
@@ -43,9 +43,6 @@ void main() {
   // This should never fail as long as stream_cipher_adapters and SICStreamCipher tests work, but I add it here to double check.
   // In the end, this is a crypto library, thus we as developers have paranoia mode turned on by default.
   group( "SIC as block cipher:", () {
-
-    initCipher();
-    BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
     runBlockCipherTests( new ChainingBlockCipher("Null/SIC"), params, [
 

@@ -10,7 +10,7 @@ import "package:cipher/api.dart";
 
 import "package:unittest/unittest.dart";
 
-import "./helpers.dart";
+import "src/helpers.dart";
 
 void runPaddingTest( Padding pad, CipherParameters params, 
                      String unpadData, int padLength, String padData ) {

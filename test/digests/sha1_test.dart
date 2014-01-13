@@ -4,18 +4,17 @@
 
 library cipher.test.digests.sha1_test;
 
-import "package:cipher/digests/sha1.dart";
+import "package:cipher/cipher.dart";
 
 import "../test/digest_tests.dart";
 
 
-/**
- * NOTE: the expected results for these tests are computed using the Java
- * version of Bouncy Castle.
- */
+/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle.
 void main() {
 
-  runDigestTests( new SHA1Digest(), [
+  initCipher();
+
+  runDigestTests( new Digest("SHA-1"), [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
     "04e7635f310b9fbfa496ace02fa3ff9e7737f58c",

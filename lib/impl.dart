@@ -15,8 +15,6 @@ import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
 
-import "package:cipher/adapters/stream_cipher_adapters.dart";
-
 import "package:cipher/block/aes_fast.dart";
 
 import "package:cipher/digests/ripemd160.dart";
@@ -48,6 +46,8 @@ import "package:cipher/random/block_ctr_random.dart";
 import "package:cipher/signers/ecdsa_signer.dart";
 
 import "package:cipher/stream/salsa20.dart";
+
+import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 
 
 bool _initialized = false;
@@ -253,6 +253,11 @@ PaddedBlockCipher _paddedBlockCipherFactory(String algorithmName) {
     var underlyingCipher = _createOrNull( () =>
       new ChainingBlockCipher(algorithmName.substring(0,lastSepIndex))
     );
+    if( underlyingCipher==null ) {
+      underlyingCipher = _createOrNull( () =>
+        new BlockCipher(algorithmName.substring(0,lastSepIndex))
+      );
+    }
     if( underlyingCipher!=null ) {
       return new PaddedBlockCipherImpl(padding, underlyingCipher);
     }
@@ -318,7 +323,7 @@ void _registerFpStandardCurve( String name, {BigInteger q, BigInteger a, BigInte
 dynamic _createOrNull( closure() ) {
   try {
    return closure();
-  } on ArgumentError catch( e ) {
+  } on UnsupportedError catch( e ) {
     return null;
   }
 }

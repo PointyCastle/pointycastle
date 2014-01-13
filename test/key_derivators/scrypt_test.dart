@@ -4,13 +4,10 @@
 
 library cipher.test.key_derivators.scrypt_test;
 
-import 'package:cipher/impl.dart';
-
-import 'package:cipher/key_derivators/scrypt.dart';
-import "package:cipher/params/key_derivators/scrypt_parameters.dart";
+import 'package:cipher/cipher.dart';
 
 import '../test/key_derivators_tests.dart';
-import '../test/helpers.dart';
+import '../test/src/helpers.dart';
 
 
 /// NOTE: the expected results for these tests are taken from the Java library found at [https://github.com/wg/scrypt]
@@ -20,7 +17,7 @@ void main() {
 
   initCipher();
 
-  var scrypt = new Scrypt();
+  var scrypt = new KeyDerivator("scrypt");
 
   runKeyDerivatorTests( scrypt, [
 

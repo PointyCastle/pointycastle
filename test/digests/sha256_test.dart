@@ -4,18 +4,17 @@
 
 library cipher.test.digests.sha256_test;
 
-import "package:cipher/digests/sha256.dart";
+import "package:cipher/cipher.dart";
 
 import "../test/digest_tests.dart";
 
 
-/**
- * NOTE: the expected results for these tests are computed using the Java
- * version of Bouncy Castle.
- */
+/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle.
 void main() {
 
-  runDigestTests( new SHA256Digest(), [
+  initCipher();
+
+  runDigestTests( new Digest("SHA-256"), [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
     "5bd6045a7697c48316411ff00be02595cf3d8596d99ba12482d18c90d61633cb",
