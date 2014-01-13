@@ -7,7 +7,8 @@ documentation: http://izaera.github.io/cipher/doc/
 environment:
   sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  bignum: any
+  bignum:
+    path: /Users/ivan/Personal/Dart/veltesta/!other/bignum-0.0.3
   fixnum: '>=0.9.0 <0.10.0'
 dev_dependencies:
   unittest: '>=0.9.0 <0.10.0'

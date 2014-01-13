@@ -1,7 +1,6 @@
-/* {izaera */
+/*
 //part of bignum;
 part of cipher.api;
-/* }izaera */
 
 /*
  * Copyright (c) 2003-2005  Tom Wu
@@ -257,32 +256,6 @@ class JSArray<T> {
  */
 class BigInteger {
 
-/* {izaera */
-  //static final ZERO = new BigInteger(0);
-  //static final ONE = new BigInteger(1);
-  static final TWO = new BigInteger(2);
-  static final THREE = new BigInteger(3);
-  static final FOUR = new BigInteger(4);
-  static final FIVE = new BigInteger(5);
-  static final SIX = new BigInteger(6);
-  static final SEVEN = new BigInteger(7);
-  static final EIGHT = new BigInteger(8);
-  static final NINE = new BigInteger(9);
-  static final TEN = new BigInteger(10);
-
-  factory BigInteger.fromBytes( int signum, List<int> magnitude ) {
-    if( signum==0 ) throw new ArgumentError("Argument signum must not be zero");
-    var self = new BigInteger(magnitude);
-    return (signum<0) ? -self : self;
-  }
-
-  int get lowestSetBit => getLowestSetBit();
-
-/* }izaera */
-
-
-
-
   /** Bits per digit */
   static int dbits;
   static int BI_DB;
@@ -305,6 +278,16 @@ class BigInteger {
 
   static BigInteger get ZERO => nbv(0);
   static BigInteger get ONE => nbv(1);
+  static final TWO = new BigInteger(2);
+  static final THREE = new BigInteger(3);
+  static final FOUR = new BigInteger(4);
+  static final FIVE = new BigInteger(5);
+  static final SIX = new BigInteger(6);
+  static final SEVEN = new BigInteger(7);
+  static final EIGHT = new BigInteger(8);
+  static final NINE = new BigInteger(9);
+  static final TEN = new BigInteger(10);
+
 
   // Basic dart BN library - subset useful for RSA encryption.
 
@@ -379,9 +362,7 @@ class BigInteger {
         // this.fromNumber(a,b,c);
         // NOTE: the fromNumber implementation trys to exploit js numbers
         this.fromString(a.toString(), 10);
-        /* {izaera */
       } else if (/*a is double ||*/ a is num) {
-        /* }izaera */
         this.fromString(a.toInt().toString(), 10);
       } else if (b == null && a is! String) {
         this.fromString(a,256);
@@ -389,6 +370,12 @@ class BigInteger {
         this.fromString(a,b);
       }
     }
+  }
+
+  factory BigInteger.fromBytes( int signum, List<int> magnitude ) {
+    if( signum==0 ) throw new ArgumentError("Argument signum must not be zero");
+    var self = new BigInteger(magnitude);
+    return (signum<0) ? -self : self;
   }
 
   /**
@@ -581,11 +568,9 @@ class BigInteger {
 
   /** return + if [this] > [a], - if [this] < [a], 0 if equal **/
   int compareTo(a) {
-    /* {izaera */
     if( a is num ) {
       a = new BigInteger(a);
     }
-    /* }izaera */
     var this_array = this.array;
     var a_array = a.array;
 
@@ -602,9 +587,7 @@ class BigInteger {
   int nbits(x) {
     var r = 1, t;
 
-    /* {izaera */
     if (x is num/*double*/) x = x.toInt();
-    /* }izaera */
 
     if((t=x>>16) != 0) { x = t; r += 16; }
     if((t=x>>8) != 0) { x = t; r += 8; }
@@ -997,9 +980,7 @@ class BigInteger {
     var d = nbv(a), y = nbi(), z = nbi(), r = "";
     this.divRemTo(d,y,z);
     while(y.signum() > 0) {
-      /* {izaera */
       r = "${(a+z.intValue()).toInt().toRadixString(b).substring(1)}${r}";
-      /* }izaera */
       y.divRemTo(d,y,z);
     }
 
@@ -1246,6 +1227,8 @@ class BigInteger {
     if(this.s < 0) return this.t*BI_DB;
     return -1;
   }
+
+  int get lowestSetBit => getLowestSetBit();
 
   /** return number of 1 bits in x */
   cbit(x) {
@@ -1656,9 +1639,7 @@ class BigInteger {
   bool operator <=(BigInteger other) => compareTo(other) <= 0 ? true : false;
   bool operator >(BigInteger other) => compareTo(other) > 0 ? true : false;
   bool operator >=(BigInteger other) => compareTo(other) >= 0 ? true : false;
-  /* {izaera */
   bool operator ==(other) => compareTo(other) == 0 ? true : false;
-  /* }izaera */
 
   // Bit-operations.
   BigInteger operator &(BigInteger other) => and(other);
@@ -1669,3 +1650,4 @@ class BigInteger {
   BigInteger operator >>(int shiftAmount) => shiftRight(shiftAmount);
 
 }
+*/
