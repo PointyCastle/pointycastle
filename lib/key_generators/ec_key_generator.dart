@@ -37,7 +37,7 @@ class ECKeyGenerator implements KeyGenerator {
     var d;
 
     do {
-      d = _random.nextBigInteger(nBitLength);//new BigInteger(nBitLength, _random);
+      d = _random.nextBigInteger(nBitLength);
     } while( d==BigInteger.ZERO || (d>=n) );
 
     var Q = _params.G*d;

@@ -56,12 +56,12 @@ class HMac implements Mac {
 
         keyLength = _digestSize;
       } else {
-        _inputPad.setRange(0, keyLength, key); //System.arraycopy(key, 0, inputPad, 0, keyLength);
+        _inputPad.setRange(0, keyLength, key);
       }
 
       _inputPad.fillRange(keyLength, _inputPad.length, 0);
 
-      _outputBuf.setRange(0, _blockLength, _inputPad); //System.arraycopy(inputPad, 0, outputBuf, 0, blockLength);
+      _outputBuf.setRange(0, _blockLength, _inputPad);
 
       _xorPad(_inputPad, _blockLength, _IPAD);
       _xorPad(_outputBuf, _blockLength, _OPAD);

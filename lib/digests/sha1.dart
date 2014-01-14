@@ -191,16 +191,12 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
     _H4 += D;
     _H5 += E;
 
-    //
     // reset start of the buffer.
-    //
     _xOff = 0;
     _X.fillRange(0, 16, new Uint32(0));
   }
 
-  //
   // Additive constants
-  //
   static final Y1 = 0x5a827999;
   static final Y2 = 0x6ed9eba1;
   static final Y3 = 0x8f1bbcdc;
