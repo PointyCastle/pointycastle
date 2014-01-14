@@ -12,35 +12,35 @@ import "package:cipher/api.dart";
 
 class FileEntropySource implements EntropySource {
 
-	final _filePath;
+  final _filePath;
 
-	String get sourceName => "file://${_filePath}";
+  String get sourceName => "file://${_filePath}";
 
-	FileEntropySource(this._filePath);
+  FileEntropySource(this._filePath);
 
-	void seed( CipherParameters params ) {
-	}
+  void seed( CipherParameters params ) {
+  }
 
-	Future<Uint8List> getBytes( int count ) {
-		var completer = new Completer<Uint8List>();
+  Future<Uint8List> getBytes( int count ) {
+    var completer = new Completer<Uint8List>();
 
-		var data = new Uint8List(count);
-		var offset = 0;
-		new File(_filePath).openRead(0, count).listen(
-			(bytes) {
-				data.setRange(offset, offset+bytes.length, bytes);
-				offset += bytes.length;
-			},
-			onError: (error, stackTrace) {
-				completer.completeError(error, stackTrace);
-			},
-			onDone: () {
-				completer.complete(data);
-			},
-			cancelOnError: true
-		);
+    var data = new Uint8List(count);
+    var offset = 0;
+    new File(_filePath).openRead(0, count).listen(
+      (bytes) {
+        data.setRange(offset, offset+bytes.length, bytes);
+        offset += bytes.length;
+      },
+      onError: (error, stackTrace) {
+        completer.completeError(error, stackTrace);
+      },
+      onDone: () {
+        completer.complete(data);
+      },
+      cancelOnError: true
+    );
 
-		return completer.future;
+    return completer.future;
   }
 
 }

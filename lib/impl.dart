@@ -317,7 +317,7 @@ void _registerFpStandardCurve( String name, {BigInteger q, BigInteger a, BigInte
 
   var curve = new fp.ECCurve(q,a,b);
   ECDomainParameters.registry[name] = (_)
-		=> new ECDomainParametersImpl( name, curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
+    => new ECDomainParametersImpl( name, curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
 }
 
 dynamic _createOrNull( closure() ) {

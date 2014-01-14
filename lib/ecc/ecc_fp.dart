@@ -503,18 +503,18 @@ List<int> _windowNaf(int width, BigInteger k) {
       // k mod 2^width
       BigInteger remainder = k.mod(pow2wBI);
 
-			// if remainder > 2^(width - 1) - 1
+      // if remainder > 2^(width - 1) - 1
       if (remainder.testBit(width - 1)) {
         wnaf[i] = remainder.intValue() - pow2wB;
       } else {
         wnaf[i] = remainder.intValue();
       }
 
-			// convert to "Java byte"
-			wnaf[i] %= 0x100;
-			if( (wnaf[i]&0x80)!=0 ) {
-				wnaf[i] = wnaf[i]-256;
-			}
+      // convert to "Java byte"
+      wnaf[i] %= 0x100;
+      if( (wnaf[i]&0x80)!=0 ) {
+        wnaf[i] = wnaf[i]-256;
+      }
 
       // wnaf[i] is now in [-2^(width-1), 2^(width-1)-1]
 

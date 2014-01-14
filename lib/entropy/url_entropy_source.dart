@@ -14,43 +14,43 @@ class UrlEntropySource implements EntropySource {
 
   final String _url;
 
-	String get sourceName => _url;
+  String get sourceName => _url;
 
-	UrlEntropySource(this._url);
+  UrlEntropySource(this._url);
 
-	void seed( CipherParameters params ) {
-	}
+  void seed( CipherParameters params ) {
+  }
 
-	Future<Uint8List> getBytes( int count ) {
-		var completer = new Completer<Uint8List>();
+  Future<Uint8List> getBytes( int count ) {
+    var completer = new Completer<Uint8List>();
 
-		var url = _url.replaceAll( "{count}", count.toString() );
-		new HttpClient().getUrl(Uri.parse(url))
-	 		.then( (HttpClientRequest request) {
-	 			return request.close();
-	 		})
-	 		.then( (HttpClientResponse response) {
-				var data = new Uint8List(count);
-				var offset = 0;
-				response.listen(
-					(bytes) {
-						data.setRange(offset, offset+bytes.length, bytes);
-						offset += bytes.length;
-					},
-					onDone: () {
-						completer.complete(data);
-					},
-					onError: (error, stackTrace) {
-						completer.completeError(error,stackTrace);
-					},
-					cancelOnError: true
-				);
-	 		})
-	 		.catchError( (error, stackTrace) {
-				completer.completeError(error, stackTrace);
-	 		});
+    var url = _url.replaceAll( "{count}", count.toString() );
+    new HttpClient().getUrl(Uri.parse(url))
+      .then( (HttpClientRequest request) {
+        return request.close();
+      })
+      .then( (HttpClientResponse response) {
+        var data = new Uint8List(count);
+        var offset = 0;
+        response.listen(
+          (bytes) {
+            data.setRange(offset, offset+bytes.length, bytes);
+            offset += bytes.length;
+          },
+          onDone: () {
+            completer.complete(data);
+          },
+          onError: (error, stackTrace) {
+            completer.completeError(error,stackTrace);
+          },
+          cancelOnError: true
+        );
+      })
+      .catchError( (error, stackTrace) {
+        completer.completeError(error, stackTrace);
+      });
 
-		return completer.future;
+    return completer.future;
   }
 
 }

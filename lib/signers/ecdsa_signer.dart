@@ -93,40 +93,40 @@ class ECDSASigner implements Signer {
   }
 
   bool verifySignature(Uint8List message, Signature signature) {
-	  var n = _pbkey.parameters.n;
-	  var e = _calculateE(n, message);
+    var n = _pbkey.parameters.n;
+    var e = _calculateE(n, message);
 
-		var r = signature.r;
-		var s = signature.s;
+    var r = signature.r;
+    var s = signature.s;
 
-		// r in the range [1,n-1]
-	  if( r.compareTo(BigInteger.ONE) < 0 || r.compareTo(n) >= 0 ) {
-	  	return false;
-	  }
+    // r in the range [1,n-1]
+    if( r.compareTo(BigInteger.ONE) < 0 || r.compareTo(n) >= 0 ) {
+      return false;
+    }
 
-	  // s in the range [1,n-1]
-	  if( s.compareTo(BigInteger.ONE) < 0 || s.compareTo(n) >= 0 ) {
-	  	return false;
-	  }
+    // s in the range [1,n-1]
+    if( s.compareTo(BigInteger.ONE) < 0 || s.compareTo(n) >= 0 ) {
+      return false;
+    }
 
-	  var c = s.modInverse(n);
+    var c = s.modInverse(n);
 
-	  var u1 = e.multiply(c).mod(n);
-	  var u2 = r.multiply(c).mod(n);
+    var u1 = e.multiply(c).mod(n);
+    var u2 = r.multiply(c).mod(n);
 
-		var G = _pbkey.parameters.G;
-	  var Q = _pbkey.Q;
+    var G = _pbkey.parameters.G;
+    var Q = _pbkey.Q;
 
-	  var point = _sumOfTwoMultiplies(G, u1, Q, u2);
+    var point = _sumOfTwoMultiplies(G, u1, Q, u2);
 
-	  // components must be bogus.
-	  if( point.isInfinity ) {
-	  	return false;
-	  }
+    // components must be bogus.
+    if( point.isInfinity ) {
+      return false;
+    }
 
-	  var v = point.x.toBigInteger().mod(n);
+    var v = point.x.toBigInteger().mod(n);
 
-	  return v==r;
+    return v==r;
   }
 
   BigInteger _calculateE(BigInteger n, Uint8List message) {
@@ -145,48 +145,48 @@ class ECDSASigner implements Signer {
   }
 
   ECPoint _sumOfTwoMultiplies( ECPoint P, BigInteger a, ECPoint Q, BigInteger b ) {
-  	ECCurve c = P.curve;
+    ECCurve c = P.curve;
 
-		if( c!=Q.curve ) {
-		  throw new ArgumentError("P and Q must be on same curve");
-  	}
+    if( c!=Q.curve ) {
+      throw new ArgumentError("P and Q must be on same curve");
+    }
 
-	  // Point multiplication for Koblitz curves (using WTNAF) beats Shamir's trick
-		/* TODO: uncomment this when F2m available
-	  if( c is ECCurve.F2m ) {
-	  	ECCurve.F2m f2mCurve = (ECCurve.F2m)c;
-	  	if( f2mCurve.isKoblitz() ) {
-	  		return P.multiply(a).add(Q.multiply(b));
-	  	}
-	  }
-	  */
+    // Point multiplication for Koblitz curves (using WTNAF) beats Shamir's trick
+    /* TODO: uncomment this when F2m available
+    if( c is ECCurve.F2m ) {
+      ECCurve.F2m f2mCurve = (ECCurve.F2m)c;
+      if( f2mCurve.isKoblitz() ) {
+        return P.multiply(a).add(Q.multiply(b));
+      }
+    }
+    */
 
-	  return _implShamirsTrick(P, a, Q, b);
+    return _implShamirsTrick(P, a, Q, b);
   }
 
   ECPoint _implShamirsTrick(ECPoint P, BigInteger k, ECPoint Q, BigInteger l) {
-	  int m = max(k.bitLength(), l.bitLength());
+    int m = max(k.bitLength(), l.bitLength());
 
-		ECPoint Z = P+Q;
-	  ECPoint R = P.curve.infinity;
+    ECPoint Z = P+Q;
+    ECPoint R = P.curve.infinity;
 
-	  for( int i=m-1 ; i>=0 ; --i ) {
-	  	R = R.twice();
+    for( int i=m-1 ; i>=0 ; --i ) {
+      R = R.twice();
 
-		  if( k.testBit(i) ) {
-		  	if( l.testBit(i) ) {
-		  		R = R+Z;
-		  	} else {
-		  		R = R+P;
-		  	}
-		  } else {
-		  	if (l.testBit(i)) {
-		  		R = R+Q;
-		  	}
-		  }
-	  }
+      if( k.testBit(i) ) {
+        if( l.testBit(i) ) {
+          R = R+Z;
+        } else {
+          R = R+P;
+        }
+      } else {
+        if (l.testBit(i)) {
+          R = R+Q;
+        }
+      }
+    }
 
-	  return R;
+    return R;
   }
 
 }

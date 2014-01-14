@@ -7,13 +7,13 @@ part of cipher.api;
 /// Standard ECC curve description
 abstract class ECDomainParameters {
 
-	/// The [Registry] for [ECDomainParameters] objects
-	static final registry = new Registry<ECDomainParameters>();
+  /// The [Registry] for [ECDomainParameters] objects
+  static final registry = new Registry<ECDomainParameters>();
 
   /// Get this domain's standard name.
   String get domainName;
 
-	ECCurve get curve;
+  ECCurve get curve;
   List<int> get seed;
   ECPoint get G;
   BigInteger get n;
@@ -29,7 +29,7 @@ abstract class ECFieldElement {
   String get fieldName;
   int get fieldSize;
 
-	int get byteLength;
+  int get byteLength;
 
   ECFieldElement operator +( ECFieldElement b );
   ECFieldElement operator -( ECFieldElement b );
@@ -51,7 +51,7 @@ abstract class ECPoint {
   ECFieldElement get x;
   ECFieldElement get y;
 
-	bool get isCompressed;
+  bool get isCompressed;
   bool get isInfinity;
 
   bool operator ==(other);
@@ -76,23 +76,23 @@ abstract class ECPoint {
 /// An elliptic curve
 abstract class ECCurve {
 
-	ECFieldElement get a;
-	ECFieldElement get b;
+  ECFieldElement get a;
+  ECFieldElement get b;
 
-	int get fieldSize;
-	ECPoint get infinity;
+  int get fieldSize;
+  ECPoint get infinity;
 
-	ECFieldElement fromBigInteger( BigInteger x );
-	ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
-	ECPoint decompressPoint( int yTilde, BigInteger X1 );
+  ECFieldElement fromBigInteger( BigInteger x );
+  ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
+  ECPoint decompressPoint( int yTilde, BigInteger X1 );
 
-	/**
-	 * Decode a point on this curve from its ASN.1 encoding. The different
-	 * encodings are taken account of, including point compression for
-	 * <code>F<sub>p</sub></code> (X9.62 s 4.2.1 pg 17).
-	 * @return The decoded point.
-	 */
-	ECPoint decodePoint( List<int> encoded );
+  /**
+   * Decode a point on this curve from its ASN.1 encoding. The different
+   * encodings are taken account of, including point compression for
+   * <code>F<sub>p</sub></code> (X9.62 s 4.2.1 pg 17).
+   * @return The decoded point.
+   */
+  ECPoint decodePoint( List<int> encoded );
 
 }
 

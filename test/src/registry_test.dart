@@ -100,7 +100,7 @@ void main() {
 
     test( "Signer returns valid implementations", () {
 
-  		_testSigner( "ECDSA" );
+      _testSigner( "ECDSA" );
 
     });
 
@@ -203,9 +203,9 @@ void _testSecureRandom(String algorithmName) {
 }
 
 void _testSigner(String algorithmName) {
-	var signer = new Signer(algorithmName);
-	expect( signer, new isInstanceOf<Signer>("Signer") );
-	expect( signer.algorithmName, algorithmName );
+  var signer = new Signer(algorithmName);
+  expect( signer, new isInstanceOf<Signer>("Signer") );
+  expect( signer.algorithmName, algorithmName );
 }
 
 void _testStreamCipher( String algorithmName ) {

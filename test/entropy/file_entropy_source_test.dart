@@ -12,27 +12,27 @@ void main() {
 
   initCipher();
 
-	var source = new EntropySource("file:///dev/random");
-	const count = 65536;
+  var source = new EntropySource("file:///dev/random");
+  const count = 65536;
 
-	group( "${source.sourceName}:", () {
+  group( "${source.sourceName}:", () {
 
-		test( "getBytes:", () {
+    test( "getBytes:", () {
 
-			return source.getBytes(count).then( (bytes) {
-				print(bytes);
-				expect( bytes.length, count );
+      return source.getBytes(count).then( (bytes) {
+        print(bytes);
+        expect( bytes.length, count );
 
-				var sum = bytes.fold(0, (prev, element) => prev + element);
-				var avg = sum/bytes.length;
-				print("AVG = $avg");
-				expect( avg>128-4, true );
-				expect( avg<128+4, true );
-			});
+        var sum = bytes.fold(0, (prev, element) => prev + element);
+        var avg = sum/bytes.length;
+        print("AVG = $avg");
+        expect( avg>128-4, true );
+        expect( avg<128+4, true );
+      });
 
-		});
+    });
 
-	});
+  });
 
 }
 

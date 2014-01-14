@@ -13,20 +13,20 @@ import "package:cipher/api.dart";
 /// Implementation of [ECDomainParameters]
 class ECDomainParametersImpl implements ECDomainParameters {
 
-	final String domainName;
-	final ECCurve curve;
-	final List<int> seed;
-	final ECPoint G;
-	final BigInteger n;
-	BigInteger _h;
+  final String domainName;
+  final ECCurve curve;
+  final List<int> seed;
+  final ECPoint G;
+  final BigInteger n;
+  BigInteger _h;
 
-	ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n, [this._h=null, this.seed=null] ) {
-		if( _h==null ) {
-		_h = BigInteger.ONE;
-		}
-	}
+  ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n, [this._h=null, this.seed=null] ) {
+    if( _h==null ) {
+    _h = BigInteger.ONE;
+    }
+  }
 
-	BigInteger get h => _h;
+  BigInteger get h => _h;
 
 }
 

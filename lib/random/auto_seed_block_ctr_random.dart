@@ -17,60 +17,60 @@ import "package:cipher/params/key_parameter.dart";
  */
 class AutoSeedBlockCtrRandom implements SecureRandom {
 
-	BlockCtrRandom _delegate;
+  BlockCtrRandom _delegate;
 
-	var _inAutoReseed = false;
-	var _autoReseedKeyLength;
+  var _inAutoReseed = false;
+  var _autoReseedKeyLength;
 
   String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
 
   AutoSeedBlockCtrRandom(BlockCipher cipher) {
-		_delegate = new BlockCtrRandom(cipher);
-	}
+    _delegate = new BlockCtrRandom(cipher);
+  }
 
   void seed(ParametersWithIV<KeyParameter> params) {
-		_autoReseedKeyLength = params.parameters.key.length;
-		_delegate.seed( params );
+    _autoReseedKeyLength = params.parameters.key.length;
+    _delegate.seed( params );
   }
 
   Uint8 nextUint8() => _autoReseedIfNeededAfter( () {
-		return _delegate.nextUint8();
+    return _delegate.nextUint8();
   });
 
   Uint16 nextUint16() => _autoReseedIfNeededAfter( () {
-		return _delegate.nextUint16();
-	});
+    return _delegate.nextUint16();
+  });
 
   Uint32 nextUint32() => _autoReseedIfNeededAfter( () {
-		return _delegate.nextUint32();
-	});
+    return _delegate.nextUint32();
+  });
 
   BigInteger nextBigInteger( int bitLength ) => _autoReseedIfNeededAfter( () {
-		return _delegate.nextBigInteger(bitLength);
-	});
+    return _delegate.nextBigInteger(bitLength);
+  });
 
-	Uint8List nextBytes( int count ) => _autoReseedIfNeededAfter( () {
-		return _delegate.nextBytes(count);
-	});
+  Uint8List nextBytes( int count ) => _autoReseedIfNeededAfter( () {
+    return _delegate.nextBytes(count);
+  });
 
   dynamic _autoReseedIfNeededAfter( dynamic closure ) {
-		if( _inAutoReseed ) {
-			return closure();
-		} else {
-			_inAutoReseed = true;
-			var ret = closure();
-			_doAutoReseed();
-			_inAutoReseed = false;
-			return ret;
-		}
+    if( _inAutoReseed ) {
+      return closure();
+    } else {
+      _inAutoReseed = true;
+      var ret = closure();
+      _doAutoReseed();
+      _inAutoReseed = false;
+      return ret;
+    }
   }
 
   void _doAutoReseed() {
-		var newKey = nextBytes(_autoReseedKeyLength);
-		var newIV = nextBytes(_delegate.cipher.blockSize);
-		var keyParam = new KeyParameter(newKey);
-		var params = new ParametersWithIV(keyParam, newIV);
-		_delegate.seed( params );
+    var newKey = nextBytes(_autoReseedKeyLength);
+    var newIV = nextBytes(_delegate.cipher.blockSize);
+    var keyParam = new KeyParameter(newKey);
+    var params = new ParametersWithIV(keyParam, newIV);
+    _delegate.seed( params );
   }
 
 }
