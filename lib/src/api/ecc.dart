@@ -18,6 +18,7 @@ abstract class ECDomainParameters {
   ECPoint get G;
   BigInteger get n;
 
+  /// Create a curve description from its standard name
   factory ECDomainParameters( String domainName ) => registry.create(domainName);
 
 }
@@ -64,11 +65,7 @@ abstract class ECPoint {
 
   ECPoint twice();
 
-  /**
-   * Multiplies this <code>ECPoint</code> by the given number.
-   * @param k The multiplicator.
-   * @return <code>k * this</code>.
-   */
+  /// Multiply this point by the given number [k].
   ECPoint operator *(BigInteger k);
 
 }
@@ -82,15 +79,17 @@ abstract class ECCurve {
   int get fieldSize;
   ECPoint get infinity;
 
+  /// Create an [ECFieldElement] on this curve from its big integer value.
   ECFieldElement fromBigInteger( BigInteger x );
+
+  /// Create an [ECPoint] on its curve from its coordinates
   ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
+
   ECPoint decompressPoint( int yTilde, BigInteger X1 );
 
   /**
-   * Decode a point on this curve from its ASN.1 encoding. The different
-   * encodings are taken account of, including point compression for
-   * <code>F<sub>p</sub></code> (X9.62 s 4.2.1 pg 17).
-   * @return The decoded point.
+   * Decode a point on this curve from its ASN.1 encoding. The different encodings are taken account of, including point
+   * compression for Fp (X9.62 s 4.2.1 pg 17).
    */
   ECPoint decodePoint( List<int> encoded );
 
@@ -99,8 +98,10 @@ abstract class ECCurve {
 /// Base class for asymmetric keys in ECC
 abstract class ECAsymmetricKey implements AsymmetricKey {
 
+  /// The domain parameters of this key
   final ECDomainParameters parameters;
 
+  /// Create an asymmetric key for the given domain parameters
   ECAsymmetricKey(this.parameters);
 
 }
@@ -108,8 +109,10 @@ abstract class ECAsymmetricKey implements AsymmetricKey {
 /// Private keys in ECC
 class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
 
+  /// ECC's d private parameter
   final BigInteger d;
 
+  /// Create an ECC private key for the given d and domain parameters.
   ECPrivateKey(this.d, ECDomainParameters parameters) : super(parameters);
 
   bool operator ==( other ) {
@@ -127,8 +130,10 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
 /// Public keys in ECC
 class ECPublicKey extends ECAsymmetricKey implements PublicKey {
 
+  /// ECC's Q public parameter
   final ECPoint Q;
 
+  /// Create an ECC public key for the given Q and domain parameters.
   ECPublicKey( this.Q, ECDomainParameters parameters ) : super(parameters);
 
   bool operator ==( other ) {
@@ -139,6 +144,28 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
 
   int get hashCode {
     return parameters.hashCode+Q.hashCode;
+  }
+
+}
+
+/// A [Signature] created with ECC.
+class ECSignature implements Signature {
+
+  final BigInteger r;
+  final BigInteger s;
+
+  ECSignature( this.r, this.s );
+
+  String toString() => "(${r.toString()},${s.toString()})";
+
+  bool operator ==(other) {
+    if( other==null ) return false;
+    if( other is! ECSignature ) return false;
+    return (other.r==this.r) && (other.s==this.s);
+  }
+
+  int get hashCode {
+    return r.hashCode+s.hashCode;
   }
 
 }

@@ -59,12 +59,7 @@ abstract class ChainingBlockCipher implements BlockCipher {
   /// The [Registry] for [ChainingBlockCipher] algorithms
   static final registry = new Registry<ChainingBlockCipher>();
 
-  /**
-   * Create the chaining block cipher specified by the standard [algorithmName].
-   *
-   * Standard algorithms can be chained using / as a separator. For example: you
-   * can ask for "AES/CBC".
-   */
+  /// Create the chaining block cipher specified by the standard [algorithmName].
   factory ChainingBlockCipher( String algorithmName ) => registry.create(algorithmName);
 
   /// Get the underlying [BlockCipher] wrapped by this cipher.
@@ -84,12 +79,7 @@ abstract class PaddedBlockCipher implements ChainingBlockCipher {
   /// The [Registry] for [PaddedBlockCipher] algorithms
   static final registry = new Registry<PaddedBlockCipher>();
 
-  /**
-   * Create the padded block cipher specified by the standard [algorithmName].
-   *
-   * Standard algorithms can be chained using / as a separator. For example: you
-   * can ask for "AES/CBC/PKCS7".
-   */
+  /// Create the padded block cipher specified by the standard [algorithmName].
   factory PaddedBlockCipher( String algorithmName ) => registry.create(algorithmName);
 
   /// Get the underlying [Padding] used by this cipher.
@@ -101,8 +91,7 @@ abstract class PaddedBlockCipher implements ChainingBlockCipher {
    *
    * The resulting cipher text is put in [out] beginning at position [outOff].
    *
-   * This method returns the total bytes processed (which is the same as the
-   * block size of the algorithm).
+   * This method returns the total bytes processed without taking the padding into account.
    */
   int doFinal( Uint8List inp, int inpOff, Uint8List out, int outOff );
 
@@ -153,7 +142,7 @@ abstract class Mac {
   /// Create the MAC specified by the standard [algorithmName].
   factory Mac( String algorithmName ) => registry.create(algorithmName);
 
-  /// Get this digest's standard algorithm name.
+  /// Get this MAC's standard algorithm name.
   String get algorithmName;
 
   /// Get this MAC's output size.
@@ -185,7 +174,11 @@ abstract class Mac {
 
 }
 
-/// The interface that a symmetric key derivator conforms to.
+/**
+ * The interface that a symmetric key derivator conforms to.
+ *
+ * A [KeyDerivator] is normally used to convert some master data (like a password, for instance) to a symmetric key.
+ */
 abstract class KeyDerivator {
 
   /// The [Registry] for [KeyDerivator] algorithms
@@ -194,10 +187,10 @@ abstract class KeyDerivator {
   /// Create the key derivator specified by the standard [algorithmName].
   factory KeyDerivator( String algorithmName ) => registry.create(algorithmName);
 
-  /// Get this factory's standard algorithm name.
+  /// Get this derivator's standard algorithm name.
   String get algorithmName;
 
-  /// Get this factory's output size.
+  /// Get this derivator key's output size.
   int get keySize;
 
   /**

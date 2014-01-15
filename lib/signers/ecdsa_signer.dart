@@ -89,10 +89,10 @@ class ECDSASigner implements Signer {
       s = (k.modInverse(n)*(e+(d*r)))%n;
     } while( s==BigInteger.ZERO );
 
-    return new Signature(r,s);
+    return new ECSignature(r,s);
   }
 
-  bool verifySignature(Uint8List message, Signature signature) {
+  bool verifySignature(Uint8List message, ECSignature signature) {
     var n = _pbkey.parameters.n;
     var e = _calculateE(n, message);
 

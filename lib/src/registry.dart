@@ -5,27 +5,27 @@
 part of cipher.api;
 
 /// A registry holds the map of factories indexed by algorithm names.
-class Registry<Algorithm> {
+class Registry<T> {
 
   final _staticFactories = new Map<String,Function>();
   final _dynamicFactories = new List<Function>();
 
   /// Shorthand for [registerStaticFactory]
-  operator []= (String algorithmName, Algorithm factory(String) )
+  operator []= (String algorithmName, T factory(String) )
     => registerStaticFactory(algorithmName, factory);
 
   /// Register an algorithm by its name.
-  void registerStaticFactory( String algorithmName, Algorithm factory(String) ) {
+  void registerStaticFactory( String algorithmName, T factory(String) ) {
     _staticFactories[algorithmName] = factory;
   }
 
-  /// Register an algorithm by its name.
-  void registerDynamicFactory( Algorithm factory(String) ) {
+  /// Register an algorithm factory method which can translate a variable algorithm name into an implementation.
+  void registerDynamicFactory( T factory(String) ) {
     _dynamicFactories.add(factory);
   }
 
   /// Create an algorithm given its name
-  Algorithm create( String algorithmName ) {
+  T create( String algorithmName ) {
     var factory = _staticFactories[algorithmName];
     if( factory!=null ) {
       return factory(algorithmName);

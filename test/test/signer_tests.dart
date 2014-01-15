@@ -52,7 +52,7 @@ void runSignerTests( Signer signer, CipherParameters signParams, CipherParameter
 
 }
 
-void _runGenerateSignatureTest(Signer signer, CipherParameters params, String message, String expectedSignature) {
+void _runGenerateSignatureTest(Signer signer, CipherParameters params, String message, Signature expectedSignature) {
   var paramsWithRandom = new ParametersWithRandom( params, new NullSecureRandom() );
 
   signer.reset();
@@ -60,23 +60,16 @@ void _runGenerateSignatureTest(Signer signer, CipherParameters params, String me
 
   var signature = signer.generateSignature(createUint8ListFromString(message));
 
-  expect( signature.toString(), expectedSignature );
+  expect( signature, expectedSignature );
 }
 
-void _runVerifySignatureTest(Signer signer, CipherParameters params, String message, String signature) {
+void _runVerifySignatureTest(Signer signer, CipherParameters params, String message, Signature signature) {
   signer.reset();
   signer.init(false, params);
 
-  var s = _decodeSignature(signature);
-  var ok = signer.verifySignature(createUint8ListFromString(message), s);
+  var ok = signer.verifySignature(createUint8ListFromString(message), signature);
 
   expect( ok, true );
 }
 
-Signature _decodeSignature(String signature) {
-  var parts = signature.split(",");
-  var r = new BigInteger( parts[0].substring(1) );
-  var s = new BigInteger( parts[1].substring(0, parts[1].length-1) );
-  return new Signature( r, s );
-}
 

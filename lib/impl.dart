@@ -3,11 +3,9 @@
 // See the LICENSE file for more information.
 
 /**
- * This library contains all out-of-the-box implementations of the interfaces
- * provided in the API.
+ * This library contains all out-of-the-box implementations of the interfaces provided in the API.
  *
- * You must call [initCipher] method before using this library to load all
- * implementations into cipher's API factories.
+ * You must call [initCipher] method before using this library to load all implementations into cipher's API factories.
  */
 library cipher.impl;
 

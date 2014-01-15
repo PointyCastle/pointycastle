@@ -31,10 +31,10 @@ abstract class SecureRandom {
   /// Get one byte long random int.
   Uint8 nextUint8();
 
-  /// Get two byte long random int.
+  /// Get two bytes long random int.
   Uint16 nextUint16();
 
-  /// Get four byte long random int.
+  /// Get four bytes long random int.
   Uint32 nextUint32();
 
   /// Get a random [BigInteger] of [bitLength] bits.
@@ -47,7 +47,7 @@ abstract class SecureRandom {
 
 /**
  * An asynchronous source of pure random data (entropy). Data returned by an [EntropySource] should be supposed to be
- * impredictable and of more quality than data obtained from a [SecureRandom]. Usually an [EntropySource] should be seen like
+ * unpredictable and of more quality than data obtained from a [SecureRandom]. Usually an [EntropySource] should be seen like
  * a random generation device while a [SecureRandom] should be seen like a cryptographic PRNG.
  */
 abstract class EntropySource {

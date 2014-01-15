@@ -5,9 +5,8 @@
 /**
  * This is the API specification library for the cipher project.
  *
- * It declares all abstract types used by the cipher library. In addition, it
- * implements the factories mechanism that allows users to instantiate
- * algorithms by their standard name.
+ * It declares all abstract types used by the cipher library. In addition, it implements the factories mechanism that allows
+ * users to instantiate algorithms by their standard name.
  */
 library cipher.api;
 

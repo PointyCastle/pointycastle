@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.src.ecc_fp;
+library cipher.ecc.ecc_fp;
 
 import "dart:typed_data";
 

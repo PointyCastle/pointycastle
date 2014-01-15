@@ -26,16 +26,8 @@ class AsymmetricKeyPair {
 
 }
 
-/// A signature created by a [Signer]
-class Signature {
-
-  final BigInteger r;
-  final BigInteger s;
-
-  Signature( this.r, this.s );
-
-  String toString() => "(${r.toString()},${s.toString()})";
-
+/// An interface for signatures created by a [Signer]
+abstract class Signature {
 }
 
 /// An interface for DSAs (digital signature algorithms)
@@ -69,7 +61,11 @@ abstract class Signer {
 
 }
 
-/// The interface that asymmetric key generators conform to.
+/**
+ * The interface that asymmetric key generators conform to.
+ *
+ * A [KeyGenerator] is used to create a pair of public and private keys.
+ */
 abstract class KeyGenerator {
 
   /// The [Registry] for [KeyGenerator] algorithms
@@ -87,7 +83,7 @@ abstract class KeyGenerator {
    */
   void init( CipherParameters params );
 
-  /// Derive key from given input and put it in [out] at offset [outOff].
+  /// Generate a new key pair.
   AsymmetricKeyPair generateKeyPair();
 
 }

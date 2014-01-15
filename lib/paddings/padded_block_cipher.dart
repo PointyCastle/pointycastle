@@ -1,5 +1,5 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.paddings.padded_block_cipher;
@@ -11,14 +11,14 @@ import "package:cipher/params/padded_block_cipher_parameters.dart";
 
 /// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
-  
+
   final Padding padding;
   final BlockCipher underlyingCipher;
-  
+
   bool _encrypting;
 
   PaddedBlockCipherImpl(this.padding,this.underlyingCipher);
-  
+
   String get algorithmName => underlyingCipher.algorithmName+"/"+padding.algorithmName;
 
   int get blockSize => underlyingCipher.blockSize;
@@ -42,12 +42,14 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
     if( _encrypting ) {
       Uint8List tmp = new Uint8List(blockSize)
         ..setAll( 0, inp.sublist(inpOff) );
-      padding.addPadding( tmp, inp.length-inpOff );
-      return processBlock(tmp, 0, out, outOff); 
+      var padCount = inp.length-inpOff;
+      padding.addPadding( tmp, padCount );
+      var processed = processBlock(tmp, 0, out, outOff);
+      return processed - padCount;
     } else {
-      var ret = processBlock(inp, inpOff, out, outOff);
+      var processed = processBlock(inp, inpOff, out, outOff);
       var padCount = padding.padCount(out.sublist(outOff));
-      return ret - padCount;
+      return processed - padCount;
     }
   }
 
