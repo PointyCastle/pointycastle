@@ -1,14 +1,18 @@
-all: clean build bundle
+all: clean depends build bundle
 
 
 clean:
 	-rm -rf ../out
 
 
+depends:
+	cd ..; pub get; cd tool
+
+
 build: test doc
 
 
-test:
+test: depends
 	@echo "********************************************************************************"
 	@echo "RUNNING TESTS"
 	@echo "********************************************************************************"
@@ -19,7 +23,7 @@ test:
 doc: doc-api doc-impl
 
 
-doc-api:
+doc-api: depends
 	@echo "********************************************************************************"
 	@echo "MAKING API DOCUMENTATION"
 	@echo "********************************************************************************"
@@ -37,7 +41,7 @@ doc-api:
           --link-api ../lib/cipher.dart
 
 
-doc-impl:
+doc-impl: depends
 	@echo "********************************************************************************"
 	@echo "MAKING IMPL DOCUMENTATION"
 	@echo "********************************************************************************"
