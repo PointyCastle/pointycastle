@@ -1,16 +1,14 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.src.ufixnum;
-
-import "dart:typed_data";
+part of cipher.api;
 
 /// Implementation of unsigned 8-bit size nums
 class Uint8 extends UintX {
-  
-  static int clip( int value ) => (value&0xFF); 
-  
+
+  static int clip( int value ) => (value&0xFF);
+
   Uint8(int value) : super(value);
 
   int get bitLength => 8;
@@ -21,13 +19,13 @@ class Uint8 extends UintX {
 
 }
 
-/// Implementation of unsigned !6-bit size nums
+/// Implementation of unsigned 16-bit size nums
 class Uint16 extends UintX {
-  
+
   static int clip( int value ) => (value&0xFFFF);
 
   Uint16(int value) : super(value);
-  
+
   Uint16.fromBigEndian( Uint8List value, int offset ) :
     super( new ByteData.view(value.buffer).getUint16(offset, Endianness.BIG_ENDIAN ) );
 
@@ -44,7 +42,7 @@ class Uint16 extends UintX {
 
 /// Implementation of unsigned 32-bit size nums
 class Uint32 extends UintX {
-  
+
   static int clip( int value ) => (value&0xFFFFFFFF);
 
   Uint32(int value) : super(value);
@@ -63,21 +61,26 @@ class Uint32 extends UintX {
 
 }
 
-/// Partial implementation of unsigned fixed size nums
+/// Base class for unsigned fixed size nums
 abstract class UintX {
-  
+
   int _value;
-  
-  UintX( int value ) { 
+
+  /// Create an [UintX] from a given [value]. The value can be clipped if it cannot fit into this [UintX].
+  UintX( int value ) {
     _value = _clip(value);
   }
 
+  /// Get the bit length of this integer
   int get bitLength;
+
+  /// Get the byte length of this integer
   int get byteLength;
 
   int _clip( int value );
   UintX _coerce( int value );
-  
+
+  /// Convert to a regular [int].
   int toInt() => _value;
   int get hashCode => _value;
 
@@ -93,8 +96,7 @@ abstract class UintX {
   UintX operator + (other) => _coerce( _value + _int(other) );
   UintX operator - (other) => _coerce( _value - _int(other) );
   UintX operator * (other) => _coerce( _value * _int(other) );
-  UintX operator / (other) => this~/other;
-  UintX operator ~/(other) => _coerce( _value ~/ _int(other) );
+  UintX operator / (other) => _coerce( _value ~/ _int(other) );
   UintX operator % (other) => _coerce( _value % _int(other) );
 
   UintX operator &(other) => _coerce( _value & _int(other) );
@@ -103,7 +105,7 @@ abstract class UintX {
 
   UintX operator <<( int n ) => _coerce( _value<<(n%bitLength) );
   UintX operator >>( int n ) => _coerce( _value>>(n%bitLength) );
-  
+
   /// Circular shift left
   int rotl( int n ) {
     if( n<0 ) throw new ArgumentError("Shift offset cannot be negative");
@@ -117,7 +119,7 @@ abstract class UintX {
     n = (n%bitLength);
     return _clip(_value >> n) | _clip(_value << (bitLength - n));
   }
-  
+
   /// Conversion of endianness
   void toBigEndian( Uint8List out, int outOff ) {
     var offset = bitLength;
@@ -137,7 +139,7 @@ abstract class UintX {
       offset += 8;
     }
   }
-  
+
   int _int( value ) {
     if( value is int ) {
       return value;

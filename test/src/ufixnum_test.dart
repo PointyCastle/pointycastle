@@ -6,7 +6,7 @@ library cipher.test.ufixnum_test;
 
 import 'dart:typed_data';
 
-import "package:cipher/src/ufixnum.dart";
+import "package:cipher/api.dart";
 
 import "package:unittest/unittest.dart";
 
@@ -113,14 +113,6 @@ void _testUint8() {
       expect( (l/0x08).toInt(), 0x02 );
       expect( (l/0x0F).toInt(), 0x01 );
       expect( (l/0xFF).toInt(), 0x00 );
-    });
-
-    test( "operator ~/", () {
-      var l = new Uint8(0x10);
-      expect( (l~/0x02).toInt(), 0x08 );
-      expect( (l~/0x08).toInt(), 0x02 );
-      expect( (l~/0x0F).toInt(), 0x01 );
-      expect( (l~/0xFF).toInt(), 0x00 );
     });
 
     test( "operator %", () {
