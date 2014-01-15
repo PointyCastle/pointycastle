@@ -64,7 +64,7 @@ void initCipher() {
     _registerKeyDerivators();
     _registerKeyGenerators();
     _registerMacs();
-    _registerChainingBlockCiphers();
+    _registerModesOfOperation();
     _registerPaddedBlockCiphers();
     _registerPaddings();
     _registerSecureRandoms();
@@ -127,10 +127,10 @@ void _registerMacs() {
   Mac.registry["RIPEMD-160/HMAC"] = (_) => new HMac(new Digest("RIPEMD-160"), 64);
 }
 
-void _registerChainingBlockCiphers() {
-  ChainingBlockCipher.registry.registerDynamicFactory( _cbcChainingBlockCipherFactory );
-  ChainingBlockCipher.registry.registerDynamicFactory( _ctrChainingBlockCipherFactory );
-  ChainingBlockCipher.registry.registerDynamicFactory( _sicChainingBlockCipherFactory );
+void _registerModesOfOperation() {
+  BlockCipher.registry.registerDynamicFactory( _cbcBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory( _ctrBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory( _sicBlockCipherFactory );
 }
 
 void _registerPaddedBlockCiphers() {
@@ -186,7 +186,7 @@ KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
   }
 }
 
-ChainingBlockCipher _cbcChainingBlockCipherFactory( String algorithmName ) {
+BlockCipher _cbcBlockCipherFactory( String algorithmName ) {
   var parts = algorithmName.split("/");
 
   if( parts.length!=2 ) return null;
@@ -201,7 +201,7 @@ ChainingBlockCipher _cbcChainingBlockCipherFactory( String algorithmName ) {
   }
 }
 
-ChainingBlockCipher _ctrChainingBlockCipherFactory( String algorithmName ) {
+BlockCipher _ctrBlockCipherFactory( String algorithmName ) {
   var parts = algorithmName.split("/");
 
   if( parts.length!=2 ) return null;
@@ -212,15 +212,14 @@ ChainingBlockCipher _ctrChainingBlockCipherFactory( String algorithmName ) {
   );
 
   if( underlyingCipher!=null ) {
-    return new StreamCipherAsChainingBlockCipher(
+    return new StreamCipherAsBlockCipher(
         underlyingCipher.blockSize,
-        new CTRStreamCipher(underlyingCipher),
-        underlyingCipher
+        new CTRStreamCipher(underlyingCipher)
     );
   }
 }
 
-ChainingBlockCipher _sicChainingBlockCipherFactory( String algorithmName ) {
+BlockCipher _sicBlockCipherFactory( String algorithmName ) {
   var parts = algorithmName.split("/");
 
   if( parts.length!=2 ) return null;
@@ -231,10 +230,9 @@ ChainingBlockCipher _sicChainingBlockCipherFactory( String algorithmName ) {
   );
 
   if( underlyingCipher!=null ) {
-    return new StreamCipherAsChainingBlockCipher(
+    return new StreamCipherAsBlockCipher(
         underlyingCipher.blockSize,
-        new SICStreamCipher(underlyingCipher),
-        underlyingCipher
+        new SICStreamCipher(underlyingCipher)
     );
   }
 }
@@ -249,13 +247,8 @@ PaddedBlockCipher _paddedBlockCipherFactory(String algorithmName) {
   );
   if( padding!=null ) {
     var underlyingCipher = _createOrNull( () =>
-      new ChainingBlockCipher(algorithmName.substring(0,lastSepIndex))
+      new BlockCipher(algorithmName.substring(0,lastSepIndex))
     );
-    if( underlyingCipher==null ) {
-      underlyingCipher = _createOrNull( () =>
-        new BlockCipher(algorithmName.substring(0,lastSepIndex))
-      );
-    }
     if( underlyingCipher!=null ) {
       return new PaddedBlockCipherImpl(padding, underlyingCipher);
     }

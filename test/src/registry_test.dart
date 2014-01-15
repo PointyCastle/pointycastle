@@ -71,11 +71,11 @@ void main() {
 
     });
 
-    test( "ChainingBlockCipher returns valid implementations", () {
+    test( "BlockCipher returns valid implementations for modes of operation", () {
 
-      _testChainingBlockCipher( "AES/SIC" );
-      _testChainingBlockCipher( "AES/CTR" );
-      _testChainingBlockCipher( "AES/CBC" );
+      _testBlockCipher( "AES/SIC" );
+      _testBlockCipher( "AES/CTR" );
+      _testBlockCipher( "AES/CBC" );
 
     });
 
@@ -158,18 +158,6 @@ void _testMac( String algorithmName ) {
   expect( mac.algorithmName, algorithmName );
 }
 
-void _testChainingBlockCipher( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  var cbc = new ChainingBlockCipher(algorithmName);
-  expect( cbc, new isInstanceOf<ChainingBlockCipher>("ChainingBlockCipher") );
-  expect( cbc.algorithmName, equals(algorithmName) );
-
-  var bc = cbc.underlyingCipher;
-  expect( bc, new isInstanceOf<BlockCipher>("BlockCipher") );
-  expect( bc.algorithmName, equals(parts[0]) );
-}
-
 void _testPaddedBlockCipher( String algorithmName ) {
   var parts = algorithmName.split("/");
 
@@ -182,12 +170,8 @@ void _testPaddedBlockCipher( String algorithmName ) {
   expect( padding.algorithmName, equals(parts[2]) );
 
   var cbc = pbc.underlyingCipher;
-  expect( cbc, new isInstanceOf<ChainingBlockCipher>("ChainingBlockCipher") );
+  expect( cbc, new isInstanceOf<BlockCipher>("BlockCipher") );
   expect( cbc.algorithmName, equals("${parts[0]}/${parts[1]}") );
-
-  var bc = cbc.underlyingCipher;
-  expect( bc, new isInstanceOf<BlockCipher>("BlockCipher") );
-  expect( bc.algorithmName, equals(parts[0]) );
 }
 
 void _testPadding( String algorithmName ) {

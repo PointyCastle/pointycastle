@@ -46,35 +46,12 @@ abstract class BlockCipher {
 }
 
 /**
- * Chaining block cipher are expected to conform to this interface.
- *
- * A [ChainingBlockCipher] is a [BlockCipher] that delegates in another
- * [BlockCipher] to perform its operation.
- *
- * Implementers of this interface ususally are block cipher modes of operation,
- * as described in [http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation].
- */
-abstract class ChainingBlockCipher implements BlockCipher {
-
-  /// The [Registry] for [ChainingBlockCipher] algorithms
-  static final registry = new Registry<ChainingBlockCipher>();
-
-  /// Create the chaining block cipher specified by the standard [algorithmName].
-  factory ChainingBlockCipher( String algorithmName ) => registry.create(algorithmName);
-
-  /// Get the underlying [BlockCipher] wrapped by this cipher.
-  BlockCipher get underlyingCipher;
-
-}
-
-/**
  * All padded block ciphers conform to this interface.
  *
- * A padded block cipher is a wrapper around a [BlockCipher] or a
- * [ChainingBlockCipher] that allows padding the last procesed block if it is
- * smaller than the [blockSize].
+ * A padded block cipher is a wrapper around a [BlockCipher] that allows padding the last procesed block if it is smaller
+ * than the [blockSize].
  */
-abstract class PaddedBlockCipher implements ChainingBlockCipher {
+abstract class PaddedBlockCipher implements BlockCipher {
 
   /// The [Registry] for [PaddedBlockCipher] algorithms
   static final registry = new Registry<PaddedBlockCipher>();

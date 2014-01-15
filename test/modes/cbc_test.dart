@@ -24,7 +24,7 @@ void main() {
   final params = new ParametersWithIV(null, iv);
   final underlyingCipher = new NullBlockCipher();
 
-  runBlockCipherTests( new ChainingBlockCipher("Null/CBC"), params, [
+  runBlockCipherTests( new BlockCipher("Null/CBC"), params, [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
     "4c7e505629750f07fbecc79ba8b282903e5e233f5d556e6a9e98ebbbcbddece35b3d575a29201c4afffc82cba2ae8f8a355a773f4549686ad1d2ace58c80a1a4",

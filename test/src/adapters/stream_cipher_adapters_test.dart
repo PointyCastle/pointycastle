@@ -31,9 +31,8 @@ void main() {
 
   ]);
 
-  var underlyingCipher = new NullBlockCipher();
-  var cbc = new StreamCipherAsChainingBlockCipher(16,new NullStreamCipher(),underlyingCipher);
-  group( "StreamCipherAsChainingBlockCipher:", () {
+  var cbc = new StreamCipherAsBlockCipher(16,new NullStreamCipher());
+  group( "StreamCipherAsBlockCipher:", () {
 
     runBlockCipherTests( cbc, null, [
 
@@ -48,10 +47,6 @@ void main() {
       )),
 
     ]);
-
-    test( "underlyingCipher return is correct", () {
-      expect( cbc.underlyingCipher, same(underlyingCipher) );
-    });
 
   });
 

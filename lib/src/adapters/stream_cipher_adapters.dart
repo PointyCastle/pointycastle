@@ -33,19 +33,3 @@ class StreamCipherAsBlockCipher implements BlockCipher {
   }
 
 }
-
-/// An adapter to convert an [StreamCipher] based in a [BlockCipher] to a [ChainingBlockCipher]
-class StreamCipherAsChainingBlockCipher extends StreamCipherAsBlockCipher implements ChainingBlockCipher {
-
-  final BlockCipher underlyingCipher;
-
-  /**
-   * Create a [ChainingBlockCipher] from [streamCipher] simulating the given [blockSize] and the [underlyingCipher].
-   * WARNING: it is the responsibility of the caller to make sure that the three given values altogether make sense and are
-   * semantically correct. The [underlyingCipher] is not used at all, just returned to implement the [ChainingBlockCipher]
-   * interface, so make sure it is valid and makes sense.
-   */
-  StreamCipherAsChainingBlockCipher(int blockSize, StreamCipher streamCipher, this.underlyingCipher) :
-    super(blockSize, streamCipher);
-
-}

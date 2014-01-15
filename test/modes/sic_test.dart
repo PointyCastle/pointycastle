@@ -44,7 +44,7 @@ void main() {
   // In the end, this is a crypto library, thus we as developers have paranoia mode turned on by default.
   group( "SIC as block cipher:", () {
 
-    runBlockCipherTests( new ChainingBlockCipher("Null/SIC"), params, [
+    runBlockCipherTests( new BlockCipher("Null/SIC"), params, [
 
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
       "4c7e505629750f07fbecc79ba8b282907231515a3075071aeded869bafb281736572565630201457e9fdc3cba5ae8c686e760256283c1257a6b78495e2f3c12c",
