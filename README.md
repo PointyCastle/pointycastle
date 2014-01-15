@@ -13,12 +13,12 @@ and also from standards, and matched against the results got from cipher.
 As of the last release, the following algorithms are implemented:
 
 
-**Stream ciphers:**
-  * Salsa 20
-
-
 **Block ciphers:**
   * AES (fast version)
+
+
+**Stream ciphers:**
+  * Salsa 20
 
 
 **Block cipher modes of operation:**
@@ -26,10 +26,40 @@ As of the last release, the following algorithms are implemented:
   * CBC
 
 
-**Digests:**
-  * RIPEMD160
-
-
 **Paddings:**
   * PKCS7
+
+
+**Digests:**
+  * RIPEMD-160
+  * SHA-1
+  * SHA-256
+
+
+**MACs:**
+  * HMAC
+  
+  
+**Signatures:**
+  * ECDSA
+  
+  
+**Password based key derivators:**
+  * PBKDF2
+  * scrypt
+  
+  
+**Asymmetric key generators:**
+  * ECDSA
+  
+  
+**Entropy sources (true RNGs):**
+  * URL based (can be used, for example, with random.org)
+  * File based (can be used, for example, with /dev/random)
+  
+  
+**Secure PRNGs:**
+  * Based on block cipher in CTR mode
+  * Based on block cipher in CTR mode with auto reseed (for forward security)
+  
   
