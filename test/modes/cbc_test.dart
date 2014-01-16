@@ -11,10 +11,7 @@ import "package:cipher/cipher.dart";
 import "../test/block_cipher_tests.dart";
 import "../test/src/null_block_cipher.dart";
 
-/**
- * NOTE: the expected results for these tests are computed using the Java
- * version of Bouncy Castle
- */
+/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle
 void main() {
 
   initCipher();
