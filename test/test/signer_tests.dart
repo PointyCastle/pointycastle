@@ -4,8 +4,6 @@
 
 library cipher.test.test.signer_tests;
 
-import 'package:bignum/bignum.dart';
-
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_random.dart";
 

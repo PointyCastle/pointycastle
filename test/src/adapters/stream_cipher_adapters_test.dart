@@ -11,7 +11,6 @@ import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 import "../../test/block_cipher_tests.dart";
 
 import "../../test/src/null_stream_cipher.dart";
-import "../../test/src/null_block_cipher.dart";
 import "../../test/src/helpers.dart";
 
 
