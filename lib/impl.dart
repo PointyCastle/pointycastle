@@ -3,7 +3,11 @@
 // See the LICENSE file for more information.
 
 /**
- * This library contains all out-of-the-box implementations of the interfaces provided in the API.
+ * This library contains all out-of-the-box implementations of the interfaces provided in the API which are compatible with
+ * client and server sides.
+ *
+ * You can extend it with client side algorithms by including library [cipher.impl_client] in addition to this one. You can
+ * also extend is with its server side counterpart by including library [cipher.impl_server] in addition to this one
  *
  * You must call [initCipher] method before using this library to load all implementations into cipher's API factories.
  */
@@ -21,9 +25,6 @@ import "package:cipher/digests/sha256.dart";
 
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
-
-import "package:cipher/entropy/file_entropy_source.dart";
-import "package:cipher/entropy/url_entropy_source.dart";
 
 import "package:cipher/key_derivators/pbkdf2.dart";
 import "package:cipher/key_derivators/scrypt.dart";
@@ -50,17 +51,13 @@ import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 
 bool _initialized = false;
 
-/**
- *  This is the initializer method for this library. It must be called prior
- *  to use any of the implementations.
- */
+/// This is the initializer method for this library. It must be called prior to use any of the implementations.
 void initCipher() {
   if( !_initialized ) {
     _initialized = true;
     _registerBlockCiphers();
     _registerDigests();
     _registerEccStandardCurves();
-    _registerEntropySources();
     _registerKeyDerivators();
     _registerKeyGenerators();
     _registerMacs();
@@ -93,11 +90,6 @@ void _registerEccStandardCurves() {
       h: BigInteger.ONE,
       seed: new BigInteger("3045ae6fc8422f64ed579528d38120eae12196d5", 16)
   );
-}
-
-void _registerEntropySources() {
-  EntropySource.registry.registerDynamicFactory( _fileEntropySourceFactory );
-  EntropySource.registry.registerDynamicFactory( _urlEntropySourceFactory );
 }
 
 void _registerKeyDerivators() {
@@ -158,19 +150,6 @@ void _registerStreamCiphers() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-EntropySource _fileEntropySourceFactory(String algorithmName) {
-  if( algorithmName.startsWith("file://") ) {
-    var filePath = algorithmName.substring(7);
-    return new FileEntropySource(filePath);
-  }
-}
-
-EntropySource _urlEntropySourceFactory(String algorithmName) {
-  if( algorithmName.startsWith("http://") || algorithmName.startsWith("https://") ) {
-    return new UrlEntropySource(algorithmName);
-  }
-}
 
 KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
   var i = algorithmName.lastIndexOf("/");
