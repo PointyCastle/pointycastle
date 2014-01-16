@@ -33,6 +33,7 @@ import "package:cipher/key_generators/ec_key_generator.dart";
 import "package:cipher/macs/hmac.dart";
 
 import "package:cipher/modes/cbc.dart";
+import "package:cipher/modes/ofb.dart";
 import "package:cipher/modes/sic.dart";
 
 import "package:cipher/paddings/padded_block_cipher.dart";
@@ -130,6 +131,7 @@ void _registerMacs() {
 void _registerModesOfOperation() {
   BlockCipher.registry.registerDynamicFactory( _cbcBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _ctrBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory( _ofbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _sicBlockCipherFactory );
 }
 
@@ -216,6 +218,26 @@ BlockCipher _ctrBlockCipherFactory( String algorithmName ) {
         underlyingCipher.blockSize,
         new CTRStreamCipher(underlyingCipher)
     );
+  }
+}
+
+BlockCipher _ofbBlockCipherFactory( String algorithmName ) {
+  var parts = algorithmName.split("/");
+
+  if( parts.length!=2 ) return null;
+  if( !parts[1].startsWith("OFB-") ) return null;
+
+  var blockSizeInBits = int.parse(parts[1].substring(4));
+  if( (blockSizeInBits%8) != 0 ) {
+    throw new ArgumentError("Bad OFB block size: $blockSizeInBits (must be a multiple of 8)");
+  }
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(parts[0])
+  );
+
+  if( underlyingCipher!=null ) {
+    return new OFBBlockCipher(underlyingCipher, blockSizeInBits~/8 );
   }
 }
 

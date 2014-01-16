@@ -76,6 +76,7 @@ void main() {
       _testBlockCipher( "AES/SIC" );
       _testBlockCipher( "AES/CTR" );
       _testBlockCipher( "AES/CBC" );
+      _testBlockCipher( "AES/OFB-64" );
 
     });
 
