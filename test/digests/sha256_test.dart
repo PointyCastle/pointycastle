@@ -5,6 +5,7 @@
 library cipher.test.digests.sha256_test;
 
 import "package:cipher/cipher.dart";
+import "package:cipher/impl.dart";
 
 import "../test/digest_tests.dart";
 
