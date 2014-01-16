@@ -1,10 +1,10 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.bin.cipher;
 
-import "package:cipher/cipher.dart";
+import "package:cipher/impl_server.dart";
 
 import "./src/util.dart";
 import "./src/benchmark/benchmark.dart";
@@ -21,7 +21,7 @@ final COMMANDS = {
 void main( List<String> args ) {
 
   initCipher();
-  
+
   if( args.length==0 ) {
     showUsage();
   } else {
@@ -33,7 +33,7 @@ void main( List<String> args ) {
       _command( args.sublist(1) );
     }
   }
-  
+
 }
 
 void showUsage() {
@@ -48,7 +48,7 @@ Available commands:
       print("   ${cmd}:   ${text}");
     }
   }
-  print( "\nRun 'cipher help <command>' for more information on a specific command." );  
+  print( "\nRun 'cipher help <command>' for more information on a specific command." );
 }
 
 void doHelp( List<String> args ) {
