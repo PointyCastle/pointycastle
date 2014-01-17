@@ -9,16 +9,16 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 
 /**
- * An implementation of a null [BlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for 
+ * An implementation of a null [BlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for
  * testing or benchmarking chaining algorithms.
  */
 class NullBlockCipher implements BlockCipher {
 
-  static const _BLOCK_SIZE = 16;
+  final int blockSize;
+
+  NullBlockCipher([this.blockSize=16]);
 
   String get algorithmName => "Null";
-
-  int get blockSize => _BLOCK_SIZE;
 
   void reset() {
   }
@@ -27,8 +27,8 @@ class NullBlockCipher implements BlockCipher {
   }
 
   int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
-      out.setRange( outOff, outOff+_BLOCK_SIZE, inp.sublist(inpOff) );
-      return _BLOCK_SIZE;
+      out.setRange( outOff, outOff+blockSize, inp.sublist(inpOff) );
+      return blockSize;
   }
 
 }
