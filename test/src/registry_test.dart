@@ -73,10 +73,11 @@ void main() {
 
     test( "BlockCipher returns valid implementations for modes of operation", () {
 
-      _testBlockCipher( "AES/SIC" );
-      _testBlockCipher( "AES/CTR" );
       _testBlockCipher( "AES/CBC" );
+      _testBlockCipher( "AES/CFB-64" );
+      _testBlockCipher( "AES/CTR" );
       _testBlockCipher( "AES/OFB-64" );
+      _testBlockCipher( "AES/SIC" );
 
     });
 

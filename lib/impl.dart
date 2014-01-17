@@ -33,6 +33,7 @@ import "package:cipher/key_generators/ec_key_generator.dart";
 import "package:cipher/macs/hmac.dart";
 
 import "package:cipher/modes/cbc.dart";
+import "package:cipher/modes/cfb.dart";
 import "package:cipher/modes/ofb.dart";
 import "package:cipher/modes/sic.dart";
 
@@ -130,6 +131,7 @@ void _registerMacs() {
 
 void _registerModesOfOperation() {
   BlockCipher.registry.registerDynamicFactory( _cbcBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory( _cfbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _ctrBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _ofbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _sicBlockCipherFactory );
@@ -200,6 +202,26 @@ BlockCipher _cbcBlockCipherFactory( String algorithmName ) {
 
   if( underlyingCipher!=null ) {
     return new CBCBlockCipher( underlyingCipher );
+  }
+}
+
+BlockCipher _cfbBlockCipherFactory( String algorithmName ) {
+  var parts = algorithmName.split("/");
+
+  if( parts.length!=2 ) return null;
+  if( !parts[1].startsWith("CFB-") ) return null;
+
+  var blockSizeInBits = int.parse(parts[1].substring(4));
+  if( (blockSizeInBits%8) != 0 ) {
+    throw new ArgumentError("Bad CFB block size: $blockSizeInBits (must be a multiple of 8)");
+  }
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(parts[0])
+  );
+
+  if( underlyingCipher!=null ) {
+    return new CFBBlockCipher(underlyingCipher, blockSizeInBits~/8 );
   }
 }
 
