@@ -22,6 +22,7 @@ import "./macs/hmac_test.dart" as hmac_test;
 
 import "./modes/cbc_test.dart" as cbc_test;
 import "./modes/cfb_test.dart" as cfb_test;
+import "./modes/ecb_test.dart" as ecb_test;
 import "./modes/ofb_test.dart" as ofb_test;
 import "./modes/sic_test.dart" as sic_test;
 
@@ -66,6 +67,7 @@ void main() {
   // modes
   cbc_test.main();
   cfb_test.main();
+  ecb_test.main();
   ofb_test.main();
   sic_test.main();
 

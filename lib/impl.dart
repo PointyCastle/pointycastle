@@ -34,6 +34,7 @@ import "package:cipher/macs/hmac.dart";
 
 import "package:cipher/modes/cbc.dart";
 import "package:cipher/modes/cfb.dart";
+import "package:cipher/modes/ecb.dart";
 import "package:cipher/modes/ofb.dart";
 import "package:cipher/modes/sic.dart";
 
@@ -133,6 +134,7 @@ void _registerModesOfOperation() {
   BlockCipher.registry.registerDynamicFactory( _cbcBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _cfbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _ctrBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory( _ecbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _ofbBlockCipherFactory );
   BlockCipher.registry.registerDynamicFactory( _sicBlockCipherFactory );
 }
@@ -240,6 +242,21 @@ BlockCipher _ctrBlockCipherFactory( String algorithmName ) {
         underlyingCipher.blockSize,
         new CTRStreamCipher(underlyingCipher)
     );
+  }
+}
+
+BlockCipher _ecbBlockCipherFactory( String algorithmName ) {
+  var parts = algorithmName.split("/");
+
+  if( parts.length!=2 ) return null;
+  if( parts[1]!="ECB") return null;
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(parts[0])
+  );
+
+  if( underlyingCipher!=null ) {
+    return new ECBBlockCipher( underlyingCipher );
   }
 }
 
