@@ -35,6 +35,7 @@ import "package:cipher/macs/hmac.dart";
 import "package:cipher/modes/cbc.dart";
 import "package:cipher/modes/cfb.dart";
 import "package:cipher/modes/ecb.dart";
+import "package:cipher/modes/gctr.dart";
 import "package:cipher/modes/ofb.dart";
 import "package:cipher/modes/sic.dart";
 
@@ -131,12 +132,41 @@ void _registerMacs() {
 }
 
 void _registerModesOfOperation() {
-  BlockCipher.registry.registerDynamicFactory( _cbcBlockCipherFactory );
-  BlockCipher.registry.registerDynamicFactory( _cfbBlockCipherFactory );
-  BlockCipher.registry.registerDynamicFactory( _ctrBlockCipherFactory );
-  BlockCipher.registry.registerDynamicFactory( _ecbBlockCipherFactory );
-  BlockCipher.registry.registerDynamicFactory( _ofbBlockCipherFactory );
-  BlockCipher.registry.registerDynamicFactory( _sicBlockCipherFactory );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _modeOfOperationFactory(algorithmName, "CBC", (underlyingCipher)
+          => new CBCBlockCipher( underlyingCipher )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _variableSizeModeOfOperationFactory(algorithmName, "CFB", (underlyingCipher, blockSize)
+          => new CFBBlockCipher( underlyingCipher, blockSize )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _modeOfOperationFactory(algorithmName, "CTR", (underlyingCipher)
+          => new StreamCipherAsBlockCipher( underlyingCipher.blockSize, new CTRStreamCipher(underlyingCipher) )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _modeOfOperationFactory(algorithmName, "ECB", (underlyingCipher)
+          => new ECBBlockCipher( underlyingCipher )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _modeOfOperationFactory(algorithmName, "GCTR", (underlyingCipher)
+          => new GCTRBlockCipher( underlyingCipher )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _variableSizeModeOfOperationFactory(algorithmName, "OFB", (underlyingCipher, blockSize)
+          => new OFBBlockCipher( underlyingCipher, blockSize )
+      )
+  );
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) => _modeOfOperationFactory(algorithmName, "SIC", (underlyingCipher)
+          => new StreamCipherAsBlockCipher( underlyingCipher.blockSize, new SICStreamCipher(underlyingCipher) )
+      )
+  );
 }
 
 void _registerPaddedBlockCiphers() {
@@ -192,18 +222,40 @@ KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
   }
 }
 
-BlockCipher _cbcBlockCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
+BlockCipher _modeOfOperationFactory( String algorithmName, String modeName,
+                                     BlockCipher subFactory(BlockCipher underlyingCipher) ) {
+  var sep = algorithmName.lastIndexOf("/");
 
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="CBC") return null;
+  if( sep==-1 ) return null;
+  if( algorithmName.substring(sep+1)!=modeName) return null;
 
   var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
+      new BlockCipher(algorithmName.substring(0, sep))
   );
 
   if( underlyingCipher!=null ) {
-    return new CBCBlockCipher( underlyingCipher );
+    return subFactory(underlyingCipher);
+  }
+}
+
+BlockCipher _variableSizeModeOfOperationFactory( String algorithmName, String modeName,
+                                                 BlockCipher subFactory(BlockCipher underlyingCipher, int blockSize) ) {
+  var sep = algorithmName.lastIndexOf("/");
+
+  if( sep==-1 ) return null;
+  if( !algorithmName.substring(sep+1).startsWith(modeName+"-") ) return null;
+
+  var blockSizeInBits = int.parse(algorithmName.substring(sep+1+modeName.length+1));
+  if( (blockSizeInBits%8) != 0 ) {
+    throw new ArgumentError("Bad ${modeName} block size: $blockSizeInBits (must be a multiple of 8)");
+  }
+
+  var underlyingCipher = _createOrNull( () =>
+      new BlockCipher(algorithmName.substring(0, sep))
+  );
+
+  if( underlyingCipher!=null ) {
+    return subFactory(underlyingCipher, blockSizeInBits~/8 );
   }
 }
 
@@ -227,39 +279,6 @@ BlockCipher _cfbBlockCipherFactory( String algorithmName ) {
   }
 }
 
-BlockCipher _ctrBlockCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="CTR") return null;
-
-  var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
-  );
-
-  if( underlyingCipher!=null ) {
-    return new StreamCipherAsBlockCipher(
-        underlyingCipher.blockSize,
-        new CTRStreamCipher(underlyingCipher)
-    );
-  }
-}
-
-BlockCipher _ecbBlockCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="ECB") return null;
-
-  var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
-  );
-
-  if( underlyingCipher!=null ) {
-    return new ECBBlockCipher( underlyingCipher );
-  }
-}
-
 BlockCipher _ofbBlockCipherFactory( String algorithmName ) {
   var parts = algorithmName.split("/");
 
@@ -277,24 +296,6 @@ BlockCipher _ofbBlockCipherFactory( String algorithmName ) {
 
   if( underlyingCipher!=null ) {
     return new OFBBlockCipher(underlyingCipher, blockSizeInBits~/8 );
-  }
-}
-
-BlockCipher _sicBlockCipherFactory( String algorithmName ) {
-  var parts = algorithmName.split("/");
-
-  if( parts.length!=2 ) return null;
-  if( parts[1]!="SIC") return null;
-
-  var underlyingCipher = _createOrNull( () =>
-      new BlockCipher(parts[0])
-  );
-
-  if( underlyingCipher!=null ) {
-    return new StreamCipherAsBlockCipher(
-        underlyingCipher.blockSize,
-        new SICStreamCipher(underlyingCipher)
-    );
   }
 }
 
