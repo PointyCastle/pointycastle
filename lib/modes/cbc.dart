@@ -9,7 +9,7 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-/// Implementations of Cipher-Block-Chaining (CBC) mode on top of a [BlockCipher].
+/// Implementation of Cipher-Block-Chaining (CBC) mode on top of a [BlockCipher].
 class CBCBlockCipher implements BlockCipher {
 
   final BlockCipher _underlyingCipher;
