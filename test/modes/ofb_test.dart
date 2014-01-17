@@ -19,7 +19,6 @@ void main() {
 
   final iv = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);
-  final underlyingCipher = new NullBlockCipher();
 
   runBlockCipherTests( new BlockCipher("Null/OFB-128"), params, [
 
