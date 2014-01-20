@@ -7,6 +7,7 @@ library cipher.test.block.aes_fast_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
+import "package:cipher/impl.dart";
 
 import '../test/block_cipher_tests.dart';
 

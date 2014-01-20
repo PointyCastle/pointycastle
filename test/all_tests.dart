@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cpiher.test.all_tests;
+library cipher.test.all_tests;
 
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
@@ -10,6 +10,7 @@ import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
+// These two cannot be run as they are integration tests (need external dependencies)
 import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
 import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 

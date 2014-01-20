@@ -9,6 +9,7 @@ import "dart:typed_data";
 import "package:unittest/unittest.dart";
 
 import "package:cipher/cipher.dart";
+import "package:cipher/impl.dart";
 
 void main() {
 

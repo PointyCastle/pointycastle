@@ -7,6 +7,7 @@ library cipher.test.stream.salsa20_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
+import "package:cipher/impl.dart";
 
 import "../test/stream_cipher_tests.dart";
 

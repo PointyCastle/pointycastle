@@ -7,6 +7,7 @@ library cipher.test.key_generators.ec_key_generator_test;
 import 'package:bignum/bignum.dart';
 
 import 'package:cipher/cipher.dart';
+import "package:cipher/impl.dart";
 
 import "../test/src/null_secure_random.dart";
 import '../test/key_generators_tests.dart';

@@ -3,13 +3,10 @@
 // See the LICENSE file for more information.
 
 /**
- * This is the main entry point to the cipher library.
- *
- * This file includes the [cipher.api], [cipher.parameters] and [cipher.impl] libraries, which comprise the whole API
- * specification plus all the out-of-the-box implementations of algorithms.
+ * This is the main entry point to the cipher library API. It includes the [cipher.api] and [cipher.parameters] libraries, which
+ * comprise the whole API specification.
  */
 library cipher;
 
 export "package:cipher/api.dart";
 export "package:cipher/parameters.dart";
-export "package:cipher/impl.dart";
