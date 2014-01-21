@@ -9,7 +9,7 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/digests/md4_family_digest.dart";
 
-/// Implementation of SHA-1 digest. For more info see links:
+/// Implementation of SHA-1 digest
 class SHA1Digest extends MD4FamilyDigest implements Digest {
 
   static const _DIGEST_LENGTH = 20;
