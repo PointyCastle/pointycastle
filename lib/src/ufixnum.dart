@@ -107,17 +107,17 @@ abstract class UintX {
   UintX operator >>( int n ) => _coerce( _value>>(n%bitLength) );
 
   /// Circular shift left
-  int rotl( int n ) {
+  UintX rotl( int n ) {
     if( n<0 ) throw new ArgumentError("Shift offset cannot be negative");
     n = (n%bitLength);
-    return _clip(_value << n) | _clip(_value >> (bitLength - n));
+    return _coerce( _clip(_value << n) | _clip(_value >> (bitLength - n)) );
   }
 
   /// Circular shift right
-  int rotr( int n ) {
+  UintX rotr( int n ) {
     if( n<0 ) throw new ArgumentError("Shift offset cannot be negative");
     n = (n%bitLength);
-    return _clip(_value >> n) | _clip(_value << (bitLength - n));
+    return _coerce( _clip(_value >> n) | _clip(_value << (bitLength - n)) );
   }
 
   /// Conversion of endianness
@@ -139,6 +139,9 @@ abstract class UintX {
       offset += 8;
     }
   }
+
+  String toString() => toInt().toString();
+  String toRadixString( int radix ) => toInt().toRadixString(radix);
 
   int _int( value ) {
     if( value is int ) {
