@@ -32,6 +32,7 @@ void main() {
     test( "Digest returns valid implementations", () {
 
       _testDigest( "MD2" );
+      _testDigest( "MD4" );
       _testDigest( "RIPEMD-160" );
       _testDigest( "SHA-1" );
       _testDigest( "SHA-256" );

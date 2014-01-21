@@ -7,6 +7,7 @@ library cipher.test.all_tests;
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
 import "./digests/md2_test.dart" as md2_test;
+import "./digests/md4_test.dart" as md4_test;
 import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
@@ -50,6 +51,7 @@ void main() {
 
   // digests
   md2_test.main();
+  md4_test.main();
   ripemd160_test.main();
   sha1_test.main();
   sha256_test.main();
