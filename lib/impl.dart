@@ -19,6 +19,7 @@ import "package:cipher/api.dart";
 
 import "package:cipher/block/aes_fast.dart";
 
+import "package:cipher/digests/md2.dart";
 import "package:cipher/digests/ripemd160.dart";
 import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha256.dart";
@@ -79,6 +80,7 @@ void _registerBlockCiphers() {
 }
 
 void _registerDigests() {
+  Digest.registry["MD2"] = (_) => new MD2Digest();
   Digest.registry["RIPEMD-160"] = (_) => new RIPEMD160Digest();
   Digest.registry["SHA-1"] = (_) => new SHA1Digest();
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
