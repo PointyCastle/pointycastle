@@ -21,6 +21,7 @@ import "package:cipher/block/aes_fast.dart";
 
 import "package:cipher/digests/md2.dart";
 import "package:cipher/digests/md4.dart";
+import "package:cipher/digests/md5.dart";
 import "package:cipher/digests/ripemd160.dart";
 import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha256.dart";
@@ -83,6 +84,7 @@ void _registerBlockCiphers() {
 void _registerDigests() {
   Digest.registry["MD2"] = (_) => new MD2Digest();
   Digest.registry["MD4"] = (_) => new MD4Digest();
+  Digest.registry["MD5"] = (_) => new MD5Digest();
   Digest.registry["RIPEMD-160"] = (_) => new RIPEMD160Digest();
   Digest.registry["SHA-1"] = (_) => new SHA1Digest();
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
@@ -114,7 +116,6 @@ void _registerMacs() {
   blockLengths.put("SHA-384", Integers.valueOf(128));
   blockLengths.put("SHA-512", Integers.valueOf(128));
   blockLengths.put("MD4", Integers.valueOf(64));
-  blockLengths.put("MD5", Integers.valueOf(64));
   blockLengths.put("RIPEMD128", Integers.valueOf(64));
   blockLengths.put("SHA-224", Integers.valueOf(64));
   blockLengths.put("Tiger", Integers.valueOf(64));
@@ -124,6 +125,7 @@ void _registerMacs() {
   */
   Mac.registry["SHA-1/HMAC"] = (_) => new HMac(new Digest("SHA-1"), 64);
   Mac.registry["SHA-256/HMAC"] = (_) => new HMac(new Digest("SHA-256"), 64);
+  Mac.registry["MD5/HMAC"] = (_) => new HMac(new Digest("MD5"), 64);
   Mac.registry["RIPEMD-160/HMAC"] = (_) => new HMac(new Digest("RIPEMD-160"), 64);
 }
 
