@@ -115,16 +115,16 @@ void _registerMacs() {
   /*
   blockLengths.put("SHA-384", Integers.valueOf(128));
   blockLengths.put("SHA-512", Integers.valueOf(128));
-  blockLengths.put("MD4", Integers.valueOf(64));
   blockLengths.put("RIPEMD128", Integers.valueOf(64));
   blockLengths.put("SHA-224", Integers.valueOf(64));
   blockLengths.put("Tiger", Integers.valueOf(64));
   blockLengths.put("Whirlpool", Integers.valueOf(64));
   blockLengths.put("GOST3411", Integers.valueOf(32));
-  blockLengths.put("MD2", Integers.valueOf(16));
   */
   Mac.registry["SHA-1/HMAC"] = (_) => new HMac(new Digest("SHA-1"), 64);
   Mac.registry["SHA-256/HMAC"] = (_) => new HMac(new Digest("SHA-256"), 64);
+  Mac.registry["MD2/HMAC"] = (_) => new HMac(new Digest("MD2"), 16);
+  Mac.registry["MD4/HMAC"] = (_) => new HMac(new Digest("MD4"), 64);
   Mac.registry["MD5/HMAC"] = (_) => new HMac(new Digest("MD5"), 64);
   Mac.registry["RIPEMD-160/HMAC"] = (_) => new HMac(new Digest("RIPEMD-160"), 64);
 }
