@@ -141,9 +141,6 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
     _X.fillRange( 0, _X.length, new Uint32(0) );
   }
 
-  void _unpackWord( Uint32 word, Uint8List out, int outOff )
-    => word.toLittleEndian(out, outOff);
-
   // round 1 left rotates
   static const _S11 = 3;
   static const _S12 = 7;
@@ -162,14 +159,14 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
   static const _S33 = 11;
   static const _S34 = 15;
 
-  /// rotate int x left n bits.
-  Uint32 _rotateLeft( Uint32 x, int n ) => x.rotl(n);//((x << n) | (x >> (32 - n))).toInt();
+  // Helper functions
+  Uint32 _rotateLeft( Uint32 x, int n ) => x.rotl(n);
+  void _unpackWord( Uint32 word, Uint8List out, int outOff ) => word.toLittleEndian(out, outOff);
 
-  // F, G, H and I are the basic MD4 functions.
+  // F, G and H are the basic MD4 functions.
   Uint32 _F( Uint32 u, Uint32 v, Uint32 w ) => (u & v) | (~u & w);
   Uint32 _G( Uint32 u, Uint32 v, Uint32 w ) => (u & v) | (u & w) | (v & w);
   Uint32 _H( Uint32 u, Uint32 v, Uint32 w ) => u ^ v ^ w;
-
 
 }
 
