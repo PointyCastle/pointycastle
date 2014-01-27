@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.digests.md4;
+library cipher.digests.md5;
 
 import "dart:typed_data";
 
