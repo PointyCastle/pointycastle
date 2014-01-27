@@ -56,6 +56,9 @@ import "package:cipher/stream/salsa20.dart";
 import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 
 
+part "./src/impl/ecc_curves.dart";
+
+
 bool _initialized = false;
 
 /// This is the initializer method for this library. It must be called prior to use any of the implementations.
@@ -90,17 +93,7 @@ void _registerDigests() {
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
 }
 
-void _registerEccStandardCurves() {
-  _registerFpStandardCurve("prime192v1",
-      q: new BigInteger("6277101735386680763835789423207666416083908700390324961279"),
-      a: new BigInteger("fffffffffffffffffffffffffffffffefffffffffffffffc", 16),
-      b: new BigInteger("64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1", 16),
-      g: new BigInteger("03188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012", 16),
-      n: new BigInteger("ffffffffffffffffffffffff99def836146bc9b1b4d22831", 16),
-      h: BigInteger.ONE,
-      seed: new BigInteger("3045ae6fc8422f64ed579528d38120eae12196d5", 16)
-  );
-}
+// See part ecc_curves.dart for _registerEccStandardCurves()
 
 void _registerKeyDerivators() {
   KeyDerivator.registry["scrypt"] = (_) => new Scrypt();
@@ -349,14 +342,6 @@ StreamCipher _sicStreamCipherFactory( String algorithmName ) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _registerFpStandardCurve( String name, {BigInteger q, BigInteger a, BigInteger b, BigInteger g, BigInteger n,
-  BigInteger h, BigInteger seed } ) {
-
-  var curve = new fp.ECCurve(q,a,b);
-  ECDomainParameters.registry[name] = (_)
-    => new ECDomainParametersImpl( name, curve, curve.decodePoint( g.toByteArray() ), n, h, seed.toByteArray() );
-}
 
 dynamic _createOrNull( closure() ) {
   try {
