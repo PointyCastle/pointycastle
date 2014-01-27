@@ -1,15 +1,4 @@
-part of cipher.impl;
-/*
-_registerFpStandardCurve("__________",
-    q: new BigInteger("____________________________________________________________"),
-    a: new BigInteger("__________________________________________________", 16),
-    b: new BigInteger("__________________________________________________", 16),
-    g: new BigInteger("__________________________________________________", 16),
-    n: new BigInteger("__________________________________________________", 16),
-    h: BigInteger.ONE,
-    seed: new BigInteger("________________________________________", 16)
-);
-*/
+part of cipher.impl.base;
 
 void _registerEccStandardCurves() {
   _registerGOST34102001StandardCurves();

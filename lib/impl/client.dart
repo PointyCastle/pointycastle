@@ -4,19 +4,15 @@
 
 /**
  * This library contains all out-of-the-box implementations of the interfaces provided in the API which are compatible only with
- * server side. It includes the [cipher.impl] library and extends it with more algorithms.
+ * client side. It includes the [cipher.impl] library and extends it with more algorithms.
  *
  * You must call [initCipher] method before using this library to load all implementations into cipher's API factories.
  * There's no need to call [initCipher] from [cipher.impl] if you call [initCipher] from this library (though you can do it if
  * your project's layout needs it).
  */
-library cipher.impl.server;
+library cipher.impl.client;
 
-import "package:cipher/api.dart";
-import "package:cipher/impl.dart" as impl;
-
-import "package:cipher/entropy/file_entropy_source.dart";
-import "package:cipher/entropy/url_entropy_source.dart";
+import "package:cipher/impl/base.dart" as base;
 
 
 bool _initialized = false;
@@ -25,30 +21,16 @@ bool _initialized = false;
 void initCipher() {
   if( !_initialized ) {
     _initialized = true;
-    impl.initCipher();
+    base.initCipher();
     _registerEntropySources();
   }
 }
 
 void _registerEntropySources() {
-  EntropySource.registry.registerDynamicFactory( _fileEntropySourceFactory );
-  EntropySource.registry.registerDynamicFactory( _urlEntropySourceFactory );
+  // This will, one day, have the implementation of EntropySource for browsers, based on mouse moves and key clicks.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-EntropySource _fileEntropySourceFactory(String algorithmName) {
-  if( algorithmName.startsWith("file://") ) {
-    var filePath = algorithmName.substring(7);
-    return new FileEntropySource(filePath);
-  }
-}
-
-EntropySource _urlEntropySourceFactory(String algorithmName) {
-  if( algorithmName.startsWith("http://") || algorithmName.startsWith("https://") ) {
-    return new UrlEntropySource(algorithmName);
-  }
-}
 
 dynamic _createOrNull( closure() ) {
   try {

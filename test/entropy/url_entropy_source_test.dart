@@ -5,7 +5,7 @@
 library cipher.test.entropy.url_entropy_source_test;
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl_server.dart";
+import "package:cipher/impl/base.dart";
 
 import "package:unittest/unittest.dart";
 

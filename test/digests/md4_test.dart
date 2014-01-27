@@ -5,7 +5,7 @@
 library cipher.test.digests.md4_test;
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl.dart";
+import "package:cipher/impl/base.dart";
 
 import "../test/digest_tests.dart";
 

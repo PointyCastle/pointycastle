@@ -7,7 +7,7 @@ library cipher.test.hmacs.hmac_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl.dart";
+import "package:cipher/impl/base.dart";
 
 import "../test/mac_tests.dart";
 

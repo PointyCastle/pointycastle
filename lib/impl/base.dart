@@ -11,7 +11,7 @@
  *
  * You must call [initCipher] method before using this library to load all implementations into cipher's API factories.
  */
-library cipher.impl;
+library cipher.impl.base;
 
 import "package:bignum/bignum.dart";
 
@@ -56,7 +56,7 @@ import "package:cipher/stream/salsa20.dart";
 import "package:cipher/src/adapters/stream_cipher_adapters.dart";
 
 
-part "./src/impl/ecc_curves.dart";
+part "../src/impl/base/ecc_curves.dart";
 
 
 bool _initialized = false;

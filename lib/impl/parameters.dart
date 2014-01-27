@@ -3,7 +3,7 @@
 // See the LICENSE file for more information.
 
 /// This library contains all parameters classes used by the implementations.
-library cipher.parameters;
+library cipher.impl.parameters;
 
 export 'package:cipher/params/asymmetric_key_parameter.dart';
 export 'package:cipher/params/key_parameter.dart';

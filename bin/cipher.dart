@@ -4,7 +4,7 @@
 
 library cipher.bin.cipher;
 
-import "package:cipher/impl_server.dart";
+import "package:cipher/impl/server.dart";
 
 import "./src/util.dart";
 import "./src/benchmark/benchmark.dart";
