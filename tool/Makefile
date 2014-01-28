@@ -3,21 +3,37 @@ all: clean depends build bundle
 
 clean:
 	-rm -rf ../out
+	-rm ../test/all_client_tests.dart.js
+	-rm ../test/all_client_tests.dart.js.deps
+	-rm ../test/all_client_tests.dart.js.map
+	-rm ../test/all_client_tests.dart.precompiled.js
 
 
 depends:
 	cd ..; pub get; cd tool
 
 
-build: test doc
+build: test test-server test-client doc
 
 
-test: depends
+test: test-client test-server
+
+
+test-server: depends
 	@echo "********************************************************************************"
-	@echo "RUNNING TESTS"
+	@echo "RUNNING SERVER TESTS"
 	@echo "********************************************************************************"
 
-	dart ../test/all_tests.dart
+	dart ../test/all_server_tests.dart
+
+
+test-client: depends
+	@echo "********************************************************************************"
+	@echo "RUNNING CLIENT TESTS"
+	@echo "********************************************************************************"
+
+	dart2js ../test/all_client_tests.dart -o ../test/all_client_tests.dart.js
+	open ../test/all_client_tests.html
 
 
 doc: doc-api doc-impl
