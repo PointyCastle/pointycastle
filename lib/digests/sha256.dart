@@ -75,11 +75,7 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
     if( _xOff>14 ) {
       processBlock();
     }
-
-    var bd = new ByteData.view(new Uint8List(8).buffer);
-    bd.setInt64( 0, bitLength, Endianness.BIG_ENDIAN );
-    _X[14] = new Uint32( bd.getInt32(0) );
-    _X[15] = new Uint32( bd.getInt32(4) );
+    packLittleEndianLength(bitLength, _X, 14);
   }
 
   void processBlock() {

@@ -23,10 +23,10 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 20;
 
   /// The 5 32-bit initialization vectors.
-  var _H = new List<Int32>(5);
+  var _H = new List<Uint32>(5);
 
   /// The working block (16 32-bit words) buffer.
-  var _X = new List<Int32>(16);//new int[16];
+  var _X = new List<Uint32>(16);
 
   /// The offset of the next valid data into the [_X] buffer.
   int _xOff;
@@ -52,35 +52,26 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
   }
 
   void processWord( Uint8List inp, int inpOff ) {
-    _X[_xOff++] = new Int32(
-           inp[inpOff]
-        | (inp[inpOff+1] << 8)
-        | (inp[inpOff+2] << 16)
-        | (inp[inpOff+3] << 24)
-    );
+    _X[_xOff++] = new Uint32.fromLittleEndian(inp, inpOff);
 
     if( _xOff == 16 ) {
       processBlock();
     }
   }
 
-  void processLength( /*long*/ int bitLength ) {
+  void processLength( int bitLength ) {
     if( _xOff > 14 ) {
       processBlock();
     }
-
-    var bd = new ByteData.view(new Uint8List(8).buffer);
-    bd.setInt64( 0, bitLength, Endianness.BIG_ENDIAN );
-    _X[14] = new Int32( bd.getInt32(4) );
-    _X[15] = new Int32( bd.getInt32(0) );
+    packBigEndianLength(bitLength, _X, 14);
   }
 
   void processBlock() {
-    Int32 a, aa;
-    Int32 b, bb;
-    Int32 c, cc;
-    Int32 d, dd;
-    Int32 e, ee;
+    var a, aa;
+    var b, bb;
+    var c, cc;
+    var d, dd;
+    var e, ee;
 
     a = aa = _H[0];
     b = bb = _H[1];
@@ -282,10 +273,10 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
 
     // reset the offset and clean out the word buffer.
     _xOff = 0;
-    _X.fillRange(0, _X.length, Int32.ZERO );
+    _X.fillRange(0, _X.length, new Uint32(0) );
   }
 
-  void _unpackWord( Int32 word, Uint8List out, int outOff ) {
+  void _unpackWord( Uint32 word, Uint8List out, int outOff ) {
     out[outOff]   = word.toInt();
     out[outOff+1] = _lsr( word, 8 ).toInt();
     out[outOff+2] = _lsr( word, 16 ).toInt();
@@ -295,16 +286,16 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
   /// Reset the working block [_X] and [_xOff] to all zeros.
   void _resetWorkingBlockAndOffset() {
     _xOff = 0;
-    _X.fillRange( 0, _X.length, Int32.ZERO );
+    _X.fillRange( 0, _X.length, new Uint32(0) );
   }
 
   /// Reset IVs to standard initial values.
   void _resetIVs() {
-    _H[0] = new Int32(0x67452301);
-    _H[1] = new Int32(0xefcdab89);
-    _H[2] = new Int32(0x98badcfe);
-    _H[3] = new Int32(0x10325476);
-    _H[4] = new Int32(0xc3d2e1f0);
+    _H[0] = new Uint32(0x67452301);
+    _H[1] = new Uint32(0xefcdab89);
+    _H[2] = new Uint32(0x98badcfe);
+    _H[3] = new Uint32(0x10325476);
+    _H[4] = new Uint32(0xc3d2e1f0);
   }
 
   /// Append the 5 words in [_H] to the [out] buffer.
@@ -319,48 +310,24 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
 }
 
 /** Cyclic logical shift left for 32 bit signed integers */
-Int32 _clsl( Int32 x, int n ) {
-  return (x << n) | _lsr( x, 32-n );
-}
+Uint32 _clsl( Uint32 x, int n ) => x.rotl(n);
 
 /** Logical shift right for 32 bit signed integers */
-Int32 _lsr( Int32 n, int shift ) {
-  if( shift<0 ) {
-    shift = 32+(shift%32);
-  }
-
-  int shift5 = shift & 0x1f;
-  Int32 n32 = n;
-  if (shift5 == 0) {
-    return n32;
-  } else {
-    return (n32 >> shift5) & ((0x7fffffff >> (shift5-1)));
-  }
-}
+Uint32 _lsr( Uint32 n, int shift ) => n >> shift;
 
 /** rounds 0-15 */
-Int32 _f1( Int32 x, Int32 y, Int32 z ) {
-  return x ^ y ^ z;
-}
+Uint32 _f1( Uint32 x, Uint32 y, Uint32 z ) => x ^ y ^ z;
 
 /** rounds 16-31 */
-Int32 _f2( Int32 x, Int32 y, Int32 z ) {
-  return (x & y) | (~x & z);
-}
+Uint32 _f2( Uint32 x, Uint32 y, Uint32 z ) => (x & y) | (~x & z);
 
 /** rounds 32-47 */
-Int32 _f3( Int32 x, Int32 y, Int32 z ) {
-  return (x | ~y) ^ z;
-}
+Uint32 _f3( Uint32 x, Uint32 y, Uint32 z ) => (x | ~y) ^ z;
 
 /** rounds 48-63 */
-Int32 _f4( Int32 x, Int32 y, Int32 z ) {
-  return (x & z) | (y & ~z);
-}
+Uint32 _f4( Uint32 x, Uint32 y, Uint32 z ) => (x & z) | (y & ~z);
 
 /** rounds 64-79 */
-Int32 _f5( Int32 x, Int32 y, Int32 z ) {
-  return x ^ (y | ~z);
-}
+Uint32 _f5( Uint32 x, Uint32 y, Uint32 z ) => x ^ (y | ~z);
 
 
