@@ -13,10 +13,6 @@ import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
-// These two cannot be run as they are integration tests (need external dependencies)
-import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
-import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
-
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
 
@@ -47,6 +43,9 @@ import "./src/adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapte
 
 void main() {
 
+  // registry
+  registry_test.main();
+
   // block ciphers
   aes_fast_test.main();
 
@@ -57,10 +56,6 @@ void main() {
   ripemd160_test.main();
   sha1_test.main();
   sha256_test.main();
-
-  // entropy sources (some commented because they need external resources)
-  //dev_random_entropy_source_test.main();
-  //random_org_entropy_source_test.main();
 
   // key derivators
   pbkdf2_test.main();
@@ -95,7 +90,6 @@ void main() {
   salsa20_test.main();
 
   // src
-  registry_test.main();
   ufixnum_test.main();
 
   // src/adapters
