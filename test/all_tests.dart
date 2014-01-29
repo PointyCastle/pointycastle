@@ -11,6 +11,7 @@ import "./digests/md4_test.dart" as md4_test;
 import "./digests/md5_test.dart" as md5_test;
 import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
+import "./digests/sha224_test.dart" as sha224_test;
 import "./digests/sha256_test.dart" as sha256_test;
 
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
@@ -55,6 +56,7 @@ void main() {
   md5_test.main();
   ripemd160_test.main();
   sha1_test.main();
+  sha224_test.main();
   sha256_test.main();
 
   // key derivators
