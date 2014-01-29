@@ -1,4 +1,5 @@
 all: clean depends build bundle
+all-drone: clean depends build-drone bundle-drone
 
 
 clean:
@@ -13,10 +14,12 @@ depends:
 	cd ..; pub get; cd tool
 
 
-build: test test-server test-client doc
+build: test doc
+build-drone: test-drone doc-drone
 
 
 test: test-client test-server
+test-drone: test-server
 
 
 test-server: depends
@@ -37,6 +40,7 @@ test-client: depends
 
 
 doc: doc-api doc-impl
+doc-drone: doc
 
 
 doc-api: depends
@@ -77,9 +81,11 @@ doc-impl: depends
 
 
 bundle: bundle-package bundle-doc
+bundle-drone: bundle-package-drone bundle-doc 
 
 
-bundle-package: test
+bundle-package: test bundle-package-drone
+bundle-package-drone: 
 	@echo "********************************************************************************"
 	@echo "MAKING PACKAGE BUNDLE"
 	@echo "********************************************************************************"
@@ -88,7 +94,6 @@ bundle-package: test
 	mkdir -p ../out/bundle
 
 	tar -c -z -C .. --exclude packages -f ../out/bundle/cipher.tar.gz LICENSE README.md pubspec.yaml bin/ lib/ licenses test/ tool/
-
 
 
 bundle-doc: doc
