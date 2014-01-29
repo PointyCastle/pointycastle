@@ -10,6 +10,7 @@ import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_tes
 import "./all_tests.dart" as all_tests;
 import "./src/registry_server_test.dart" as registry_server_test;
 
+/// Some tests are commented out because they need external dependencies and thus, cannot be run automatically.
 void main() {
 
   // registry
@@ -19,7 +20,7 @@ void main() {
   all_tests.main();
 
   // entropy sources
-  dev_random_entropy_source_test.main();
-  random_org_entropy_source_test.main();
+  //dev_random_entropy_source_test.main();
+  //random_org_entropy_source_test.main();
 
 }
