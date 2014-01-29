@@ -38,7 +38,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
 
     // Reset buffer
     _xOff = 0;
-    _X.fillRange(0, _X.length, new Uint32(0) );
+    _X.fillRange( 0, _X.length, new Uint32(0) );
   }
 
   int doFinal(Uint8List out, int outOff) {
@@ -72,26 +72,20 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   }
 
   void processBlock() {
-    //
     // expand 16 word block into 80 word block.
-    //
     for( var i=16 ; i<80 ; i++ ) {
       var t = _X[i - 3] ^ _X[i - 8] ^ _X[i - 14] ^ _X[i - 16];
       _X[i] = t << 1 | t >> 31;
     }
 
-    //
     // set up working variables.
-    //
     Uint32 A = _H1;
     Uint32 B = _H2;
     Uint32 C = _H3;
     Uint32 D = _H4;
     Uint32 E = _H5;
 
-    //
     // round 1
-    //
     var idx = 0;
 
     for( var j=0 ; j<4 ; j++ ) {
@@ -114,9 +108,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
       C = C << 30 | C >> 2;
     }
 
-    //
     // round 2
-    //
     for (int j=0 ; j<4 ; j++ ) {
       // E = rotateLeft(A, 5) + h(B, C, D) + E + X[idx++] + Y2
       // B = rotateLeft(B, 30)
@@ -136,9 +128,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
       C = C << 30 | C >> 2;
     }
 
-    //
     // round 3
-    //
     for( var j=0 ; j<4 ; j++ ) {
       // E = rotateLeft(A, 5) + g(B, C, D) + E + X[idx++] + Y3
       // B = rotateLeft(B, 30)
@@ -158,9 +148,7 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
       C = C << 30 | C >> 2;
     }
 
-    //
     // round 4
-    //
     for( int j=0 ; j<=3 ; j++ ) {
       // E = rotateLeft(A, 5) + h(B, C, D) + E + X[idx++] + Y4
       // B = rotateLeft(B, 30)
