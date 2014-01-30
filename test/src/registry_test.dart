@@ -37,6 +37,7 @@ void main() {
       testDigest( "SHA-1" );
       testDigest( "SHA-224" );
       testDigest( "SHA-256" );
+      testDigest( "SHA-384" );
 
     });
 
