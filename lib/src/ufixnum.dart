@@ -61,6 +61,27 @@ class Uint32 extends UintX {
 
 }
 
+/// Implementation of unsigned 64-bit size nums
+class Uint64 extends UintX {
+
+  static int clip( int value ) => (value&0xFFFFFFFFFFFFFFFF);
+
+  Uint64(int value) : super(value);
+
+  Uint64.fromBigEndian( Uint8List value, int offset ) :
+    super( (new Uint32.fromBigEndian(value, offset).toInt() << 32) | new Uint32.fromBigEndian(value, offset+4).toInt() );
+
+  Uint64.fromLittleEndian( Uint8List value, int offset ) :
+    super( (new Uint32.fromLittleEndian(value, offset+4).toInt() << 32) | new Uint32.fromLittleEndian(value, offset).toInt() );
+
+  int get bitLength => 64;
+  int get byteLength => 8;
+
+  int _clip( int value ) => clip(value);
+  Uint64 _coerce(int value) => new Uint64(value);
+
+}
+
 /// Base class for unsigned fixed size nums
 abstract class UintX {
 
