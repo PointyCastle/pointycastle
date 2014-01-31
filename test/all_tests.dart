@@ -14,6 +14,7 @@ import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha224_test.dart" as sha224_test;
 import "./digests/sha256_test.dart" as sha256_test;
 import "./digests/sha384_test.dart" as sha384_test;
+import "./digests/sha512_test.dart" as sha512_test;
 
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
@@ -60,6 +61,7 @@ void main() {
   sha224_test.main();
   sha256_test.main();
   sha384_test.main();
+  sha512_test.main();
 
   // key derivators
   pbkdf2_test.main();

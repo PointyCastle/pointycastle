@@ -27,6 +27,7 @@ import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha224.dart";
 import "package:cipher/digests/sha256.dart";
 import "package:cipher/digests/sha384.dart";
+import "package:cipher/digests/sha512.dart";
 
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
@@ -95,6 +96,7 @@ void _registerDigests() {
   Digest.registry["SHA-224"] = (_) => new SHA224Digest();
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
   Digest.registry["SHA-384"] = (_) => new SHA384Digest();
+  Digest.registry["SHA-512"] = (_) => new SHA512Digest();
 }
 
 // See part ecc_curves.dart for _registerEccStandardCurves()
