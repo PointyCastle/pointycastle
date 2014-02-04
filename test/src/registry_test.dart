@@ -36,6 +36,7 @@ void main() {
       testDigest( "MD5" );
       testDigest( "RIPEMD-128" );
       testDigest( "RIPEMD-160" );
+      testDigest( "RIPEMD-256" );
       testDigest( "SHA-1" );
       testDigest( "SHA-224" );
       testDigest( "SHA-256" );

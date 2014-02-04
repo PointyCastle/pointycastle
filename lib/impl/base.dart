@@ -24,6 +24,7 @@ import "package:cipher/digests/md4.dart";
 import "package:cipher/digests/md5.dart";
 import "package:cipher/digests/ripemd128.dart";
 import "package:cipher/digests/ripemd160.dart";
+import "package:cipher/digests/ripemd256.dart";
 import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha224.dart";
 import "package:cipher/digests/sha256.dart";
@@ -96,6 +97,7 @@ void _registerDigests() {
   Digest.registry["MD5"] = (_) => new MD5Digest();
   Digest.registry["RIPEMD-128"] = (_) => new RIPEMD128Digest();
   Digest.registry["RIPEMD-160"] = (_) => new RIPEMD160Digest();
+  Digest.registry["RIPEMD-256"] = (_) => new RIPEMD256Digest();
   Digest.registry["SHA-1"] = (_) => new SHA1Digest();
   Digest.registry["SHA-224"] = (_) => new SHA224Digest();
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
