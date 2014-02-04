@@ -9,8 +9,6 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/digests/md4_family_digest.dart";
 
-import "package:fixnum/fixnum.dart";
-
 /**
  * Implementation of RIPEMD-160 digest. For more info see links:
  *
@@ -272,15 +270,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     _H[0] = dd;
 
     // reset the offset and clean out the word buffer.
-    _xOff = 0;
-    _X.fillRange(0, _X.length, new Uint32(0) );
-  }
-
-  void _unpackWord( Uint32 word, Uint8List out, int outOff ) {
-    out[outOff]   = word.toInt();
-    out[outOff+1] = _lsr( word, 8 ).toInt();
-    out[outOff+2] = _lsr( word, 16 ).toInt();
-    out[outOff+3] = _lsr( word, 24 ).toInt();
+    _resetWorkingBlockAndOffset();
   }
 
   /// Reset the working block [_X] and [_xOff] to all zeros.
@@ -307,7 +297,24 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     _unpackWord( _H[4], out, outOff+16 );
   }
 
+  /** rounds 0-15 */
+  Uint32 _f1( Uint32 x, Uint32 y, Uint32 z ) => x ^ y ^ z;
+
+  /** rounds 16-31 */
+  Uint32 _f2( Uint32 x, Uint32 y, Uint32 z ) => (x & y) | (~x & z);
+
+  /** rounds 32-47 */
+  Uint32 _f3( Uint32 x, Uint32 y, Uint32 z ) => (x | ~y) ^ z;
+
+  /** rounds 48-63 */
+  Uint32 _f4( Uint32 x, Uint32 y, Uint32 z ) => (x & z) | (y & ~z);
+
+  /** rounds 64-79 */
+  Uint32 _f5( Uint32 x, Uint32 y, Uint32 z ) => x ^ (y | ~z);
+
 }
+
+void _unpackWord(Uint32 word, Uint8List out, int outOff) => word.toLittleEndian(out, outOff);
 
 /** Cyclic logical shift left for 32 bit signed integers */
 Uint32 _clsl( Uint32 x, int n ) => x.rotl(n);
@@ -315,19 +322,5 @@ Uint32 _clsl( Uint32 x, int n ) => x.rotl(n);
 /** Logical shift right for 32 bit signed integers */
 Uint32 _lsr( Uint32 n, int shift ) => n >> shift;
 
-/** rounds 0-15 */
-Uint32 _f1( Uint32 x, Uint32 y, Uint32 z ) => x ^ y ^ z;
-
-/** rounds 16-31 */
-Uint32 _f2( Uint32 x, Uint32 y, Uint32 z ) => (x & y) | (~x & z);
-
-/** rounds 32-47 */
-Uint32 _f3( Uint32 x, Uint32 y, Uint32 z ) => (x | ~y) ^ z;
-
-/** rounds 48-63 */
-Uint32 _f4( Uint32 x, Uint32 y, Uint32 z ) => (x & z) | (y & ~z);
-
-/** rounds 64-79 */
-Uint32 _f5( Uint32 x, Uint32 y, Uint32 z ) => x ^ (y | ~z);
 
 
