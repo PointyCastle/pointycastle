@@ -9,6 +9,7 @@ import "./block/aes_fast_test.dart" as aes_fast_test;
 import "./digests/md2_test.dart" as md2_test;
 import "./digests/md4_test.dart" as md4_test;
 import "./digests/md5_test.dart" as md5_test;
+import "./digests/ripemd128_test.dart" as ripemd128_test;
 import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha224_test.dart" as sha224_test;
@@ -58,6 +59,7 @@ void main() {
   md2_test.main();
   md4_test.main();
   md5_test.main();
+  ripemd128_test.main();
   ripemd160_test.main();
   sha1_test.main();
   sha224_test.main();
