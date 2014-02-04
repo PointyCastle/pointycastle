@@ -538,7 +538,7 @@ List<int> _windowNaf(int width, BigInteger k) {
 }
 
 Uint8List _x9IntegerToBytes( BigInteger s, int qLength ) {
-  Uint8List bytes = s.toByteArray();
+  Uint8List bytes = new Uint8List.fromList(s.toByteArray());
 
   if( qLength < bytes.length ) {
     return bytes.sublist( bytes.length-qLength );
