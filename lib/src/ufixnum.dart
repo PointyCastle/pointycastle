@@ -124,8 +124,8 @@ abstract class UintX {
   UintX operator |(other) => _coerce( _value | _int(other) );
   UintX operator ^(other) => _coerce( _value ^ _int(other) );
 
-  UintX operator <<( int n ) => _coerce( _value<<(n%bitLength) );
-  UintX operator >>( int n ) => _coerce( _value>>(n%bitLength) );
+  UintX operator <<(n) => _coerce( _value<<(n.toInt()%bitLength) );
+  UintX operator >>(n) => _coerce( _value>>(n.toInt()%bitLength) );
 
   /// Circular shift left
   UintX rotl( int n ) {
