@@ -13,6 +13,7 @@ import "./digests/ripemd160_test.dart" as ripemd160_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha224_test.dart" as sha224_test;
 import "./digests/sha256_test.dart" as sha256_test;
+import "./digests/sha3_test.dart" as sha3_test;
 import "./digests/sha384_test.dart" as sha384_test;
 import "./digests/sha512_test.dart" as sha512_test;
 import "./digests/sha512t_test.dart" as sha512t_test;
@@ -61,6 +62,7 @@ void main() {
   sha1_test.main();
   sha224_test.main();
   sha256_test.main();
+  sha3_test.main();
   sha384_test.main();
   sha512_test.main();
   sha512t_test.main();

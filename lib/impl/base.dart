@@ -26,6 +26,7 @@ import "package:cipher/digests/ripemd160.dart";
 import "package:cipher/digests/sha1.dart";
 import "package:cipher/digests/sha224.dart";
 import "package:cipher/digests/sha256.dart";
+import "package:cipher/digests/sha3.dart";
 import "package:cipher/digests/sha384.dart";
 import "package:cipher/digests/sha512.dart";
 import "package:cipher/digests/sha512t.dart";
@@ -98,6 +99,7 @@ void _registerDigests() {
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
   Digest.registry["SHA-384"] = (_) => new SHA384Digest();
   Digest.registry["SHA-512"] = (_) => new SHA512Digest();
+  Digest.registry.registerDynamicFactory( _sha3DigestFactory );
   Digest.registry.registerDynamicFactory( _sha512tDigestFactory );
 }
 
@@ -203,6 +205,14 @@ Digest _sha512tDigestFactory(String algorithmName) {
   }
 
   return new SHA512tDigest( digestSize~/8 );
+}
+
+Digest _sha3DigestFactory(String algorithmName) {
+  if( !algorithmName.startsWith("SHA-3/") ) return null;
+
+  var bitLength = int.parse( algorithmName.substring(6) );
+
+  return new SHA3Digest( bitLength );
 }
 
 KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
