@@ -33,6 +33,7 @@ import "package:cipher/digests/sha3.dart";
 import "package:cipher/digests/sha384.dart";
 import "package:cipher/digests/sha512.dart";
 import "package:cipher/digests/sha512t.dart";
+import "package:cipher/digests/tiger.dart";
 
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/ecc/ecc_fp.dart" as fp;
@@ -105,6 +106,7 @@ void _registerDigests() {
   Digest.registry["SHA-256"] = (_) => new SHA256Digest();
   Digest.registry["SHA-384"] = (_) => new SHA384Digest();
   Digest.registry["SHA-512"] = (_) => new SHA512Digest();
+  Digest.registry["Tiger"] = (_) => new TigerDigest();
   Digest.registry.registerDynamicFactory( _sha3DigestFactory );
   Digest.registry.registerDynamicFactory( _sha512tDigestFactory );
 }
