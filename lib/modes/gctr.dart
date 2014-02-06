@@ -7,6 +7,7 @@ library cipher.modes.gctr;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
 /// Implementation of GOST 28147 OFB counter mode (GCTR) on top of a [BlockCipher].

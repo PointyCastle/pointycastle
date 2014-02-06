@@ -7,6 +7,7 @@ library cipher.digests.long_sha2_family_digest;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 
 /// Base implementation of SHA-2 family algorithms SHA-384 and SHA-512.
 abstract class LongSHA2FamilyDigest implements Digest {

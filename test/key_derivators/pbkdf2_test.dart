@@ -10,7 +10,6 @@ import "package:cipher/impl/base.dart";
 import '../test/key_derivators_tests.dart';
 import '../test/src/helpers.dart';
 
-
 /// NOTE: the expected results for these tests are computed using the Java
 void main() {
 

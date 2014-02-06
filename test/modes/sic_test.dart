@@ -6,10 +6,9 @@ library cipher.test.modes.sic_test;
 
 import "dart:typed_data";
 
-import "package:unittest/unittest.dart";
-
 import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
+import "package:unittest/unittest.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/stream_cipher_tests.dart";

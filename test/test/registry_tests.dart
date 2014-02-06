@@ -4,11 +4,9 @@
 
 library cipher.test.test.registry_tests;
 
-import "package:cipher/api.dart";
-
+import "package:cipher/cipher.dart";
 import "package:unittest/unittest.dart";
 import "package:unittest/matcher.dart";
-
 
 void testBlockCipher( String algorithmName ) {
   var cipher = new BlockCipher(algorithmName);
@@ -63,7 +61,7 @@ void testPaddedBlockCipher( String algorithmName ) {
   expect( padding, new isInstanceOf<Padding>("Padding") );
   expect( padding.algorithmName, equals(parts[2]) );
 
-  var cbc = pbc.underlyingCipher;
+  var cbc = pbc.cipher;
   expect( cbc, new isInstanceOf<BlockCipher>("BlockCipher") );
   expect( cbc.algorithmName, equals("${parts[0]}/${parts[1]}") );
 }

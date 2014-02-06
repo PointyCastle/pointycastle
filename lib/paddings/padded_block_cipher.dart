@@ -13,29 +13,29 @@ import "package:cipher/params/padded_block_cipher_parameters.dart";
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   final Padding padding;
-  final BlockCipher underlyingCipher;
+  final BlockCipher cipher;
 
   bool _encrypting;
 
-  PaddedBlockCipherImpl(this.padding,this.underlyingCipher);
+  PaddedBlockCipherImpl(this.padding,this.cipher);
 
-  String get algorithmName => underlyingCipher.algorithmName+"/"+padding.algorithmName;
+  String get algorithmName => cipher.algorithmName+"/"+padding.algorithmName;
 
-  int get blockSize => underlyingCipher.blockSize;
+  int get blockSize => cipher.blockSize;
 
   void reset() {
     _encrypting = null;
-    underlyingCipher.reset();
+    cipher.reset();
   }
 
   void init( bool forEncryption, PaddedBlockCipherParameters params ) {
     _encrypting = forEncryption;
-    underlyingCipher.init( forEncryption, params.underlyingCipherParameters );
+    cipher.init( forEncryption, params.underlyingCipherParameters );
     padding.init( params.paddingCipherParameters );
   }
 
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    return underlyingCipher.processBlock(inp, inpOff, out, outOff);
+    return cipher.processBlock(inp, inpOff, out, outOff);
   }
 
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {

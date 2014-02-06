@@ -2,7 +2,9 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-part of cipher.api;
+library cipher.api.ufixnum;
+
+import "dart:typed_data";
 
 /// Implementation of unsigned 8-bit size nums
 class Uint8 extends UintX {

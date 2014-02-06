@@ -6,7 +6,6 @@ library cipher.test.entropy.file_entropy_source_test;
 
 import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
-
 import "package:unittest/unittest.dart";
 
 void main() {

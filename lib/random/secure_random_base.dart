@@ -7,24 +7,24 @@ library cipher.random.secure_random_base;
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
-
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 
 /// An utility base implementation of [SecureRandom] so that only [nextUint8] method needs to be implemented.
 abstract class SecureRandomBase implements SecureRandom {
 
-  Uint16 nextUint16() {
+  int nextUint16() {
     var b0 = nextUint8();
     var b1 = nextUint8();
-    return new Uint16( (b1<<8) | b0 );
+    return Uint16.clip( (b1<<8) | b0 );
   }
 
-  Uint32 nextUint32() {
+  int nextUint32() {
     var b0 = nextUint8();
     var b1 = nextUint8();
     var b2 = nextUint8();
     var b3 = nextUint8();
-    return new Uint32( (b3<<24) | (b2<<16) | (b1<<8) | b0 );
+    return Uint32.clip( (b3<<24) | (b2<<16) | (b1<<8) | b0 );
   }
 
   BigInteger nextBigInteger( int bitLength ) {

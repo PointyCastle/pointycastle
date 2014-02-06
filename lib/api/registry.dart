@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-part of cipher.api;
+library cipher.api.registry;
 
 /// A registry holds the map of factories indexed by algorithm names.
 class Registry<T> {

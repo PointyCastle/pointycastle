@@ -7,6 +7,7 @@ library cipher.digests.md5;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/digests/md4_family_digest.dart";
 
 /// Implementation of MD5 digest

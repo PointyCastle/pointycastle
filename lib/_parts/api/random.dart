@@ -29,13 +29,13 @@ abstract class SecureRandom {
   void seed( CipherParameters params );
 
   /// Get one byte long random int.
-  Uint8 nextUint8();
+  int nextUint8();
 
   /// Get two bytes long random int.
-  Uint16 nextUint16();
+  int nextUint16();
 
   /// Get four bytes long random int.
-  Uint32 nextUint32();
+  int nextUint32();
 
   /// Get a random [BigInteger] of [bitLength] bits.
   BigInteger nextBigInteger( int bitLength );

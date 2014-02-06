@@ -10,6 +10,7 @@ import "dart:math";
 import 'package:bignum/bignum.dart';
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ecc.dart";
 import "package:cipher/params/asymmetric_key_parameter.dart";
 import "package:cipher/params/parameters_with_random.dart";
 

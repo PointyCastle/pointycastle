@@ -7,6 +7,7 @@ library cipher.digests.sha256;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/digests/md4_family_digest.dart";
 
 /// Implementation of SHA-256 digest.

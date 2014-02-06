@@ -7,6 +7,7 @@ library cipher.key_derivators.scrypt;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_derivators/scrypt_parameters.dart";
 import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 

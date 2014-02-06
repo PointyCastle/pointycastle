@@ -7,9 +7,9 @@ library cipher.random.block_ctr_random;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/random/secure_random_base.dart";
 import "package:cipher/params/parameters_with_iv.dart";
-
 
 /// An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random values
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
@@ -34,14 +34,14 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     cipher.init(true, params.parameters);
   }
 
-  Uint8 nextUint8() {
+  int nextUint8() {
     if( _used==_output.length ) {
       cipher.processBlock(_input, 0, _output, 0);
       _used = 0;
       _incrementInput();
     }
 
-    return new Uint8(_output[_used++]);
+    return Uint8.clip(_output[_used++]);
   }
 
   void _incrementInput() {

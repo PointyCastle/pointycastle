@@ -2,12 +2,11 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.ufixnum_test;
+library cipher.api.ufixnum_test;
 
 import 'dart:typed_data';
 
-import "package:cipher/api.dart";
-
+import "package:cipher/api/ufixnum.dart";
 import "package:unittest/unittest.dart";
 
 void main() {

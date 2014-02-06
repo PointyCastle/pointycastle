@@ -7,6 +7,7 @@ library cipher.digests.ripemd128;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/digests/md4_family_digest.dart";
 
 /// Implementation of RIPEMD-128 digest

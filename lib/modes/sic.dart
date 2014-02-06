@@ -1,5 +1,5 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.modes.sic;
@@ -7,16 +7,17 @@ library cipher.modes.sic;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
 /**
- * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter 
+ * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter
  * (see file [package:cipher/adapters/stream_cipher_adapters.dart] for more info).
  */
 
 /**
  * Implementation of SIC mode of operation as a [StreamCipher]. This implementation uses the IV as the initial nonce value and
- * keeps incrementing it by 1 for every new block. The counter may overflow and rotate, and that would cause a two-time-pad 
+ * keeps incrementing it by 1 for every new block. The counter may overflow and rotate, and that would cause a two-time-pad
  * error, but this is so unlikely to happen for usual block sizes that we don't check for that event. It is the responsibility
  * of the caller to make sure the counter does not overflow.
  */

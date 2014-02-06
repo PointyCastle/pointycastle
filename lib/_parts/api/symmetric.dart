@@ -62,6 +62,9 @@ abstract class PaddedBlockCipher implements BlockCipher {
   /// Get the underlying [Padding] used by this cipher.
   Padding get padding;
 
+  /// Get the underlying [BlockCipher] used by this cipher.
+  BlockCipher get cipher;
+
   /**
    * Process the last block of data given by [inp] and starting at offset
    * [inpOff] and pad it if necessary (i.e: if it is smaller than [blockSize]).

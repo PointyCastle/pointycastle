@@ -6,11 +6,10 @@ library cipher.test.test.key_derivators_tests;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-
+import "package:cipher/cipher.dart";
 import "package:unittest/unittest.dart";
 
-import "src/helpers.dart";
+import "./src/helpers.dart";
 
 void runKeyDerivatorTests( KeyDerivator keyDerivator, List<dynamic> paramsPasswordKeyTuples ) {
 

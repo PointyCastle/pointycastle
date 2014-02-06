@@ -15,7 +15,10 @@ library cipher.impl.base;
 
 import "package:bignum/bignum.dart";
 
+import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
+
 import "package:cipher/api.dart";
+import "package:cipher/api/ecc.dart";
 
 import "package:cipher/block/aes_fast.dart";
 
@@ -63,11 +66,7 @@ import "package:cipher/signers/ecdsa_signer.dart";
 
 import "package:cipher/stream/salsa20.dart";
 
-import "package:cipher/src/adapters/stream_cipher_adapters.dart";
-
-
-part "../src/impl/base/ecc_curves.dart";
-
+part "../_parts/impl/base/ecc_curves.dart";
 
 bool _initialized = false;
 

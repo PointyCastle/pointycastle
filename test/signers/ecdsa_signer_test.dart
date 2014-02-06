@@ -5,7 +5,6 @@
 library cipher.test.paddings.ecdsa_signer_test;
 
 import 'package:bignum/bignum.dart';
-
 import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
 

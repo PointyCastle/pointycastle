@@ -7,15 +7,7 @@ library cipher.digests.sha3;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-String formatBytesAsHexString(Uint8List bytes) {
-  var result = new StringBuffer();
-  for (var i = 0; i < bytes.lengthInBytes; i++) {
-    var part = bytes[i];
-    result.write('${part < 16 ? '0' : ''}${part.toRadixString(16)}');
-  }
-  return result.toString();
-}
-
+import "package:cipher/api/ufixnum.dart";
 
 /// Implementation of SHA-3 digest.
 class SHA3Digest implements Digest {

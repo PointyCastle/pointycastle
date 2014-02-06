@@ -4,11 +4,11 @@
 
 library cipher.test.all_server_tests;
 
-import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
-import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
+//import "./entropy/file_entropy_source_test.dart" as dev_random_entropy_source_test;
+//import "./entropy/url_entropy_source_test.dart" as random_org_entropy_source_test;
 
 import "./all_tests.dart" as all_tests;
-import "./src/registry_server_test.dart" as registry_server_test;
+import "./api/registry_server_test.dart" as registry_server_test;
 
 /// Some tests are commented out because they need external dependencies and thus, cannot be run automatically.
 void main() {

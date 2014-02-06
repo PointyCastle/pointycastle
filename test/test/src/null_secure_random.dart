@@ -5,6 +5,7 @@
 library cipher.test.src.null_secure_random;
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 import "package:cipher/random/secure_random_base.dart";
 
 /// An implementation of [SecureRandom] that return numbers in growing sequence.
@@ -17,7 +18,7 @@ class NullSecureRandom extends SecureRandomBase {
   void seed(CipherParameters params) {
   }
 
-  Uint8 nextUint8() => new Uint8(_nextValue++);
+  int nextUint8() => Uint8.clip(_nextValue++);
 
 }
 

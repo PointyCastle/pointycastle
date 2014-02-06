@@ -7,7 +7,7 @@ library cipher.test.all_client_tests;
 import "package:unittest/html_enhanced_config.dart";
 
 import "./all_tests.dart" as all_tests;
-import "./src/registry_client_test.dart" as registry_client_test;
+import "./api/registry_client_test.dart" as registry_client_test;
 
 void main() {
 

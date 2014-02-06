@@ -6,10 +6,9 @@ library cipher.test.random.block_ctr_random_test;
 
 import "dart:typed_data";
 
-import "package:unittest/unittest.dart";
-
 import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
+import "package:unittest/unittest.dart";
 
 void main() {
 

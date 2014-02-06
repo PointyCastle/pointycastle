@@ -1,61 +1,60 @@
-// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com  
-// Use of this source code is governed by a LGPL v3 license. 
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
 library cipher.test.test.block_cipher_tests;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-
+import "package:cipher/cipher.dart";
 import "package:unittest/unittest.dart";
 
-import "src/helpers.dart";
+import "./src/helpers.dart";
 
-void runBlockCipherTests( BlockCipher cipher, CipherParameters params, 
+void runBlockCipherTests( BlockCipher cipher, CipherParameters params,
                      List<String> plainCipherTextPairs ) {
-  
+
   group( "${cipher.algorithmName}:", () {
 
-    group( "cipher  :", () { 
-      
+    group( "cipher  :", () {
+
       for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-        
+
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i+1];
 
         test( "${formatAsTruncated(plainText)}", () =>
           _runBlockCipherTest( cipher, params, plainText, cipherText )
         );
-        
+
       }
     });
 
-    group( "decipher:", () { 
-      
+    group( "decipher:", () {
+
       for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-      
+
         var plainText = plainCipherTextPairs[i];
         var cipherText = plainCipherTextPairs[i+1];
-        
+
         test( "${formatAsTruncated(plainText)}", () =>
           _runBlockDecipherTest( cipher, params, cipherText, plainText )
         );
-        
+
       }
     });
-  
+
     group( "ciph&dec:", () {
-      
+
       var plainText = createUint8ListFromSequentialNumbers(1024);
       test( "1KB of sequential bytes", () =>
         _runBlockCipherDecipherTest(cipher, params, plainText )
       );
-      
+
     });
-  
+
   });
-  
+
 }
 
 void _resetCipher( BlockCipher cipher, bool forEncryption, CipherParameters params ) {
@@ -92,7 +91,7 @@ void _runBlockCipherDecipherTest( BlockCipher cipher, CipherParameters params, U
   var plainTextAgain = _processBlocks( cipher, cipherText );
 
   expect( plainTextAgain, equals(plainText) );
-  
+
 }
 
 Uint8List _processBlocks( BlockCipher cipher, Uint8List inp ) {

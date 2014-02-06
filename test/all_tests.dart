@@ -4,6 +4,11 @@
 
 library cipher.test.all_tests;
 
+import "./adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_block_cipher_test;
+
+import "./api/ufixnum_test.dart" as ufixnum_test;
+import "./api/registry_test.dart" as registry_test;
+
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
 import "./digests/md2_test.dart" as md2_test;
@@ -47,13 +52,13 @@ import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 
 import "./stream/salsa20_test.dart" as salsa20_test;
 
-import "./src/registry_test.dart" as registry_test;
-import "./src/ufixnum_test.dart" as ufixnum_test;
-import "./src/adapters/stream_cipher_adapters_test.dart" as stream_cipher_adapters_test;
-
 void main() {
 
-  // registry
+  // adapters
+  stream_cipher_as_block_cipher_test.main();
+
+  // api
+  ufixnum_test.main();
   registry_test.main();
 
   // block ciphers
@@ -108,11 +113,5 @@ void main() {
 
   // stream ciphers
   salsa20_test.main();
-
-  // src
-  ufixnum_test.main();
-
-  // src/adapters
-  stream_cipher_adapters_test.main();
 
 }

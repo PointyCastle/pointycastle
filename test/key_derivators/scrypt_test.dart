@@ -10,7 +10,6 @@ import "package:cipher/impl/base.dart";
 import '../test/key_derivators_tests.dart';
 import '../test/src/helpers.dart';
 
-
 /// NOTE: the expected results for these tests are taken from the Java library found at [https://github.com/wg/scrypt]
 /// See also [http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-00#page-10] (which at the time of writing this test had
 /// typos because it interchanged N and r parameters).

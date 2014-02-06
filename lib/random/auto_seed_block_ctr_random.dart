@@ -9,7 +9,6 @@ import "package:cipher/random/block_ctr_random.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/params/key_parameter.dart";
 
-
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random values and automatically
  * self reseeds itself after each request for data, in order to achieve forward security. See section 4.1 of the paper:
@@ -33,15 +32,15 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
     _delegate.seed( params );
   }
 
-  Uint8 nextUint8() => _autoReseedIfNeededAfter( () {
+  int nextUint8() => _autoReseedIfNeededAfter( () {
     return _delegate.nextUint8();
   });
 
-  Uint16 nextUint16() => _autoReseedIfNeededAfter( () {
+  int nextUint16() => _autoReseedIfNeededAfter( () {
     return _delegate.nextUint16();
   });
 
-  Uint32 nextUint32() => _autoReseedIfNeededAfter( () {
+  int nextUint32() => _autoReseedIfNeededAfter( () {
     return _delegate.nextUint32();
   });
 

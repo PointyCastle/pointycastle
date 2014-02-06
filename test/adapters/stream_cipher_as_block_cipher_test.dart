@@ -2,16 +2,14 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.src.adapters.stream_cipher_adapters_test;
+library cipher.test.adapters.stream_cipher_as_block_cipher_test;
 
 import 'package:unittest/unittest.dart';
+import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
 
-import "package:cipher/src/adapters/stream_cipher_adapters.dart";
-
-import "../../test/block_cipher_tests.dart";
-
-import "../../test/src/null_stream_cipher.dart";
-import "../../test/src/helpers.dart";
+import '../test/block_cipher_tests.dart';
+import '../test/src/null_stream_cipher.dart';
+import '../test/src/helpers.dart';
 
 
 void main() {

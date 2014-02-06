@@ -14,15 +14,12 @@ import "dart:async";
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
+import "package:cipher/api/registry.dart";
 
-part "./src/registry.dart";
-part "./src/ufixnum.dart";
-
-part "./src/api/unkeyed.dart";
-part "./src/api/symmetric.dart";
-part "./src/api/asymmetric.dart";
-part "./src/api/random.dart";
-part "./src/api/ecc.dart";
+part "./_parts/api/unkeyed.dart";
+part "./_parts/api/symmetric.dart";
+part "./_parts/api/asymmetric.dart";
+part "./_parts/api/random.dart";
 
 /// All cipher initialization parameters classes implement this.
 abstract class CipherParameters {

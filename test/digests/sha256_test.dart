@@ -9,7 +9,6 @@ import "package:cipher/impl/base.dart";
 
 import "../test/digest_tests.dart";
 
-
 /// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle.
 void main() {
 

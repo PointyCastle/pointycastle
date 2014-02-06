@@ -7,6 +7,7 @@ library cipher.digests.whirlpool;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/api/ufixnum.dart";
 
 /// Implementation of Whirlpool digest.
 class WhirlpoolDigest implements Digest {
