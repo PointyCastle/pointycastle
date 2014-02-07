@@ -11,8 +11,7 @@ import "package:unittest/unittest.dart";
 
 import "./src/helpers.dart";
 
-void runBlockCipherTests( BlockCipher cipher, CipherParameters params,
-                     List<String> plainCipherTextPairs ) {
+void runBlockCipherTests( BlockCipher cipher, CipherParameters params, List<String> plainCipherTextPairs ) {
 
   group( "${cipher.algorithmName}:", () {
 
