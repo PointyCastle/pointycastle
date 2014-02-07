@@ -20,6 +20,8 @@ import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
 import "package:cipher/api.dart";
 import "package:cipher/api/ecc.dart";
 
+import "package:cipher/asymmetric/rsa.dart";
+
 import "package:cipher/block/aes_fast.dart";
 
 import "package:cipher/digests/md2.dart";
@@ -74,6 +76,7 @@ bool _initialized = false;
 void initCipher() {
   if( !_initialized ) {
     _initialized = true;
+    _registerAsymmetricBlockCiphers();
     _registerBlockCiphers();
     _registerDigests();
     _registerEccStandardCurves();
@@ -87,6 +90,10 @@ void initCipher() {
     _registerSigners();
     _registerStreamCiphers();
   }
+}
+
+void _registerAsymmetricBlockCiphers() {
+  AsymmetricBlockCipher.registry["RSA"] = (_) => new RSAEngine();
 }
 
 void _registerBlockCiphers() {

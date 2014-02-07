@@ -22,6 +22,12 @@ void main() {
 
     });
 
+    test( "AsymmetricBlockCipher returns valid implementations", () {
+
+      testAsymmetricBlockCipher( "RSA" );
+
+    });
+
     test( "BlockCipher returns valid implementations", () {
 
       testBlockCipher( "AES" );

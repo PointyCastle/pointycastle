@@ -9,6 +9,8 @@ import "./adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_
 import "./api/ufixnum_test.dart" as ufixnum_test;
 import "./api/registry_test.dart" as registry_test;
 
+import "./asymmetric/rsa_test.dart" as rsa_test;
+
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
 import "./digests/md2_test.dart" as md2_test;
@@ -60,6 +62,9 @@ void main() {
   // api
   ufixnum_test.main();
   registry_test.main();
+
+  // asymmetric block ciphers
+  rsa_test.main();
 
   // block ciphers
   aes_fast_test.main();
