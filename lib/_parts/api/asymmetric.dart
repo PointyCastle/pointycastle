@@ -17,10 +17,10 @@ abstract class PrivateKey implements AsymmetricKey {
 }
 
 /// A pair of public and private asymmetric keys.
-class AsymmetricKeyPair {
+class AsymmetricKeyPair<B extends PublicKey, V extends PrivateKey> {
 
-  final PublicKey publicKey;
-  final PrivateKey privateKey;
+  final B publicKey;
+  final V privateKey;
 
   AsymmetricKeyPair(this.publicKey, this.privateKey);
 
