@@ -108,8 +108,24 @@ class RSAEngine implements AsymmetricBlockCipher {
 
   BigInteger _processBigInteger(BigInteger input) => input.modPow(_key.exponent, _key.modulus);
 
-  // TODO: make use of Chinese Remainder Theorem (maybe with special keys like BC?)
+
+  // TODO: make use of Chinese Remainder Theorem
   /*
+  CRT: calculate dP, dQ, etc. inside init and cache them
+    // calculate the CRT factors
+    var pSub1 = (p - BigInteger.ONE);
+    var qSub1 = (q - BigInteger.ONE);
+    var dP = d.remainder(pSub1);
+    var dQ = d.remainder(qSub1);
+    var qInv = q.modInverse(p);
+
+    var dP = d.remainder(pSub1);
+    var dQ = d.remainder(qSub1);
+    var qInv = q.modInverse(p);
+  */
+
+  /*
+  CRT: use it in _processBigInteger()
   if (key is RSAPrivateCrtKeyParameters)
   {
       //
