@@ -25,3 +25,4 @@ export 'package:cipher/params/key_derivators/scrypt_parameters.dart';
 
 export 'package:cipher/params/key_generators/ec_key_generator_parameters.dart';
 export 'package:cipher/params/key_generators/key_generator_parameters.dart';
+export "package:cipher/params/key_generators/rsa_key_generator_parameters.dart";

@@ -71,6 +71,7 @@ void main() {
     test( "KeyGenerator returns valid implementations", () {
 
       testKeyGenerator( "EC" );
+      testKeyGenerator( "RSA" );
 
     });
 

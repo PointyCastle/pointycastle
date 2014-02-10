@@ -34,6 +34,7 @@ import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
 
 import "./key_generators/ec_key_generator_test.dart" as ec_key_generator_test;
+import "./key_generators/rsa_key_generator_test.dart" as rsa_key_generator_test;
 
 import "./macs/hmac_test.dart" as hmac_test;
 
@@ -93,6 +94,7 @@ void main() {
 
   // key generators
   ec_key_generator_test.main();
+  rsa_key_generator_test.main();
 
   // MACs
   hmac_test.main();

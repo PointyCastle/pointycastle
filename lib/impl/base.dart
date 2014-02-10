@@ -48,6 +48,7 @@ import "package:cipher/key_derivators/pbkdf2.dart";
 import "package:cipher/key_derivators/scrypt.dart";
 
 import "package:cipher/key_generators/ec_key_generator.dart";
+import "package:cipher/key_generators/rsa_key_generator.dart";
 
 import "package:cipher/macs/hmac.dart";
 
@@ -128,6 +129,7 @@ void _registerKeyDerivators() {
 
 void _registerKeyGenerators() {
   KeyGenerator.registry["EC"] = (_) => new ECKeyGenerator();
+  KeyGenerator.registry["RSA"] = (_) => new RSAKeyGenerator();
 }
 
 void _registerMacs() {

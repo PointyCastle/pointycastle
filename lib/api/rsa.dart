@@ -10,7 +10,7 @@ import "package:cipher/api.dart";
 /// Base class for asymmetric keys in RSA
 abstract class RSAAsymmetricKey implements AsymmetricKey {
 
-  /// The domain parameters of this key
+  // The parameters of this key
   final BigInteger modulus;
   final BigInteger exponent;
 
@@ -25,8 +25,12 @@ abstract class RSAAsymmetricKey implements AsymmetricKey {
 /// Private keys in RSA
 class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 
+  // The secret prime factors of n
+  final BigInteger p;
+  final BigInteger q;
+
   /// Create an RSA private key for the given parameters.
-  RSAPrivateKey(BigInteger modulus, BigInteger exponent) : super(modulus, exponent);
+  RSAPrivateKey(BigInteger modulus, BigInteger exponent, this.p, this.q) : super(modulus, exponent);
 
   /// Get private exponent [d] = e^-1
   BigInteger get d => exponent;
