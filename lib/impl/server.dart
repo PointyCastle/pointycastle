@@ -42,12 +42,16 @@ EntropySource _fileEntropySourceFactory(String algorithmName) {
     var filePath = algorithmName.substring(7);
     return new FileEntropySource(filePath);
   }
+
+  return null;
 }
 
 EntropySource _urlEntropySourceFactory(String algorithmName) {
   if( algorithmName.startsWith("http://") || algorithmName.startsWith("https://") ) {
     return new UrlEntropySource(algorithmName);
   }
+
+  return null;
 }
 
 dynamic _createOrNull( closure() ) {

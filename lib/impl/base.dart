@@ -243,6 +243,8 @@ KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
   if( mac!=null ) {
     return new PBKDF2KeyDerivator(mac);
   }
+
+  return null;
 }
 
 BlockCipher _modeOfOperationFactory( String algorithmName, String modeName,
@@ -259,6 +261,8 @@ BlockCipher _modeOfOperationFactory( String algorithmName, String modeName,
   if( underlyingCipher!=null ) {
     return subFactory(underlyingCipher);
   }
+
+  return null;
 }
 
 BlockCipher _variableSizeModeOfOperationFactory( String algorithmName, String modeName,
@@ -280,6 +284,8 @@ BlockCipher _variableSizeModeOfOperationFactory( String algorithmName, String mo
   if( underlyingCipher!=null ) {
     return subFactory(underlyingCipher, blockSizeInBits~/8 );
   }
+
+  return null;
 }
 
 BlockCipher _cfbBlockCipherFactory( String algorithmName ) {
@@ -300,6 +306,8 @@ BlockCipher _cfbBlockCipherFactory( String algorithmName ) {
   if( underlyingCipher!=null ) {
     return new CFBBlockCipher(underlyingCipher, blockSizeInBits~/8 );
   }
+
+  return null;
 }
 
 BlockCipher _ofbBlockCipherFactory( String algorithmName ) {
@@ -320,6 +328,8 @@ BlockCipher _ofbBlockCipherFactory( String algorithmName ) {
   if( underlyingCipher!=null ) {
     return new OFBBlockCipher(underlyingCipher, blockSizeInBits~/8 );
   }
+
+  return null;
 }
 
 PaddedBlockCipher _paddedBlockCipherFactory(String algorithmName) {
@@ -338,6 +348,8 @@ PaddedBlockCipher _paddedBlockCipherFactory(String algorithmName) {
       return new PaddedBlockCipherImpl(padding, underlyingCipher);
     }
   }
+
+  return null;
 }
 
 SecureRandom _ctrPrngSecureRandomFactory( String algorithmName ) {
@@ -346,6 +358,8 @@ SecureRandom _ctrPrngSecureRandomFactory( String algorithmName ) {
     var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
     return new BlockCtrRandom(blockCipher);
   }
+
+  return null;
 }
 
 SecureRandom _ctrAutoSeedPrngSecureRandomFactory( String algorithmName ) {
@@ -354,6 +368,8 @@ SecureRandom _ctrAutoSeedPrngSecureRandomFactory( String algorithmName ) {
     var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
     return new AutoSeedBlockCtrRandom(blockCipher);
   }
+
+  return null;
 }
 
 StreamCipher _ctrStreamCipherFactory( String algorithmName ) {
@@ -369,6 +385,8 @@ StreamCipher _ctrStreamCipherFactory( String algorithmName ) {
   if( underlyingCipher!=null ) {
     return new CTRStreamCipher( underlyingCipher );
   }
+
+  return null;
 }
 
 StreamCipher _sicStreamCipherFactory( String algorithmName ) {
@@ -384,6 +402,8 @@ StreamCipher _sicStreamCipherFactory( String algorithmName ) {
   if( underlyingCipher!=null ) {
     return new SICStreamCipher( underlyingCipher );
   }
+
+  return null;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
