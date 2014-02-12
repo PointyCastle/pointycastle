@@ -15,30 +15,52 @@ As of the last release, the following algorithms are implemented:
 
 **Block ciphers:**
 
-  * AES (fast version)
+  * AES
+
+
+**Asymmetric block ciphers:**
+
+  * RSA
 
 
 **Stream ciphers:**
 
-  * Salsa 20
+  * Salsa20
 
 
 **Block cipher modes of operation:**
 
-  * SIC (a.k.a. CTR)
-  * CBC
+  * CBC (Cipher Block Chaining mode)
+  * CFB (Cipher Feedback mode)
+  * ECB (Electronic Code Book mode)
+  * GCTR (GOST 28147 OFB counter mode)
+  * OFB (Output FeedBack mode)
+  * CTR (Counter mode)
 
 
 **Paddings:**
 
-  * PKCS7
+  * PKCS7 
 
 
 **Digests:**
 
+  * MD2
+  * MD4
+  * MD5
+  * RIPEMD-128
   * RIPEMD-160
+  * RIPEMD-256
+  * RIPEMD-320
   * SHA-1
+  * SHA-224
   * SHA-256
+  * SHA-3
+  * SHA-384
+  * SHA-512
+  * SHA-512/t
+  * Tiger
+  * Whirlpool
 
 
 **MACs:**
@@ -49,6 +71,7 @@ As of the last release, the following algorithms are implemented:
 **Signatures:**
 
   * ECDSA
+  * RSA
   
   
 **Password based key derivators:**
@@ -60,6 +83,7 @@ As of the last release, the following algorithms are implemented:
 **Asymmetric key generators:**
 
   * ECDSA
+  * RSA
   
   
 **Entropy sources (true RNGs):**
