@@ -9,6 +9,7 @@ import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
 
 import "../test/signer_tests.dart";
+import "../test/src/null_secure_random.dart";
 
 /**
  * NOTE: the expected results for these tests are computed using the Java
@@ -23,12 +24,13 @@ void main() {
   var Qx = new BigInteger("1498602238651628509310686451034731914387602356706565103527");
   var Qy = new BigInteger("6264116558863692852155702059476882343593676720209154057133");
   var Q = eccDomain.curve.createPoint( Qx, Qy );
-  var pubParams = new PublicKeyParameter( new ECPublicKey(Q, eccDomain));
+  var verifyParams = () => new PublicKeyParameter( new ECPublicKey(Q, eccDomain));
 
   var d = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
-  var privParams = new PrivateKeyParameter( new ECPrivateKey(d, eccDomain) );
+  var privParams = new PrivateKeyParameter(new ECPrivateKey(d, eccDomain));
+  var signParams = () => new ParametersWithRandom(privParams, new NullSecureRandom() );
 
-  runSignerTests( new Signer("ECDSA"), privParams, pubParams, [
+  runSignerTests( new Signer("ECDSA"), signParams, verifyParams, [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
     _newSignature(

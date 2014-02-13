@@ -7,10 +7,9 @@ library cipher.test.test.signer_tests;
 import "package:cipher/cipher.dart";
 import "package:unittest/unittest.dart";
 
-import "./src/null_secure_random.dart";
 import "./src/helpers.dart";
 
-void runSignerTests( Signer signer, CipherParameters signParams, CipherParameters verifyParams, List<String> messageSignaturePairs ) {
+void runSignerTests( Signer signer, CipherParameters signParams(), CipherParameters verifyParams(), List messageSignaturePairs ) {
 
   group( "${signer.algorithmName}:", () {
 
@@ -48,20 +47,18 @@ void runSignerTests( Signer signer, CipherParameters signParams, CipherParameter
 
 }
 
-void _runGenerateSignatureTest(Signer signer, CipherParameters params, String message, Signature expectedSignature) {
-  var paramsWithRandom = new ParametersWithRandom( params, new NullSecureRandom() );
-
+void _runGenerateSignatureTest(Signer signer, CipherParameters params(), String message, Signature expectedSignature) {
   signer.reset();
-  signer.init(true, paramsWithRandom);
+  signer.init(true, params());
 
   var signature = signer.generateSignature(createUint8ListFromString(message));
 
   expect( signature, expectedSignature );
 }
 
-void _runVerifySignatureTest(Signer signer, CipherParameters params, String message, Signature signature) {
+void _runVerifySignatureTest(Signer signer, CipherParameters params(), String message, Signature signature) {
   signer.reset();
-  signer.init(false, params);
+  signer.init(false, params());
 
   var ok = signer.verifySignature(createUint8ListFromString(message), signature);
 
