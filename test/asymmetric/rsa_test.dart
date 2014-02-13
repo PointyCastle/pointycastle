@@ -27,8 +27,8 @@ void main() {
   var pubk = new RSAPublicKey(modulus, publicExponent);
   var privk = new RSAPrivateKey(modulus, privateExponent, p, q);
 
-  var encpar = new PublicKeyParameter<RSAPublicKey>(pubk);
-  var decpar = new PrivateKeyParameter<RSAPrivateKey>(privk);
+  var encpar = () => new PublicKeyParameter<RSAPublicKey>(pubk);
+  var decpar = () => new PrivateKeyParameter<RSAPrivateKey>(privk);
 
   runAsymmetricBlockCipherTests(new AsymmetricBlockCipher("RSA"), encpar, decpar, [
 

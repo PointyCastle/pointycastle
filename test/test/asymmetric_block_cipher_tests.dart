@@ -11,7 +11,7 @@ import "package:unittest/unittest.dart";
 
 import "./src/helpers.dart";
 
-void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameters encParams, CipherParameters decParams,
+void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameters encParams(), CipherParameters decParams(),
                                    List<String> plainCipherTextPairs ) {
 
   group( "${cipher.algorithmName}:", () {
@@ -44,13 +44,13 @@ void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameter
 
 }
 
-void _runCipherTest(AsymmetricBlockCipher cipher, CipherParameters params, String plainTextString,
+void _runCipherTest(AsymmetricBlockCipher cipher, CipherParameters params(), String plainTextString,
                     String expectedHexCipherText) {
 
   var plainText = createUint8ListFromString( plainTextString );
 
   cipher.reset();
-  cipher.init(true, params);
+  cipher.init(true, params());
 
   var out = new Uint8List(cipher.outputBlockSize);
 
@@ -61,13 +61,13 @@ void _runCipherTest(AsymmetricBlockCipher cipher, CipherParameters params, Strin
   expect( hexOut, equals(expectedHexCipherText) );
 }
 
-void _runDecipherTest(AsymmetricBlockCipher cipher, CipherParameters params, String hexCipherText,
+void _runDecipherTest(AsymmetricBlockCipher cipher, CipherParameters params(), String hexCipherText,
                       String expectedPlainTextString ) {
 
   var cipherText = createUint8ListFromHexString(hexCipherText);
 
   cipher.reset();
-  cipher.init(false, params);
+  cipher.init(false, params());
 
   var out = new Uint8List(cipher.outputBlockSize);
 
