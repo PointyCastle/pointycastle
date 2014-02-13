@@ -10,6 +10,7 @@ import "./api/ufixnum_test.dart" as ufixnum_test;
 import "./api/registry_test.dart" as registry_test;
 
 import "./asymmetric/rsa_test.dart" as rsa_test;
+import "./asymmetric/pkcs1_test.dart" as pkcs1_test;
 
 import "./block/aes_fast_test.dart" as aes_fast_test;
 
@@ -66,6 +67,7 @@ void main() {
 
   // asymmetric block ciphers
   rsa_test.main();
+  pkcs1_test.main();
 
   // block ciphers
   aes_fast_test.main();

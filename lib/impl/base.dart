@@ -21,6 +21,7 @@ import "package:cipher/api.dart";
 import "package:cipher/api/ecc.dart";
 
 import "package:cipher/asymmetric/rsa.dart";
+import "package:cipher/asymmetric/pkcs1.dart";
 
 import "package:cipher/block/aes_fast.dart";
 
@@ -94,6 +95,7 @@ void initCipher() {
 }
 
 void _registerAsymmetricBlockCiphers() {
+  AsymmetricBlockCipher.registry.registerDynamicFactory(_pkcs1AsymmetricBlockCipherFactory);
   AsymmetricBlockCipher.registry["RSA"] = (_) => new RSAEngine();
 }
 
@@ -211,6 +213,23 @@ void _registerStreamCiphers() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+AsymmetricBlockCipher _pkcs1AsymmetricBlockCipherFactory(String algorithmName) {
+  var sep = algorithmName.lastIndexOf("/");
+
+  if (sep==-1) return null;
+  if (algorithmName.substring(sep+1) != "PKCS1") return null;
+
+  var underlyingCipher = _createOrNull( () =>
+    new AsymmetricBlockCipher(algorithmName.substring(0, sep))
+  );
+
+  if( underlyingCipher!=null ) {
+    return new PKCS1Encoding(underlyingCipher);
+  }
+
+  return null;
+}
 
 Digest _sha512tDigestFactory(String algorithmName) {
   if( !algorithmName.startsWith("SHA-512/") ) return null;
