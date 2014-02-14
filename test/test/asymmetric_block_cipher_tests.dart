@@ -11,30 +11,38 @@ import "package:unittest/unittest.dart";
 
 import "./src/helpers.dart";
 
-void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameters encParams(), CipherParameters decParams(),
-                                   List<String> plainCipherTextPairs ) {
+void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameters pubParams(), CipherParameters privParams(),
+                                   List<String> plainCipherTextTuples ) {
 
   group( "${cipher.algorithmName}:", () {
 
     group( "encrypt:", () {
-      for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-        var plainText = plainCipherTextPairs[i];
-        var cipherText = plainCipherTextPairs[i+1];
+      for( var i=0 ; i<plainCipherTextTuples.length ; i+=3 ) {
+        var plainText = plainCipherTextTuples[i];
+        var publicCipherText = plainCipherTextTuples[i+1];
+        var privateCipherText = plainCipherTextTuples[i+2];
 
-        test( "${formatAsTruncated(plainText)}", () =>
-          _runCipherTest( cipher, encParams, plainText, cipherText )
+        test( "public: ${formatAsTruncated(plainText)}", () =>
+          _runCipherTest( cipher, pubParams, plainText, publicCipherText )
+        );
+        test( "private: ${formatAsTruncated(plainText)}", () =>
+          _runCipherTest( cipher, privParams, plainText, privateCipherText )
         );
 
       }
     });
 
     group( "decrypt:", () {
-      for( var i=0 ; i<plainCipherTextPairs.length ; i+=2 ) {
-        var plainText = plainCipherTextPairs[i];
-        var cipherText = plainCipherTextPairs[i+1];
+      for( var i=0 ; i<plainCipherTextTuples.length ; i+=3 ) {
+        var plainText = plainCipherTextTuples[i];
+        var publicCipherText = plainCipherTextTuples[i+1];
+        var privateCipherText = plainCipherTextTuples[i+2];
 
-        test( "${formatAsTruncated(plainText)}", () =>
-          _runDecipherTest( cipher, decParams, cipherText, plainText )
+        test( "public: ${formatAsTruncated(plainText)}", () =>
+          _runDecipherTest( cipher, pubParams, privateCipherText, plainText )
+        );
+        test( "private: ${formatAsTruncated(plainText)}", () =>
+          _runDecipherTest( cipher, privParams, publicCipherText, plainText )
         );
 
       }
