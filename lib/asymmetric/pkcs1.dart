@@ -87,7 +87,7 @@ class PKCS1Encoding implements AsymmetricBlockCipher {
       block.fillRange(1, padLength, 0xFF);
     } else {
       block[0] = 0x02;                        // type code 2
-      block.setRange(1, block.length, _random.nextBytes(out.length));
+      block.setRange(1, padLength, _random.nextBytes(padLength-1));
 
       // a zero byte marks the end of the padding, so all
       // the pad bytes must be non-zero.
