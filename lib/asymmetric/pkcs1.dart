@@ -41,7 +41,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       akparams = params;
     }
 
-    _engine.init(forEncryption, params);
+    _engine.init(forEncryption, akparams);
 
     _forPrivateKey = (akparams.key is PrivateKey);
     _forEncryption = forEncryption;

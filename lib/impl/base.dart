@@ -67,6 +67,7 @@ import "package:cipher/random/auto_seed_block_ctr_random.dart";
 import "package:cipher/random/block_ctr_random.dart";
 
 import "package:cipher/signers/ecdsa_signer.dart";
+import "package:cipher/signers/rsa_signer.dart";
 
 import "package:cipher/stream/salsa20.dart";
 
@@ -203,6 +204,17 @@ void _registerSecureRandoms() {
 
 void _registerSigners() {
   Signer.registry["ECDSA"] = (_) => new ECDSASigner();
+  Signer.registry["MD2/RSA"] = (_) => new RSASigner(new Digest("MD2"), "06082a864886f70d0202");
+  Signer.registry["MD4/RSA"] = (_) => new RSASigner(new Digest("MD4"), "06082a864886f70d0204");
+  Signer.registry["MD5/RSA"] = (_) => new RSASigner(new Digest("MD5"), "06082a864886f70d0205");
+  Signer.registry["RIPEMD-128/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-128"), "06052b24030202");
+  Signer.registry["RIPEMD-160/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-160"), "06052b24030201");
+  Signer.registry["RIPEMD-256/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-256"), "06052b24030203");
+  Signer.registry["SHA-1/RSA"] = (_) => new RSASigner(new Digest("SHA-1"), "06052b0e03021a");
+  Signer.registry["SHA-224/RSA"] = (_) => new RSASigner(new Digest("SHA-224"), "0609608648016503040204");
+  Signer.registry["SHA-256/RSA"] = (_) => new RSASigner(new Digest("SHA-256"), "0609608648016503040201");
+  Signer.registry["SHA-384/RSA"] = (_) => new RSASigner(new Digest("SHA-384"), "0609608648016503040202");
+  Signer.registry["SHA-512/RSA"] = (_) => new RSASigner(new Digest("SHA-512"), "0609608648016503040203");
 }
 
 void _registerStreamCiphers() {

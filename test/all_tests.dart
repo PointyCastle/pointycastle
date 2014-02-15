@@ -53,6 +53,7 @@ import "./random/auto_seed_block_ctr_random_test.dart" as auto_seed_block_ctr_ra
 import "./random/block_ctr_random_test.dart" as block_ctr_random_test;
 
 import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
+import "./signers/rsa_signer_test.dart" as rsa_signer_test;
 
 import "./stream/salsa20_test.dart" as salsa20_test;
 
@@ -119,6 +120,7 @@ void main() {
 
   // signers
   ecdsa_signer_test.main();
+  rsa_signer_test.main();
 
   // stream ciphers
   salsa20_test.main();

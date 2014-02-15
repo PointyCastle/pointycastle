@@ -4,6 +4,8 @@
 
 library cipher.api.rsa;
 
+import "dart:typed_data";
+
 import "package:bignum/bignum.dart";
 import "package:cipher/api.dart";
 
@@ -63,3 +65,30 @@ class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
   int get hashCode => modulus.hashCode+exponent.hashCode;
 
 }
+
+/// A [Signature] created with RSA.
+class RSASignature implements Signature {
+
+  final Uint8List bytes;
+
+  RSASignature(this.bytes);
+
+  String toString() => bytes.toString();
+
+  bool operator ==(other) {
+    if( other==null ) return false;
+    if( other is! RSASignature ) return false;
+    if( other.bytes.length!=this.bytes.length ) return false;
+
+    for (var i=0; i<this.bytes.length; i++) {
+      if (this.bytes[i] != other.bytes[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  int get hashCode => bytes.hashCode;
+
+}
+

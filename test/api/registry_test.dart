@@ -118,6 +118,17 @@ void main() {
     test( "Signer returns valid implementations", () {
 
       testSigner( "ECDSA" );
+      testSigner( "MD2/RSA" );
+      testSigner( "MD4/RSA" );
+      testSigner( "MD5/RSA" );
+      testSigner( "RIPEMD-128/RSA" );
+      testSigner( "RIPEMD-160/RSA" );
+      testSigner( "RIPEMD-256/RSA" );
+      testSigner( "SHA-1/RSA" );
+      testSigner( "SHA-224/RSA" );
+      testSigner( "SHA-256/RSA" );
+      testSigner( "SHA-384/RSA" );
+      testSigner( "SHA-512/RSA" );
 
     });
 
