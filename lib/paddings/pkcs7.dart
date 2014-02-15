@@ -8,9 +8,10 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
+import "package:cipher/paddings/base_padding.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
-class PKCS7Padding implements Padding {
+class PKCS7Padding extends BasePadding {
 
   String get algorithmName => "PKCS7";
 

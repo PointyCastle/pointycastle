@@ -6,11 +6,11 @@ library cipher.digests.sha3;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
+import "package:cipher/digests/base_digest.dart";
 
 /// Implementation of SHA-3 digest.
-class SHA3Digest implements Digest {
+class SHA3Digest extends BaseDigest {
 
   static List<Uint64> _keccakRoundConstants = _keccakInitializeRoundConstants();
   static List<Uint32> _keccakRhoOffsets = _keccakInitializeRhoOffsets();

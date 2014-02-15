@@ -10,6 +10,7 @@ import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_derivators/scrypt_parameters.dart";
 import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
+import "package:cipher/key_derivators/base_key_derivator.dart";
 
 /**
  * Implementation of SCrypt password based key derivation function. See the next link for info on how to choose N, r, and p:
@@ -20,7 +21,7 @@ import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
  *
  *    * [https://github.com/wg/scrypt]
  */
-class Scrypt implements KeyDerivator {
+class Scrypt extends BaseKeyDerivator {
 
   static final int _MAX_VALUE = 0x7fffffff;
 

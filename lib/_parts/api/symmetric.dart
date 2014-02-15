@@ -32,6 +32,9 @@ abstract class BlockCipher {
    */
   void init( bool forEncryption, CipherParameters params );
 
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
+
   /**
    * Process a whole block of data given by [inp] and starting at offset
    * [inpOff].
@@ -64,6 +67,9 @@ abstract class PaddedBlockCipher implements BlockCipher {
 
   /// Get the underlying [BlockCipher] used by this cipher.
   BlockCipher get cipher;
+
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
 
   /**
    * Process the last block of data given by [inp] and starting at offset
@@ -102,6 +108,9 @@ abstract class StreamCipher {
    */
   void init( bool forEncryption, CipherParameters params );
 
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
+
   /// Process one byte of data given by [inp] and return its encrypted value.
   int returnByte( int inp );
 
@@ -136,6 +145,9 @@ abstract class Mac {
    * the documentation of each implementation to find out more).
    */
   void init( CipherParameters params );
+
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
 
   /// Add one byte of data to the MAC input.
   void updateByte( int inp );
@@ -178,6 +190,9 @@ abstract class KeyDerivator {
    * (see the documentation of each implementation to find out more).
    */
   void init( CipherParameters params );
+
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
 
   /// Derive key from given input and put it in [out] at offset [outOff].
   int deriveKey( Uint8List inp, int inpOff, Uint8List out, int outOff );

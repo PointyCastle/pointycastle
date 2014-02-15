@@ -117,6 +117,9 @@ abstract class AsymmetricBlockCipher {
    */
   void init( bool forEncryption, CipherParameters params );
 
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
+
   /**
    * Process a block of [len] bytes given by [inp] and starting at offset [inpOff] and put the resulting cipher text in [out]
    * beginning at position [outOff].

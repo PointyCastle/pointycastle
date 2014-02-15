@@ -7,8 +7,9 @@ library cipher.key_derivators.pbkdf2;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 import "package:cipher/params/key_parameter.dart";
+import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
+import "package:cipher/key_derivators/base_key_derivator.dart";
 
 /**
  * Generator for PBE derived keys and ivs as defined by PKCS 5 V2.0 Scheme 2. This generator uses a SHA-1 HMac as the
@@ -17,7 +18,7 @@ import "package:cipher/params/key_parameter.dart";
  * * [http://www.rsasecurity.com/rsalabs/pkcs/pkcs-5/index.html]
  *
  */
-class PBKDF2KeyDerivator implements KeyDerivator {
+class PBKDF2KeyDerivator extends BaseKeyDerivator {
 
   Pbkdf2Parameters _params;
   Mac _mac;

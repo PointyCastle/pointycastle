@@ -7,12 +7,13 @@ library cipher.engines.null_asymmetric_block_cipher;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/asymmetric/base_asymmetric_block_cipher.dart";
 
 /**
  * An implementation of a null [AsymmetricBlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used
  * for testing or benchmarking chaining algorithms.
  */
-class NullAsymmetricBlockCipher implements AsymmetricBlockCipher {
+class NullAsymmetricBlockCipher extends BaseAsymmetricBlockCipher {
 
   final int inputBlockSize;
   final int outputBlockSize;

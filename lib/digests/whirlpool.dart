@@ -6,11 +6,11 @@ library cipher.digests.whirlpool;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
+import "package:cipher/digests/base_digest.dart";
 
 /// Implementation of Whirlpool digest.
-class WhirlpoolDigest implements Digest {
+class WhirlpoolDigest extends BaseDigest {
 
   static const _DIGEST_LENGTH_BYTES = 512 ~/ 8;
   static const _BITCOUNT_ARRAY_SIZE = 32;

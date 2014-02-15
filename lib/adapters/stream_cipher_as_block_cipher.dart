@@ -7,9 +7,10 @@ library cipher.adapters.stream_cipher_as_block_cipher;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/block/base_block_cipher.dart";
 
 /// An adapter to convert an [StreamCipher] to a [BlockCipher]
-class StreamCipherAsBlockCipher implements BlockCipher {
+class StreamCipherAsBlockCipher extends BaseBlockCipher {
 
   final StreamCipher streamCipher;
   final int blockSize;

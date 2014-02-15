@@ -7,12 +7,13 @@ library cipher.test.src.null_stream_cipher;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/stream/base_stream_cipher.dart";
 
 /**
  * An implementation of a null [StreamCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for
  * testing or benchmarking chaining algorithms.
  */
-class NullStreamCipher implements StreamCipher {
+class NullStreamCipher extends BaseStreamCipher {
 
   String get algorithmName => "Null";
 

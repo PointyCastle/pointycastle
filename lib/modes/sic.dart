@@ -9,6 +9,7 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/parameters_with_iv.dart";
+import "package:cipher/stream/base_stream_cipher.dart";
 
 /**
  * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter
@@ -21,7 +22,7 @@ import "package:cipher/params/parameters_with_iv.dart";
  * error, but this is so unlikely to happen for usual block sizes that we don't check for that event. It is the responsibility
  * of the caller to make sure the counter does not overflow.
  */
-class SICStreamCipher implements StreamCipher {
+class SICStreamCipher extends BaseStreamCipher {
 
   final BlockCipher underlyingCipher;
 

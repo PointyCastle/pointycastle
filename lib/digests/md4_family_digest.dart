@@ -6,11 +6,11 @@ library cipher.digests.md4_family_digest;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
+import "package:cipher/digests/base_digest.dart";
 
 /// Base implementation of MD4 family style digest as outlined in "Handbook of Applied Cryptography", pages 344 - 347.
- abstract class MD4FamilyDigest implements Digest {
+abstract class MD4FamilyDigest extends BaseDigest {
 
   /// Working word (4 bytes) buffer
   var _xBuf = new Uint8List(4);

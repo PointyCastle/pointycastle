@@ -6,11 +6,11 @@ library cipher.digests.tiger;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
+import "package:cipher/digests/base_digest.dart";
 
 /// Implementation of Tiger digest.
-class TigerDigest implements Digest {
+class TigerDigest extends BaseDigest {
 
   //private static final int BYTE_LENGTH = 64;
   static const _DIGEST_LENGTH = 24;

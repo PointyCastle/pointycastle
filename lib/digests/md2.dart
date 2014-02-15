@@ -6,10 +6,10 @@ library cipher.digests.md2;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
+import "package:cipher/digests/base_digest.dart";
 
 /// Implementation of MD2 as outlined in RFC1319 by B.Kaliski from RSA Laboratories April 1992
-class MD2Digest implements Digest {
+class MD2Digest extends BaseDigest {
 
     static const _DIGEST_LENGTH = 16;
 

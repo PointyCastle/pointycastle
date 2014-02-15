@@ -9,13 +9,14 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
+import "package:cipher/macs/base_mac.dart";
 
 /**
  * HMAC implementation based on RFC2104
  *
  * H(K XOR opad, H(K XOR ipad, text))
  */
-class HMac implements Mac {
+class HMac extends BaseMac {
 
     static final _IPAD = new Uint8(0x36);
     static final _OPAD = new Uint8(0x5C);

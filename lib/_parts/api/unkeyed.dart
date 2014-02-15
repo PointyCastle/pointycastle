@@ -22,6 +22,9 @@ abstract class Digest {
   /// Reset the digest to its original state.
   void reset();
 
+  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  Uint8List process(Uint8List data);
+
   /// Add one byte of data to the digested input.
   void updateByte( int inp );
 
@@ -53,6 +56,12 @@ abstract class Padding {
 
   /// Initialise the padder. Normally, paddings don't need any init params.
   void init( [CipherParameters params] );
+
+  /**
+   * Process a whole block of [data] at once, returning the result in a new byte array. If [pad] is true adds padding to the
+   * given block, otherwise, padding is removed.
+   */
+  Uint8List process(bool pad, Uint8List data);
 
   /**
    * Add the pad bytes to the passed in block, returning the number of bytes

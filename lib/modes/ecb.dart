@@ -7,9 +7,10 @@ library cipher.modes.ecb;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/block/base_block_cipher.dart";
 
 /// Implementation of Electronic Code Book (ECB) mode on top of a [BlockCipher].
-class ECBBlockCipher implements BlockCipher {
+class ECBBlockCipher extends BaseBlockCipher {
 
   final BlockCipher _underlyingCipher;
 

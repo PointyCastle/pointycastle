@@ -6,13 +6,13 @@ library cipher.stream.salsa20;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/params/parameters_with_iv.dart";
+import "package:cipher/stream/base_stream_cipher.dart";
 
 /// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005.
-class Salsa20Engine implements StreamCipher {
+class Salsa20Engine extends BaseStreamCipher {
 
   static const _STATE_SIZE = 16; // 16, 32 bit ints = 64 bytes
   static const _BYTE_LIMIT = 0x400000000000000000;

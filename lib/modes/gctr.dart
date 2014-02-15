@@ -9,9 +9,10 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/parameters_with_iv.dart";
+import "package:cipher/block/base_block_cipher.dart";
 
 /// Implementation of GOST 28147 OFB counter mode (GCTR) on top of a [BlockCipher].
-class GCTRBlockCipher implements BlockCipher {
+class GCTRBlockCipher extends BaseBlockCipher {
 
   static const C1 = 16843012; //00000001000000010000000100000100
   static const C2 = 16843009; //00000001000000010000000100000001
@@ -83,6 +84,7 @@ class GCTRBlockCipher implements BlockCipher {
     }
     else
     {
+      // TODO: make this behave in a standard way (as the other modes of operation)
       reset();
 
       // if params is null we reuse the current working key.

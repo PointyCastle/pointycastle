@@ -34,6 +34,12 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
     padding.init( params.paddingCipherParameters );
   }
 
+  Uint8List process(Uint8List data) {
+    var out = new Uint8List(blockSize);
+    var len = doFinal(data, 0, out, 0);
+    return out.sublist(0, len);
+  }
+
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     return cipher.processBlock(inp, inpOff, out, outOff);
   }

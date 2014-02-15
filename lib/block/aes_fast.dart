@@ -6,9 +6,9 @@ library cipher.block.aes_fast;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
+import "package:cipher/block/base_block_cipher.dart";
 
 /**
  * An implementation of the AES (Rijndael), from FIPS-197.
@@ -34,7 +34,7 @@ import "package:cipher/params/key_parameter.dart";
  * This file contains the fast version with 8Kbytes of static tables for round
  * precomputation.
  */
-class AESFastEngine implements BlockCipher {
+class AESFastEngine extends BaseBlockCipher {
 
   static const _BLOCK_SIZE = 16;
 

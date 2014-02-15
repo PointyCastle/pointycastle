@@ -9,8 +9,9 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/params/asymmetric_key_parameter.dart";
 import "package:cipher/params/parameters_with_random.dart";
+import "package:cipher/asymmetric/base_asymmetric_block_cipher.dart";
 
-class PKCS1Encoding implements AsymmetricBlockCipher {
+class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   static const _HEADER_LENGTH = 10;
 
