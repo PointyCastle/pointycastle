@@ -34,14 +34,10 @@ void runDigestTests( Digest digest, List<String> plainDigestTextPairs ) {
 }
 
 void _runDigestTest( Digest digest, String plainTextString, String expectedHexDigestText ) {
-  var plainText = createUint8ListFromString( plainTextString );
-
-  var out = new Uint8List(digest.digestSize);
-
   digest.reset();
-  digest.update( plainText, 0, plainText.length );
-  digest.doFinal( out, 0 );
 
+  var plainText = createUint8ListFromString( plainTextString );
+  var out = digest.process(plainText);
   var hexOut = formatBytesAsHexString(out);
 
   expect( hexOut, equals(expectedHexDigestText) );

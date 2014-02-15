@@ -25,9 +25,10 @@ void main() {
       var params = new PaddedBlockCipherParameters( null, null );
       var pbc = new PaddedBlockCipher("Null/PKCS7");
 
+      pbc.init( true, params );
+
       var inp = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
       var out = new Uint8List( 2*pbc.blockSize );
-      pbc.init( true, params );
       pbc.processBlock( inp, 0, out, 0 );
       pbc.doFinal( inp, pbc.blockSize, out, pbc.blockSize );
 

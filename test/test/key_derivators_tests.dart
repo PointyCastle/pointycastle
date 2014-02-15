@@ -35,15 +35,12 @@ void runKeyDerivatorTests( KeyDerivator keyDerivator, List<dynamic> paramsPasswo
 }
 
 void _runKeyDerivatorTest( KeyDerivator keyDerivator, CipherParameters params, String password, String expectedHexKey ) {
-
   keyDerivator.init(params);
 
-  var out = new Uint8List(keyDerivator.keySize);
   var passwordBytes = createUint8ListFromString( password );
-  keyDerivator.deriveKey(passwordBytes, 0, out, 0);
-
+  var out = keyDerivator.process(passwordBytes);
   var hexOut = formatBytesAsHexString(out);
-  expect( hexOut, equals(expectedHexKey) );
 
+  expect( hexOut, equals(expectedHexKey) );
 }
 

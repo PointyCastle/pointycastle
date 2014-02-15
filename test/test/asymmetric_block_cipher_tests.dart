@@ -55,15 +55,11 @@ void runAsymmetricBlockCipherTests(AsymmetricBlockCipher cipher, CipherParameter
 void _runCipherTest(AsymmetricBlockCipher cipher, CipherParameters params(), String plainTextString,
                     String expectedHexCipherText) {
 
-  var plainText = createUint8ListFromString( plainTextString );
-
   cipher.reset();
   cipher.init(true, params());
 
-  var out = new Uint8List(cipher.outputBlockSize);
-
-  cipher.processBlock(plainText, 0, plainText.length, out, 0);
-
+  var plainText = createUint8ListFromString( plainTextString );
+  var out = cipher.process(plainText);
   var hexOut = formatBytesAsHexString(out);
 
   expect( hexOut, equals(expectedHexCipherText) );
@@ -71,17 +67,12 @@ void _runCipherTest(AsymmetricBlockCipher cipher, CipherParameters params(), Str
 
 void _runDecipherTest(AsymmetricBlockCipher cipher, CipherParameters params(), String hexCipherText,
                       String expectedPlainTextString ) {
-
-  var cipherText = createUint8ListFromHexString(hexCipherText);
-
   cipher.reset();
   cipher.init(false, params());
 
-  var out = new Uint8List(cipher.outputBlockSize);
-
-  var len = cipher.processBlock(cipherText, 0, cipherText.length, out, 0);
-
-  var plainText = new String.fromCharCodes(out.sublist(0, len));
+  var cipherText = createUint8ListFromHexString(hexCipherText);
+  var out = cipher.process(cipherText);
+  var plainText = new String.fromCharCodes(out);
 
   expect( plainText, equals(expectedPlainTextString) );
 }

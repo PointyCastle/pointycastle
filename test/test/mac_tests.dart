@@ -34,14 +34,10 @@ void runMacTests( Mac mac, List<String> plainDigestTextPairs ) {
 }
 
 void _runMacTest( Mac mac, String plainTextString, String expectedHexDigestText ) {
-  var plainText = createUint8ListFromString( plainTextString );
-
-  var out = new Uint8List(mac.macSize);
-
   mac.reset();
-  mac.update( plainText, 0, plainText.length );
-  mac.doFinal( out, 0 );
 
+  var plainText = createUint8ListFromString( plainTextString );
+  var out = mac.process(plainText);
   var hexOut = formatBytesAsHexString(out);
 
   expect( hexOut, equals(expectedHexDigestText) );
