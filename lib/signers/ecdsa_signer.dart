@@ -13,14 +13,20 @@ import "package:cipher/api.dart";
 import "package:cipher/api/ecc.dart";
 import "package:cipher/params/asymmetric_key_parameter.dart";
 import "package:cipher/params/parameters_with_random.dart";
+import "package:cipher/params/key_parameter.dart";
 
 class ECDSASigner implements Signer {
 
   ECPublicKey _pbkey;
   ECPrivateKey _pvkey;
   SecureRandom _random;
+  bool _deterministic;
+  Digest _digest;
 
-  String get algorithmName => "ECDSA";
+  /// If [_deterministic] is true, RFC 6979 is used for k calculation.
+  ECDSASigner(this._digest, [this._deterministic=false]);
+
+  String get algorithmName => "${_digest.algorithmName}/${_deterministic ? "DET-" : ""}ECDSA";
 
   void reset() {
   }
@@ -62,20 +68,26 @@ class ECDSASigner implements Signer {
   }
 
   Signature generateSignature(Uint8List message) {
+    message = _hashMessage(message);
+
     var n = _pvkey.parameters.n;
     var e = _calculateE(n, message);
     var r = null;
     var s = null;
+
+    var kCalculator;
+    if (_deterministic) {
+      kCalculator = new _RFC6979KCalculator(_digest, n, _pvkey.d, message);
+    } else {
+      kCalculator = new _RandomKCalculator(n, _random);
+    }
 
     // 5.3.2
     do {// generate s
       var k = null;
 
       do { // generate r
-        do {
-          k = _random.nextBigInteger(n.bitLength());
-        }
-        while( k==BigInteger.ZERO || k>=n );
+        k = kCalculator.nextK();
 
         var p = _pvkey.parameters.G*k;
 
@@ -88,12 +100,20 @@ class ECDSASigner implements Signer {
       var d = _pvkey.d;
 
       s = (k.modInverse(n)*(e+(d*r)))%n;
+
     } while( s==BigInteger.ZERO );
 
     return new ECSignature(r,s);
   }
 
+  Uint8List _hashMessage(Uint8List message) {
+    _digest.reset();
+    return _digest.process(message);
+  }
+
   bool verifySignature(Uint8List message, ECSignature signature) {
+    message = _hashMessage(message);
+
     var n = _pbkey.parameters.n;
     var e = _calculateE(n, message);
 
@@ -190,4 +210,149 @@ class ECDSASigner implements Signer {
     return R;
   }
 
+}
+
+class _RFC6979KCalculator {
+
+  Mac _mac;
+  Uint8List _K;
+  Uint8List _V;
+  BigInteger _n;
+
+  _RFC6979KCalculator(Digest digest, this._n, BigInteger d, Uint8List message) {
+    _mac = new Mac("${digest.algorithmName}/HMAC");
+    _V = new Uint8List(_mac.macSize);
+    _K = new Uint8List(_mac.macSize);
+    _init(d, message);
+  }
+
+  void _init(BigInteger d, Uint8List message) {
+    _V.fillRange(0, _V.length, 0x01);
+    _K.fillRange(0, _K.length, 0x00);
+
+    var x = new Uint8List((_n.bitLength() + 7) ~/ 8);
+    var dVal = _asUnsignedByteArray(d);
+
+    x.setRange((x.length - dVal.length), x.length, dVal);
+
+    var m = new Uint8List((_n.bitLength() + 7) ~/ 8);
+
+    var mInt = _bitsToInt(message);
+
+    if (mInt > _n) {
+      mInt -= _n;
+    }
+
+    var mVal = _asUnsignedByteArray(mInt);
+
+    m.setRange((m.length - mVal.length), m.length, mVal);
+
+    _mac.init(new KeyParameter(_K));
+
+    _mac.update(_V, 0, _V.length);
+    _mac.updateByte(0x00);
+    _mac.update(x, 0, x.length);
+    _mac.update(m, 0, m.length);
+    _mac.doFinal(_K, 0);
+
+    _mac.init(new KeyParameter(_K));
+    _mac.update(_V, 0, _V.length);
+    _mac.doFinal(_V, 0);
+
+    _mac.update(_V, 0, _V.length);
+    _mac.updateByte(0x01);
+    _mac.update(x, 0, x.length);
+    _mac.update(m, 0, m.length);
+    _mac.doFinal(_K, 0);
+
+    _mac.init(new KeyParameter(_K));
+    _mac.update(_V, 0, _V.length);
+    _mac.doFinal(_V, 0);
+  }
+
+  BigInteger nextK() {
+    var t = new Uint8List((_n.bitLength() + 7) ~/ 8);
+
+    for (;;) {
+      var tOff = 0;
+
+      while (tOff < t.length) {
+        _mac.update(_V, 0, _V.length);
+        _mac.doFinal(_V, 0);
+
+        if ((t.length - tOff) < _V.length) {
+          t.setRange(tOff, t.length, _V);
+          tOff += (t.length - tOff);
+        } else {
+          t.setRange(tOff, tOff + _V.length, _V);
+          tOff += _V.length;
+        }
+      }
+
+      var k = _bitsToInt(t);
+
+      if ((k == 0) || (k >= _n)) {
+        _mac.update(_V, 0, _V.length);
+        _mac.updateByte(0x00);
+        _mac.doFinal(_K, 0);
+
+        _mac.init(new KeyParameter(_K));
+        _mac.update(_V, 0, _V.length);
+        _mac.doFinal(_V, 0);
+      } else {
+        return k;
+      }
+    }
+  }
+
+  BigInteger _bitsToInt(Uint8List t) {
+    var v = new BigInteger.fromBytes(1, t);
+    if ((t.length * 8) > _n.bitLength()) {
+      v = v >> ((t.length * 8) - _n.bitLength());
+    }
+
+    return v;
+  }
+
+
+  Uint8List _asUnsignedByteArray(BigInteger value) {
+    var bytes = value.toByteArray();
+
+    if (bytes[0] == 0) {
+      return new Uint8List.fromList(bytes.sublist(1));
+    } else {
+      return new Uint8List.fromList(bytes);
+    }
+  }
+
+}
+
+class _RandomKCalculator {
+
+  BigInteger _n;
+  SecureRandom _random;
+
+  _RandomKCalculator(this._n, this._random);
+
+  BigInteger nextK() {
+    var k;
+    do {
+      k = _random.nextBigInteger(_n.bitLength());
+    }
+    while( k==BigInteger.ZERO || k>=_n );
+    return k;
+  }
+
+}
+
+
+
+
+String formatBytesAsHexString(Uint8List bytes) {
+  var result = new StringBuffer();
+  for( var i=0 ; i<bytes.lengthInBytes ; i++ ) {
+    var part = bytes[i];
+    result.write('${part < 16 ? '0' : ''}${part.toRadixString(16)}');
+  }
+  return result.toString();
 }

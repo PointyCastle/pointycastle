@@ -203,7 +203,7 @@ void _registerSecureRandoms() {
 }
 
 void _registerSigners() {
-  Signer.registry["ECDSA"] = (_) => new ECDSASigner();
+  Signer.registry.registerDynamicFactory(_ecdsaSignerFactory);
   Signer.registry["MD2/RSA"] = (_) => new RSASigner(new Digest("MD2"), "06082a864886f70d0202");
   Signer.registry["MD4/RSA"] = (_) => new RSASigner(new Digest("MD4"), "06082a864886f70d0204");
   Signer.registry["MD5/RSA"] = (_) => new RSASigner(new Digest("MD5"), "06082a864886f70d0205");
@@ -398,6 +398,26 @@ SecureRandom _ctrAutoSeedPrngSecureRandomFactory( String algorithmName ) {
     var blockCipherName = algorithmName.substring(0, algorithmName.length-19);
     var blockCipher = _createOrNull( () => new BlockCipher(blockCipherName) );
     return new AutoSeedBlockCtrRandom(blockCipher);
+  }
+
+  return null;
+}
+
+Signer _ecdsaSignerFactory(String algorithmName) {
+  var sep = algorithmName.lastIndexOf("/");
+
+  if (sep==-1) return null;
+
+  var ecdsaName = algorithmName.substring(sep+1);
+  if ((ecdsaName != "ECDSA") && (ecdsaName != "DET-ECDSA")) return null;
+
+  var underlyingDigest = _createOrNull( () =>
+    new Digest(algorithmName.substring(0, sep))
+  );
+
+  if( underlyingDigest!=null ) {
+    var deterministic = (ecdsaName == "DET-ECDSA");
+    return new ECDSASigner(underlyingDigest, deterministic);
   }
 
   return null;

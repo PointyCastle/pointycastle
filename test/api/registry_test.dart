@@ -117,7 +117,7 @@ void main() {
 
     test( "Signer returns valid implementations", () {
 
-      testSigner( "ECDSA" );
+      testSigner( "SHA-1/ECDSA" );
       testSigner( "MD2/RSA" );
       testSigner( "MD4/RSA" );
       testSigner( "MD5/RSA" );

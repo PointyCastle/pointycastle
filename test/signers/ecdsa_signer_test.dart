@@ -30,18 +30,34 @@ void main() {
   var privParams = new PrivateKeyParameter(new ECPrivateKey(d, eccDomain));
   var signParams = () => new ParametersWithRandom(privParams, new NullSecureRandom() );
 
-  runSignerTests( new Signer("ECDSA"), signParams, verifyParams, [
+  runSignerTests( new Signer("SHA-1/ECDSA"), signParams, verifyParams, [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
     _newSignature(
         "4165461920577864743570110591887661239883413257826890841803",
-        "3921818269646681551036727339486031144481055001966973146395"
+        "4192466672819485121438972302615731758021595554374647962056"
     ),
 
     "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
     _newSignature(
         "4165461920577864743570110591887661239883413257826890841803",
-        "4966480092874390501758979364830358346132047144845401039538"
+        "4124624969901653266585887193504647035526068719224431686679"
+    ),
+
+  ]);
+
+  runSignerTests( new Signer("SHA-1/DET-ECDSA"), signParams, verifyParams, [
+
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
+    _newSignature(
+        "6052012072724008730564193612572794050491696411960275629627",
+        "2161019278549597185578307509265728228343111084484752661213"
+    ),
+
+    "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
+    _newSignature(
+        "4087581495017442027693712553398765118791696551913571321320",
+        "4593990646726045634082084213208629584972116888758459298644"
     ),
 
   ]);
