@@ -55,7 +55,6 @@ class SHA3Digest extends BaseDigest {
 
   void _init(int bitLength) {
     switch (bitLength) {
-      case 0:
       case 288:
         _initSponge(1024, 576);
         break;

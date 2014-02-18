@@ -12,7 +12,6 @@ import "package:cipher/digests/base_digest.dart";
 /// Implementation of Tiger digest.
 class TigerDigest extends BaseDigest {
 
-  //private static final int BYTE_LENGTH = 64;
   static const _DIGEST_LENGTH = 24;
 
   // registers

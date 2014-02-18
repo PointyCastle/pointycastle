@@ -246,12 +246,12 @@ AsymmetricBlockCipher _pkcs1AsymmetricBlockCipherFactory(String algorithmName) {
 Digest _sha512tDigestFactory(String algorithmName) {
   if( !algorithmName.startsWith("SHA-512/") ) return null;
 
-  var digestSize = int.parse( algorithmName.substring(8) );
-  if( (digestSize % 8) != 0 ) {
-    throw new ArgumentError("Digest length for SHA-512/t is not a multiple of 8: ${digestSize}");
+  var bitLength = int.parse( algorithmName.substring(8) );
+  if( (bitLength % 8) != 0 ) {
+    throw new ArgumentError("Digest length for SHA-512/t is not a multiple of 8: ${bitLength}");
   }
 
-  return new SHA512tDigest( digestSize~/8 );
+  return new SHA512tDigest( bitLength~/8 );
 }
 
 Digest _sha3DigestFactory(String algorithmName) {

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.src.null_secure_random;
+library cipher.test.src.fixed_secure_random;
 
 import "package:cipher/api.dart";
 import "package:cipher/random/secure_random_base.dart";
