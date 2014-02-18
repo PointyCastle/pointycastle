@@ -411,13 +411,17 @@ Signer _ecdsaSignerFactory(String algorithmName) {
   var ecdsaName = algorithmName.substring(sep+1);
   if ((ecdsaName != "ECDSA") && (ecdsaName != "DET-ECDSA")) return null;
 
-  var underlyingDigest = _createOrNull( () =>
-    new Digest(algorithmName.substring(0, sep))
-  );
+  var digestName = algorithmName.substring(0, sep);
+
+  var underlyingDigest = _createOrNull(() => new Digest(digestName));
 
   if( underlyingDigest!=null ) {
-    var deterministic = (ecdsaName == "DET-ECDSA");
-    return new ECDSASigner(underlyingDigest, deterministic);
+    var mac = null;
+    if (ecdsaName == "DET-ECDSA") {
+      mac = new Mac("${digestName}/HMAC");
+    }
+
+    return new ECDSASigner(underlyingDigest, mac);
   }
 
   return null;

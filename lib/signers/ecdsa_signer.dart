@@ -22,11 +22,17 @@ class ECDSASigner implements Signer {
   SecureRandom _random;
   bool _deterministic;
   Digest _digest;
+  Mac _kMac;
 
-  /// If [_deterministic] is true, RFC 6979 is used for k calculation.
-  ECDSASigner(this._digest, [this._deterministic=false]);
+  /**
+   * If [_digest] is not null it is used to hash the message before signing and verifying, otherwise, the message needs to be
+   * hashed by the user of this [ECDSASigner] object.
+   * If [_kMac] is not null, RFC 6979 is used for k calculation with the given [Mac]. Keep in mind that, to comply with
+   * RFC 69679, [_kMac] must be HMAC with the same digest used to hash the message.
+   */
+  ECDSASigner([this._digest=null, this._kMac=null]);
 
-  String get algorithmName => "${_digest.algorithmName}/${_deterministic ? "DET-" : ""}ECDSA";
+  String get algorithmName => "${_digest.algorithmName}/${(_kMac == null) ? "" : "DET-"}ECDSA";
 
   void reset() {
   }
@@ -68,7 +74,7 @@ class ECDSASigner implements Signer {
   }
 
   Signature generateSignature(Uint8List message) {
-    message = _hashMessage(message);
+    message = _hashMessageIfNeeded(message);
 
     var n = _pvkey.parameters.n;
     var e = _calculateE(n, message);
@@ -76,8 +82,8 @@ class ECDSASigner implements Signer {
     var s = null;
 
     var kCalculator;
-    if (_deterministic) {
-      kCalculator = new _RFC6979KCalculator(_digest, n, _pvkey.d, message);
+    if (_kMac != null) {
+      kCalculator = new _RFC6979KCalculator(_kMac, n, _pvkey.d, message);
     } else {
       kCalculator = new _RandomKCalculator(n, _random);
     }
@@ -106,13 +112,8 @@ class ECDSASigner implements Signer {
     return new ECSignature(r,s);
   }
 
-  Uint8List _hashMessage(Uint8List message) {
-    _digest.reset();
-    return _digest.process(message);
-  }
-
   bool verifySignature(Uint8List message, ECSignature signature) {
-    message = _hashMessage(message);
+    message = _hashMessageIfNeeded(message);
 
     var n = _pbkey.parameters.n;
     var e = _calculateE(n, message);
@@ -148,6 +149,15 @@ class ECDSASigner implements Signer {
     var v = point.x.toBigInteger().mod(n);
 
     return v==r;
+  }
+
+  Uint8List _hashMessageIfNeeded(Uint8List message) {
+    if (_digest != null) {
+      _digest.reset();
+      return _digest.process(message);
+    } else {
+      return message;
+    }
   }
 
   BigInteger _calculateE(BigInteger n, Uint8List message) {
@@ -219,8 +229,7 @@ class _RFC6979KCalculator {
   Uint8List _V;
   BigInteger _n;
 
-  _RFC6979KCalculator(Digest digest, this._n, BigInteger d, Uint8List message) {
-    _mac = new Mac("${digest.algorithmName}/HMAC");
+  _RFC6979KCalculator(this._mac, this._n, BigInteger d, Uint8List message) {
     _V = new Uint8List(_mac.macSize);
     _K = new Uint8List(_mac.macSize);
     _init(d, message);
