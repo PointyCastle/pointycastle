@@ -6,6 +6,7 @@ library cipher.api.ufixnum_test;
 
 import 'dart:typed_data';
 
+import "package:bignum/bignum.dart";
 import "package:cipher/api/ufixnum.dart";
 import "package:unittest/unittest.dart";
 
@@ -30,6 +31,14 @@ void _testUint8() {
       var val = new Uint8(0);
       expect( val.bitLength, 8 );
       expect( val.byteLength, 1 );
+    });
+
+    test( "toUintX()", () {
+      var val = new Uint8(0x10);
+      expect(val.toUint8(), new Uint8(0x10));
+      expect(val.toUint16(), new Uint16(0x10));
+      expect(val.toUint32(), new Uint32(0x10));
+      expect(val.toUint64(), new Uint64(0,0x10));
     });
 
     test( "operator ==", () {
@@ -227,6 +236,14 @@ void _testUint16() {
       var val = new Uint16(0);
       expect( val.bitLength, 16 );
       expect( val.byteLength, 2 );
+    });
+
+    test( "toUintX()", () {
+      var val = new Uint16(0x1020);
+      expect(val.toUint8(), new Uint8(0x20));
+      expect(val.toUint16(), new Uint16(0x1020));
+      expect(val.toUint32(), new Uint32(0x1020));
+      expect(val.toUint64(), new Uint64(0,0x1020));
     });
 
     test( "operator ==", () {
@@ -436,6 +453,14 @@ void _testUint32() {
       expect( val.byteLength, 4 );
     });
 
+    test( "toUintX()", () {
+      var val = new Uint32(0x10203040);
+      expect(val.toUint8(), new Uint8(0x40));
+      expect(val.toUint16(), new Uint16(0x3040));
+      expect(val.toUint32(), new Uint32(0x10203040));
+      expect(val.toUint64(), new Uint64(0,0x10203040));
+    });
+
     test( "operator ==", () {
       var l = new Uint32(0x80808080);
       expect( l==0x80808080, true );
@@ -625,171 +650,176 @@ void _testUint64() {
   group( "Uint64:", () {
 
     test( "Uint64()", () {
-      expect( new Uint64(0x0000000000000000).toInt(),  equals(0x0000000000000000) );
-      expect( new Uint64(0xFFFFFFFFFFFFFFFF).toInt(),  equals(0xFFFFFFFFFFFFFFFF) );
-      expect( new Uint64(0x10000000000000000).toInt(), equals(0x0000000000000000) );
+      expect( new Uint64(0,0).toRadixString(16), "0" );
+      expect( new Uint64(0xFFFFFFFF,0xFFFFFFFF).toRadixString(16), "ffffffffffffffff" );
     });
 
     test( "Uint64.fromLittleEndian()", () {
       var data = new Uint8List.fromList( [0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x80] );
-      expect( new Uint64.fromLittleEndian(data, 0).toInt(), 0x8070605040302010 );
+      expect( new Uint64.fromLittleEndian(data, 0).toRadixString(16), "8070605040302010" );
     });
 
     test( "Uint64.fromBigEndian()", () {
       var data = new Uint8List.fromList( [0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x80] );
-      expect( new Uint64.fromBigEndian(data, 0).toInt(), 0x1020304050607080 );
+      expect( new Uint64.fromBigEndian(data, 0).toRadixString(16), "1020304050607080" );
     });
 
     test( "size getters", () {
-      var val = new Uint64(0);
+      var val = new Uint64(0,0);
       expect( val.bitLength, 64 );
       expect( val.byteLength, 8 );
     });
 
+    test( "toUintX()", () {
+      var val = new Uint64(0x10203040,0x50607080);
+      expect(val.toUint8(), new Uint8(0x80));
+      expect(val.toUint16(), new Uint16(0x7080));
+      expect(val.toUint32(), new Uint32(0x50607080));
+      expect(val.toUint64(), new Uint64(0x10203040,0x50607080));
+    });
+
     test( "operator ==", () {
-      var l = new Uint64(0x8080808080808080);
-      expect( l==0x8080808080808080, true );
-      expect( l==0xFFFFFFFFFFFFFFFF, false );
-      expect( l==l,                  true );
+      var l = new Uint64(0x80808080,0x80808080);
+      expect( l==new BigInteger("8080808080808080",16), true );
+      expect( l==new BigInteger("FFFFFFFFFFFFFFFF",16), false );
+      expect( l==l, true );
     });
 
     test( "operator <", () {
-      var l = new Uint64(0x8080808080808080);
-      expect( l<0x0000000000000000, false );
-      expect( l<0x8080808080808080, false );
-      expect( l<0xFFFFFFFFFFFFFFFF, true );
-      expect( l<l,          false );
+      var l = new Uint64(0x80808080,0x80808080);
+      expect( l<new BigInteger("0000000000000000",16), false );
+      expect( l<new BigInteger("8080808080808080",16), false );
+      expect( l<new BigInteger("FFFFFFFFFFFFFFFF",16), true );
+      expect( l<l, false );
     });
 
     test( "operator <=", () {
-      var l = new Uint64(0x8080808080808080);
-      expect( l<=0x0000000000000000, false );
-      expect( l<=0x8080808080808080, true );
-      expect( l<=0xFFFFFFFFFFFFFFFF, true );
-      expect( l<=l,                  true );
+      var l = new Uint64(0x80808080,0x80808080);
+      expect( l<=new BigInteger("0000000000000000",16), false );
+      expect( l<=new BigInteger("8080808080808080",16), true );
+      expect( l<=new BigInteger("FFFFFFFFFFFFFFFF",16), true );
+      expect( l<=l, true );
     });
 
     test( "operator >", () {
-      var l = new Uint64(0x8080808080808080);
-      expect( l>0x0000000000000000, true );
-      expect( l>0x8080808080808080, false );
-      expect( l>0xFFFFFFFFFFFFFFFF, false );
-      expect( l>l,                  false );
+      var l = new Uint64(0x80808080,0x80808080);
+      expect( l>new BigInteger("0000000000000000",16), true );
+      expect( l>new BigInteger("8080808080808080",16), false );
+      expect( l>new BigInteger("FFFFFFFFFFFFFFFF",16), false );
+      expect( l>l, false );
     });
 
     test( "operator >=", () {
-      var l = new Uint64(0x8080808080808080);
-      expect( l>=0x0000000000000000, true );
-      expect( l>=0x8080808080808080, true );
-      expect( l>=0xFFFFFFFFFFFFFFFF, false );
-      expect( l>=l,                  true );
+      var l = new Uint64(0x80808080,0x80808080);
+      expect( l>=new BigInteger("0000000000000000",16), true );
+      expect( l>=new BigInteger("8080808080808080",16), true );
+      expect( l>=new BigInteger("FFFFFFFFFFFFFFFF",16), false );
+      expect( l>=l, true );
     });
 
     test( "operator - (unary)", () {
-      expect( (-new Uint64(0x8000000000000000)).toInt(), 0x8000000000000000 );
-      expect( (-new Uint64(0x0000000000000001)).toInt(), 0xFFFFFFFFFFFFFFFF );
-      expect( (-new Uint64(0x0000000000000000)).toInt(), 0x0000000000000000 );
+      expect( (-new Uint64(0x80000000,0x00000000)).toRadixString(16), "8000000000000000" );
+      expect( (-new Uint64(0x00000000,0x00000001)).toRadixString(16), "ffffffffffffffff" );
+      expect( (-new Uint64(0x00000000,0x00000000)).toRadixString(16),                "0" );
     });
 
     test( "operator ~ (unary)", () {
-      expect( (~new Uint64(0x5555555555555555)).toInt(), 0xAAAAAAAAAAAAAAAA );
-      expect( (~new Uint64(0xFFFFFFFFFFFFFFFF)).toInt(), 0x0000000000000000 );
-      expect( (~new Uint64(0x0000000000000000)).toInt(), 0xFFFFFFFFFFFFFFFF );
+      expect( (~new Uint64(0x55555555,0x55555555)).toRadixString(16), "aaaaaaaaaaaaaaaa" );
+      expect( (~new Uint64(0xFFFFFFFF,0xFFFFFFFF)).toRadixString(16),                "0" );
+      expect( (~new Uint64(0x00000000,0x00000000)).toRadixString(16), "ffffffffffffffff" );
     });
 
     test( "operator +", () {
-      var l = new Uint64(0x8000000000000000);
-      expect( (l+0x10000000000000000).toInt(), 0x8000000000000000 );
-      expect( (l+0x8000000000000000).toInt(),  0x0000000000000000 );
-      expect( (l+0x1000000000000000).toInt(),  0x9000000000000000 );
-      expect( (l+0x0000000000000000).toInt(),  0x8000000000000000 );
+      var l = new Uint64(0x80000000,0x00000000);
+      expect( (l+new BigInteger("8000000000000000",16)).toRadixString(16),                "0" );
+      expect( (l+new BigInteger("1000000000000000",16)).toRadixString(16), "9000000000000000" );
+      expect( (l+new BigInteger("0000000000000000",16)).toRadixString(16), "8000000000000000" );
     });
 
     test( "operator -", () {
-      var l = new Uint64(0x8000000000000000);
-      expect( (l-0x10000000000000000).toInt(), 0x8000000000000000 );
-      expect( (l-0x8000000000000000).toInt(),  0x0000000000000000 );
-      expect( (l-0x1000000000000000).toInt(),  0x7000000000000000 );
-      expect( (l-0x0000000000000000).toInt(),  0x8000000000000000 );
+      var l = new Uint64(0x80000000,0x00000000);
+      expect( (l-new BigInteger("8000000000000000",16)).toRadixString(16),                "0");
+      expect( (l-new BigInteger("1000000000000000",16)).toRadixString(16), "7000000000000000");
+      expect( (l-new BigInteger("0000000000000000",16)).toRadixString(16), "8000000000000000");
     });
 
     test( "operator *", () {
-      var l = new Uint64(0x1000000000000000);
-      expect( (l*0x0000000000000000).toInt(), 0x0000000000000000 );
-      expect( (l*0x0000000000000001).toInt(), 0x1000000000000000 );
-      expect( (l*0x0000000000000008).toInt(), 0x8000000000000000 );
-      expect( (l*0x0000000000000010).toInt(), 0x0000000000000000 );
+      var l = new Uint64(0x10000000,0x00000000);
+      expect( (l*new BigInteger("0000000000000000",16)).toRadixString(16),                "0" );
+      expect( (l*new BigInteger("0000000000000001",16)).toRadixString(16), "1000000000000000" );
+      expect( (l*new BigInteger("0000000000000008",16)).toRadixString(16), "8000000000000000" );
+      expect( (l*new BigInteger("0000000000000010",16)).toRadixString(16),                "0" );
     });
 
     test( "operator /", () {
-      var l = new Uint64(0x1000000000000000);
-      expect( (l/0x0000000000000002).toInt(), 0x0800000000000000 );
-      expect( (l/0x0800000000000000).toInt(), 0x0000000000000002 );
-      expect( (l/0x0F00000000000000).toInt(), 0x0000000000000001 );
-      expect( (l/0xFFFFFFFFFFFFFFFF).toInt(), 0x0000000000000000 );
+      var l = new Uint64(0x10000000,0x00000000);
+      expect( (l/new BigInteger("0000000000000002",16)).toRadixString(16), "800000000000000" );
+      expect( (l/new BigInteger("0800000000000000",16)).toRadixString(16),               "2" );
+      expect( (l/new BigInteger("0F00000000000000",16)).toRadixString(16),               "1" );
+      expect( (l/new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16),               "0" );
     });
 
     test( "operator ~/", () {
-      var l = new Uint64(0x1000000000000000);
-      expect( (l/0x0000000000000002).toInt(), 0x0800000000000000 );
-      expect( (l/0x0800000000000000).toInt(), 0x0000000000000002 );
-      expect( (l/0x0F00000000000000).toInt(), 0x0000000000000001 );
-      expect( (l/0xFFFFFFFFFFFFFFFF).toInt(), 0x0000000000000000 );
+      var l = new Uint64(0x10000000,0x00000000);
+      expect( (l/new BigInteger("0000000000000002",16)).toRadixString(16), "800000000000000" );
+      expect( (l/new BigInteger("0800000000000000",16)).toRadixString(16),               "2" );
+      expect( (l/new BigInteger("0F00000000000000",16)).toRadixString(16),               "1" );
+      expect( (l/new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16),               "0" );
     });
 
     test( "operator %", () {
-      var l = new Uint64(0x1000000000000000);
-      expect( (l%0x0000000000000002).toInt(), 0x0000000000000000 );
-      expect( (l%0x0000000000000008).toInt(), 0x0000000000000000 );
-      expect( (l%0x0F00000000000000).toInt(), 0x0100000000000000 );
-      expect( (l%0xFFFFFFFFFFFFFFFF).toInt(), 0x1000000000000000 );
+      var l = new Uint64(0x10000000,0x00000000);
+      expect( (l%new BigInteger("0000000000000002",16)).toRadixString(16),                "0" );
+      expect( (l%new BigInteger("0000000000000008",16)).toRadixString(16),                "0" );
+      expect( (l%new BigInteger("0F00000000000000",16)).toRadixString(16),  "100000000000000" );
+      expect( (l%new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16), "1000000000000000" );
     });
 
     test( "operator &", () {
-      var l = new Uint64(0x5555555555555555);
-      expect( (l&0x0000000000000000).toInt(), 0x0000000000000000 );
-      expect( (l&0x0101010101010101).toInt(), 0x0101010101010101 );
-      expect( (l&0xF0F0F0F0F0F0F0F0).toInt(), 0x5050505050505050 );
-      expect( (l&0xFFFFFFFFFFFFFFFF).toInt(), 0x5555555555555555 );
+      var l = new Uint64(0x55555555,0x55555555);
+      expect( (l&new BigInteger("0000000000000000",16)).toRadixString(16),                "0" );
+      expect( (l&new BigInteger("0101010101010101",16)).toRadixString(16),  "101010101010101" );
+      expect( (l&new BigInteger("F0F0F0F0F0F0F0F0",16)).toRadixString(16), "5050505050505050" );
+      expect( (l&new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16), "5555555555555555" );
     });
 
     test( "operator |", () {
-      var l = new Uint64(0x5555555555555555);
-      expect( (l|0x0000000000000000).toInt(), 0x5555555555555555 );
-      expect( (l|0x0202020202020202).toInt(), 0x5757575757575757 );
-      expect( (l|0xF0F0F0F0F0F0F0F0).toInt(), 0xF5F5F5F5F5F5F5F5 );
-      expect( (l|0xFFFFFFFFFFFFFFFF).toInt(), 0xFFFFFFFFFFFFFFFF );
+      var l = new Uint64(0x55555555,0x55555555);
+      expect( (l|new BigInteger("0000000000000000",16)).toRadixString(16), "5555555555555555" );
+      expect( (l|new BigInteger("0202020202020202",16)).toRadixString(16), "5757575757575757" );
+      expect( (l|new BigInteger("F0F0F0F0F0F0F0F0",16)).toRadixString(16), "f5f5f5f5f5f5f5f5" );
+      expect( (l|new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16), "ffffffffffffffff" );
     });
 
     test( "operator ^", () {
-      var l = new Uint64(0x5555555555555555);
-      expect( (l^0x0000000000000000).toInt(), 0x5555555555555555 );
-      expect( (l^0x0202020202020202).toInt(), 0x5757575757575757 );
-      expect( (l^0xF0F0F0F0F0F0F0F0).toInt(), 0xA5A5A5A5A5A5A5A5 );
-      expect( (l^0xFFFFFFFFFFFFFFFF).toInt(), 0xAAAAAAAAAAAAAAAA );
+      var l = new Uint64(0x55555555,0x55555555);
+      expect( (l^new BigInteger("0000000000000000",16)).toRadixString(16), "5555555555555555" );
+      expect( (l^new BigInteger("0202020202020202",16)).toRadixString(16), "5757575757575757" );
+      expect( (l^new BigInteger("F0F0F0F0F0F0F0F0",16)).toRadixString(16), "a5a5a5a5a5a5a5a5" );
+      expect( (l^new BigInteger("FFFFFFFFFFFFFFFF",16)).toRadixString(16), "aaaaaaaaaaaaaaaa" );
     });
 
     test( "operator <<", () {
-      var val = new Uint64(0x1000000000000000);
-      expect( (val<<0).toInt(),   0x1000000000000000 );
-      expect( (val<<3).toInt(),   0x8000000000000000 );
-      expect( (val<<4).toInt(),   0x0000000000000000 );
-      expect( (val<<-61).toInt(), 0x8000000000000000 );
+      var val = new Uint64(0x10000000,0x00000000);
+      expect( (val<<0).toRadixString(16),   "1000000000000000" );
+      expect( (val<<3).toRadixString(16),   "8000000000000000" );
+      expect( (val<<4).toRadixString(16),                  "0" );
+      expect( (val<<-61).toRadixString(16), "8000000000000000" );
     });
 
     test( "operator >>", () {
-      var val = new Uint64(0x8000000000000000);
-      expect( (val>>0).toInt(),   0x8000000000000000 );
-      expect( (val>>3).toInt(),   0x1000000000000000 );
-      expect( (val>>4).toInt(),   0x0800000000000000 );
-      expect( (val>>-61).toInt(), 0x1000000000000000 );
+      var val = new Uint64(0x80000000,0x00000000);
+      expect( (val>>0).toRadixString(16),   "8000000000000000" );
+      expect( (val>>3).toRadixString(16),   "1000000000000000" );
+      expect( (val>>4).toRadixString(16),    "800000000000000" );
+      expect( (val>>-61).toRadixString(16), "1000000000000000" );
     });
 
     test( "rotl()", () {
-      var val = new Uint64(0x1000000000000000);
-      expect( val.rotl(0).toInt(),  0x1000000000000000 );
-      expect( val.rotl(3).toInt(),  0x8000000000000000 );
-      expect( val.rotl(64).toInt(), 0x1000000000000000 );
+      var val = new Uint64(0x10000000,0x00000000);
+      expect( val.rotl(0).toRadixString(16),  "1000000000000000" );
+      expect( val.rotl(3).toRadixString(16),  "8000000000000000" );
+      expect( val.rotl(64).toRadixString(16), "1000000000000000" );
       try {
         val.rotl(-5);
         fail("expected exception when shift value is negative");
@@ -798,10 +828,10 @@ void _testUint64() {
     });
 
     test( "rotr()", () {
-      var val = new Uint64(0x1000000000000000);
-      expect( val.rotr(0).toInt(),  0x1000000000000000 );
-      expect( val.rotr(3).toInt(),  0x0200000000000000 );
-      expect( val.rotr(64).toInt(), 0x1000000000000000 );
+      var val = new Uint64(0x10000000,0x00000000);
+      expect( val.rotr(0).toRadixString(16),  "1000000000000000" );
+      expect( val.rotr(3).toRadixString(16),   "200000000000000" );
+      expect( val.rotr(64).toRadixString(16), "1000000000000000" );
       try {
         val.rotr(-5);
         fail("expected exception when shift value is negative");
@@ -811,28 +841,28 @@ void _testUint64() {
 
     test( "toBigEndian()", () {
       var out = new Uint8List(8);
-      new Uint64(0x1020304050607080).toBigEndian( out, 0 );
-      expect( out[0], equals(0x10) );
+      new Uint64(0x80203040,0x50607010).toBigEndian( out, 0 );
+      expect( out[0], equals(0x80) );
       expect( out[1], equals(0x20) );
       expect( out[2], equals(0x30) );
       expect( out[3], equals(0x40) );
       expect( out[4], equals(0x50) );
       expect( out[5], equals(0x60) );
       expect( out[6], equals(0x70) );
-      expect( out[7], equals(0x80) );
+      expect( out[7], equals(0x10) );
     });
 
     test( "toLittleEndian()", () {
       var out = new Uint8List(8);
-      new Uint64(0x1020304050607080).toLittleEndian( out, 0 );
-      expect( out[0], equals(0x80) );
+      new Uint64(0x80203040,0x50607010).toLittleEndian( out, 0 );
+      expect( out[0], equals(0x10) );
       expect( out[1], equals(0x70) );
       expect( out[2], equals(0x60) );
       expect( out[3], equals(0x50) );
       expect( out[4], equals(0x40) );
       expect( out[5], equals(0x30) );
       expect( out[6], equals(0x20) );
-      expect( out[7], equals(0x10) );
+      expect( out[7], equals(0x80) );
     });
 
   });
