@@ -29,27 +29,28 @@ void main() {
   var pubParams = () => new ParametersWithRandom(new PublicKeyParameter<RSAPublicKey>(pubk), new NullSecureRandom());
   var privParams = () => new ParametersWithRandom(new PrivateKeyParameter<RSAPrivateKey>(privk), new NullSecureRandom());
 
-  runSignerTests( new Signer("SHA-512/RSA"), privParams, pubParams, [
+  runSignerTests( new Signer("SHA-1/RSA"), privParams, pubParams, [
 
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
     _newSignature(
-        "7f612335cb7553c1eb4713a036825a0e5eb8eb21ea3993e02ee2bb4a64d0be79e7a4d7717f7604a51cf989725087f0b25aa1b20e9ee08c165e4015"
-        "8f66a443338f3f83b6c8707a4e3303e1f90f3ba5254ce65f14cf1305cb993335773d087174bc1a95b88185ef16f7a6c4e6e48fe11d3a5604b2bd1c"
-        "601100b49a762c07c2a5c473ccba3e079e8c53e5a18beb1246d6eef45c39a610dea48d1b7f46931da2cda454697ad1a4f62a6aa90e0026cefcb23b"
-        "67e52579c41cf431509cb1140b9d63fad68642fca34afeeac6069336abc233056db29a2a9b1e1e4ae65a38f9032e1693a6be052fec5bc9044665bf"
-        "d19c29ecddff7e26f0a3228ecc4c8f9ec70d3c1b"
+        "18683e8e227a62049c4f249fcebb5a41dbdd03a926cbf5928be2cf81f870c5fab7865a9caec7b50291a8e3be0089ad86692b3e319060da928934a3"
+        "1ee23b04867a4b5237f2bd66e2a42e1098db797303693cb435a0a6155f20ecc0bf8a6522a72a20ccbb6ae9f2e227a340cce213299f438cda9518fc"
+        "fbfd63ed3b6d302f3248ee046bca9cc29fdeb64547b6639d24d4ea45361c98454ed413f0d0b96cdca62b74a193fcdf4ba7d9d6010bc01bd39f5c82"
+        "37d62b9025458aa71729331ce41d996643adfb1631c9561d8959e423aefb3024bf987589930e2c5ae780517199bab1e13efa2d1642648ad405b489"
+        "73e9ae0b4dea3943d91d7ab849b3935100e70dcd"
     ),
 
     "En un lugar de La Mancha, de cuyo nombre no quiero acordarme...",
     _newSignature(
-        "49b57219db717dee1485a7fe7fd8baa43f53fd736057a9313848b61996b8c5b080c52920450d17215bc2a115188b7267d2bcfbbbb7d6a21223e215"
-        "53356d40a0f12d9b0b7363580b129f5ffaa540f8421485b2cac677d6b16adc5d27d70ddc28685a055a2bcf4173311e862024bc953927ef4a68d7ba"
-        "467c3db538e778360fce218b748411e16f0c265ccd956b712843d99beb6467284f618e87df949a994dce54abe771a5e80b6adef2d61b2c11267ad7"
-        "b98687ec39ad9ad1f8f77c4a8b6e018e3e4e511b5566dd78abca25429c384ad7b21dab9fdf3c53c15c30640d8f3e2aefb660e9e490f2f0fc7f4a6e"
-        "7057de5fb39249a3110b0be105107b3d3bcfc3d2"
+        "17716fff28fac619fefa4345042beb21217e34589b7bd3689b27acfad08ccd6ad4476f1e79cbcb3a239269c2de0e070b3e8179244db5cb2a5840da"
+        "e372b174595992db96e6a007e5f2ffebaef9c7b7b0013f8ef6f4656986299b8e8459560185cfde06f77bcf82ec32d83694dd1a4e0b91f2e5e5a34a"
+        "653e1d89e7e8b80b2935ea9a422670e567332d24bb1ed3ca0daf367c833b8113105204ad677be45aa3507e26f54e39e36edf6175c64302d05261a0"
+        "bade75cdd93f4383ed224fe1b61b2f74d7c0bcbffe9908cfb58d48d848b062702541af610f7d21f318297d126757492fc48fb3a1c91c36ddf0b5dd"
+        "971de9a857e390badb0766779eea5672097b695d"
     ),
 
   ]);
+
 }
 
 RSASignature _newSignature(String value)
