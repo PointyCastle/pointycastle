@@ -69,14 +69,14 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
 
 
   void tIvGenerate(int bitLength) {
-    H1 = new Uint64(0x6a09e667f3bcc908 ^ 0xa5a5a5a5a5a5a5a5);
-    H2 = new Uint64(0xbb67ae8584caa73b ^ 0xa5a5a5a5a5a5a5a5);
-    H3 = new Uint64(0x3c6ef372fe94f82b ^ 0xa5a5a5a5a5a5a5a5);
-    H4 = new Uint64(0xa54ff53a5f1d36f1 ^ 0xa5a5a5a5a5a5a5a5);
-    H5 = new Uint64(0x510e527fade682d1 ^ 0xa5a5a5a5a5a5a5a5);
-    H6 = new Uint64(0x9b05688c2b3e6c1f ^ 0xa5a5a5a5a5a5a5a5);
-    H7 = new Uint64(0x1f83d9abfb41bd6b ^ 0xa5a5a5a5a5a5a5a5);
-    H8 = new Uint64(0x5be0cd19137e2179 ^ 0xa5a5a5a5a5a5a5a5);
+    H1 = new Uint64(0,0x6a09e667f3bcc908 ^ 0xa5a5a5a5a5a5a5a5);
+    H2 = new Uint64(0,0xbb67ae8584caa73b ^ 0xa5a5a5a5a5a5a5a5);
+    H3 = new Uint64(0,0x3c6ef372fe94f82b ^ 0xa5a5a5a5a5a5a5a5);
+    H4 = new Uint64(0,0xa54ff53a5f1d36f1 ^ 0xa5a5a5a5a5a5a5a5);
+    H5 = new Uint64(0,0x510e527fade682d1 ^ 0xa5a5a5a5a5a5a5a5);
+    H6 = new Uint64(0,0x9b05688c2b3e6c1f ^ 0xa5a5a5a5a5a5a5a5);
+    H7 = new Uint64(0,0x1f83d9abfb41bd6b ^ 0xa5a5a5a5a5a5a5a5);
+    H8 = new Uint64(0,0x5be0cd19137e2179 ^ 0xa5a5a5a5a5a5a5a5);
 
     updateByte(0x53);
     updateByte(0x48);

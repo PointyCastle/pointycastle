@@ -24,14 +24,14 @@ class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
 
     // SHA-384 initial hash value: The first 64 bits of the fractional parts of the square roots of the 9th through 16th prime
     // numbers
-    H1 = new Uint64(0xcbbb9d5dc1059ed8);
-    H2 = new Uint64(0x629a292a367cd507);
-    H3 = new Uint64(0x9159015a3070dd17);
-    H4 = new Uint64(0x152fecd8f70e5939);
-    H5 = new Uint64(0x67332667ffc00b31);
-    H6 = new Uint64(0x8eb44a8768581511);
-    H7 = new Uint64(0xdb0c2e0d64f98fa7);
-    H8 = new Uint64(0x47b5481dbefa4fa4);
+    H1 = new Uint64(0xcbbb9d5d,0xc1059ed8);
+    H2 = new Uint64(0x629a292a,0x367cd507);
+    H3 = new Uint64(0x9159015a,0x3070dd17);
+    H4 = new Uint64(0x152fecd8,0xf70e5939);
+    H5 = new Uint64(0x67332667,0xffc00b31);
+    H6 = new Uint64(0x8eb44a87,0x68581511);
+    H7 = new Uint64(0xdb0c2e0d,0x64f98fa7);
+    H8 = new Uint64(0x47b5481d,0xbefa4fa4);
   }
 
   int doFinal(Uint8List out, int outOff) {

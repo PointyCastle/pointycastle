@@ -16,13 +16,13 @@ abstract class MD4FamilyDigest extends BaseDigest {
   var _xBuf = new Uint8List(4);
 
   /// Offset to next position to fill in buffer
-  var _xBufOff = 0;
+  int _xBufOff = 0;
 
   /// Number of procesed bytes
-  var _byteCount = 0;
+  Uint64 _byteCount;
 
   void reset() {
-    _byteCount = 0;
+    _byteCount = new Uint64(0,0);
     _xBufOff = 0;
     _xBuf.fillRange( 0, _xBuf.length, 0 );
   }
@@ -59,21 +59,21 @@ abstract class MD4FamilyDigest extends BaseDigest {
   void processWord( Uint8List inp, int inpOff );
 
   /// Called from [finish] so that extender can process the number of bits processed.
-  void processLength( int bitLength );
+  void processLength( Uint64 bitLength );
 
   /// Process a whole block of data in extender digest.
   void processBlock();
 
   /// Pack a 64-bit length into an array of [Uint32]s in big endian format
-  void packBigEndianLength(int bitLength, List<Uint32> _X, int i) {
-    _X[i+1] = new Uint32(bitLength>>32);
-    _X[i] = new Uint32(bitLength);
+  void packBigEndianLength(Uint64 bitLength, List<Uint32> _X, int i) {
+    _X[i+1] = (bitLength >> 32).toUint32();
+    _X[i] = bitLength.toUint32();
   }
 
   /// Pack a 64-bit length into an array of [Uint32]s in little endian format
-  void packLittleEndianLength(int bitLength, List<Uint32> _X, int i) {
-    _X[i] = new Uint32(bitLength>>32);
-    _X[i+1] = new Uint32(bitLength);
+  void packLittleEndianLength(Uint64 bitLength, List<Uint32> _X, int i) {
+    _X[i] = (bitLength>>32).toUint32();
+    _X[i+1] = bitLength.toUint32();
   }
 
   /// Process [len] bytes from [inp]

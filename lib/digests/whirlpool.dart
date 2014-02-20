@@ -46,11 +46,11 @@ class WhirlpoolDigest extends BaseDigest {
 
     _bitCount.fillRange(0, _bitCount.length, new Uint16(0));
 
-    _hash.fillRange(0, _hash.length, new Uint64(0));
-    _K.fillRange(0, _K.length, new Uint64(0));
-    _L.fillRange(0, _L.length, new Uint64(0));
-    _block.fillRange(0, _block.length, new Uint64(0));
-    _state.fillRange(0, _state.length, new Uint64(0));
+    _hash.fillRange(0, _hash.length, new Uint64(0,0));
+    _K.fillRange(0, _K.length, new Uint64(0,0));
+    _L.fillRange(0, _L.length, new Uint64(0,0));
+    _block.fillRange(0, _block.length, new Uint64(0,0));
+    _state.fillRange(0, _state.length, new Uint64(0,0));
   }
 
   void updateByte(int inp) {
@@ -132,15 +132,15 @@ class WhirlpoolDigest extends BaseDigest {
     // iterate over the rounds
     for (var round = 1; round <= _ROUNDS; round++) {
       for (var i = 0; i < 8; i++) {
-        _L[i] = new Uint64(0);
-        _L[i] ^= _CT.C0[Uint8.clip(_K[(i - 0) & 7] >> 56)];
-        _L[i] ^= _CT.C1[Uint8.clip(_K[(i - 1) & 7] >> 48)];
-        _L[i] ^= _CT.C2[Uint8.clip(_K[(i - 2) & 7] >> 40)];
-        _L[i] ^= _CT.C3[Uint8.clip(_K[(i - 3) & 7] >> 32)];
-        _L[i] ^= _CT.C4[Uint8.clip(_K[(i - 4) & 7] >> 24)];
-        _L[i] ^= _CT.C5[Uint8.clip(_K[(i - 5) & 7] >> 16)];
-        _L[i] ^= _CT.C6[Uint8.clip(_K[(i - 6) & 7] >>  8)];
-        _L[i] ^= _CT.C7[Uint8.clip(_K[(i - 7) & 7])];
+        _L[i] = new Uint64(0,0);
+        _L[i] ^= _CT.C0[(_K[(i - 0) & 7] >> 56).toUint8().toInt()];
+        _L[i] ^= _CT.C1[(_K[(i - 1) & 7] >> 48).toUint8().toInt()];
+        _L[i] ^= _CT.C2[(_K[(i - 2) & 7] >> 40).toUint8().toInt()];
+        _L[i] ^= _CT.C3[(_K[(i - 3) & 7] >> 32).toUint8().toInt()];
+        _L[i] ^= _CT.C4[(_K[(i - 4) & 7] >> 24).toUint8().toInt()];
+        _L[i] ^= _CT.C5[(_K[(i - 5) & 7] >> 16).toUint8().toInt()];
+        _L[i] ^= _CT.C6[(_K[(i - 6) & 7] >>  8).toUint8().toInt()];
+        _L[i] ^= _CT.C7[(_K[(i - 7) & 7]).toUint8().toInt()];
       }
 
       _K.setRange(0, _K.length, _L );
@@ -151,14 +151,14 @@ class WhirlpoolDigest extends BaseDigest {
       for (var i = 0; i < 8; i++) {
           _L[i] = _K[i];
 
-          _L[i] ^= _CT.C0[Uint8.clip(_state[(i - 0) & 7] >> 56)];
-          _L[i] ^= _CT.C1[Uint8.clip(_state[(i - 1) & 7] >> 48)];
-          _L[i] ^= _CT.C2[Uint8.clip(_state[(i - 2) & 7] >> 40)];
-          _L[i] ^= _CT.C3[Uint8.clip(_state[(i - 3) & 7] >> 32)];
-          _L[i] ^= _CT.C4[Uint8.clip(_state[(i - 4) & 7] >> 24)];
-          _L[i] ^= _CT.C5[Uint8.clip(_state[(i - 5) & 7] >> 16)];
-          _L[i] ^= _CT.C6[Uint8.clip(_state[(i - 6) & 7] >> 8)];
-          _L[i] ^= _CT.C7[Uint8.clip(_state[(i - 7) & 7])];
+          _L[i] ^= _CT.C0[(_state[(i - 0) & 7] >> 56).toUint8().toInt()];
+          _L[i] ^= _CT.C1[(_state[(i - 1) & 7] >> 48).toUint8().toInt()];
+          _L[i] ^= _CT.C2[(_state[(i - 2) & 7] >> 40).toUint8().toInt()];
+          _L[i] ^= _CT.C3[(_state[(i - 3) & 7] >> 32).toUint8().toInt()];
+          _L[i] ^= _CT.C4[(_state[(i - 4) & 7] >> 24).toUint8().toInt()];
+          _L[i] ^= _CT.C5[(_state[(i - 5) & 7] >> 16).toUint8().toInt()];
+          _L[i] ^= _CT.C6[(_state[(i - 6) & 7] >> 8).toUint8().toInt()];
+          _L[i] ^= _CT.C7[(_state[(i - 7) & 7]).toUint8().toInt()];
       }
 
       // save the current state
@@ -193,7 +193,7 @@ class WhirlpoolDigest extends BaseDigest {
       var sum = (_bitCount[i] & 0xff) + _CT.EIGHT[i] + carry;
 
       carry = sum >> 8;
-      _bitCount[i] = new Uint16(sum & 0xff);
+      _bitCount[i] = (sum & 0xff);
     }
   }
 
@@ -280,10 +280,10 @@ class _Constants {
       C7[i] = _packIntoLong(v1, v4, v1, v8, v5, v2, v9, v1);
     }
 
-    rc[0] = new Uint64(0);
+    rc[0] = new Uint64(0,0);
     for (var r = 1; r <= WhirlpoolDigest._ROUNDS; r++) {
       var i = 8 * (r - 1);
-      rc[r] = new Uint64(
+      rc[r] =
         (C0[i    ] & 0xff00000000000000) ^
         (C1[i + 1] & 0x00ff000000000000) ^
         (C2[i + 2] & 0x0000ff0000000000) ^
@@ -291,16 +291,14 @@ class _Constants {
         (C4[i + 4] & 0x00000000ff000000) ^
         (C5[i + 5] & 0x0000000000ff0000) ^
         (C6[i + 6] & 0x000000000000ff00) ^
-        (C7[i + 7] & 0x00000000000000ff)
-      );
+        (C7[i + 7] & 0x00000000000000ff);
     }
 
     EIGHT[WhirlpoolDigest._BITCOUNT_ARRAY_SIZE-1] = new Uint16(8);
   }
 
   Uint64 _packIntoLong(int b7, int b6, int b5, int b4, int b3, int b2, int b1, int b0)
-    => (new Uint64(b7) << 56) ^ (new Uint64(b6) << 48) ^ (new Uint64(b5) << 40) ^ (new Uint64(b4) << 32) ^
-        (new Uint64(b3) << 24) ^ (new Uint64(b2) << 16) ^ (new Uint64(b1) <<  8) ^ b0;
+    => new Uint64( ((b7 << 24) | (b6 << 16) | (b5 << 8) | b4), ((b3 << 24) | (b2 << 16) | (b1 << 8) | b0));
 
   /*
    * int's are used to prevent sign extension.  The values that are really being used are

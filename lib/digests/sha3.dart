@@ -232,10 +232,10 @@ class SHA3Digest extends BaseDigest {
 
   void _fromBytesToWords(List<Uint64> stateAsWords, Uint8List state) {
     for (int i = 0; i < (1600 ~/ 64); i++) {
-      stateAsWords[i] = new Uint64(0);
+      stateAsWords[i] = new Uint64(0,0);
       int index = i * (64 ~/ 8);
       for (int j = 0; j < (64 ~/ 8); j++) {
-        stateAsWords[i] |= (new Uint64(state[index + j]) << (8 * j));
+        stateAsWords[i] |= (new Uint64(0,state[index + j]) << (8 * j));
       }
     }
   }
@@ -244,7 +244,7 @@ class SHA3Digest extends BaseDigest {
     for (int i = 0; i < (1600 ~/ 64); i++) {
       int index = i * (64 ~/ 8);
       for (int j = 0; j < (64 ~/ 8); j++) {
-        state[index + j] = (stateAsWords[i] >> (8 * j)).toInt();
+        state[index + j] = (stateAsWords[i] >> (8 * j)).toUint8().toInt();
       }
     }
   }
@@ -280,7 +280,7 @@ class SHA3Digest extends BaseDigest {
 
   void theta(List<Uint64> A) {
     for (var x = 0; x < 5; x++) {
-      C[x] = new Uint64(0);
+      C[x] = new Uint64(0,0);
       for (var y = 0; y < 5; y++) {
         C[x] ^= A[x + 5 * y];
       }
@@ -298,7 +298,7 @@ class SHA3Digest extends BaseDigest {
       for (var y = 0; y < 5; y++) {
         var index = x + 5 * y;
         if (_keccakRhoOffsets[index] != 0) {
-          A[index] = (A[index] << _keccakRhoOffsets[index]) ^ ((A[index]) >> (64 - _keccakRhoOffsets[index].toInt()));
+          A[index] = (A[index] << _keccakRhoOffsets[index].toInt()) ^ ((A[index]) >> (64 - _keccakRhoOffsets[index].toInt()));
         }
       }
     }
@@ -355,7 +355,7 @@ class SHA3Digest extends BaseDigest {
     var i, j, bitPosition;
 
     for (i = 0; i < 24; i++) {
-      keccakRoundConstants[i] = new Uint64(0);
+      keccakRoundConstants[i] = new Uint64(0,0);
       for (j = 0; j < 7; j++) {
         bitPosition = (1 << j) - 1;
         if (_LFSR86540(LFSRstate)) {

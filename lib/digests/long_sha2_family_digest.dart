@@ -35,8 +35,8 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
   int get byteLength => _BYTE_LENGTH;
 
   void reset() {
-    _byteCount1 = new Uint64(0);
-    _byteCount2 = new Uint64(0);
+    _byteCount1 = new Uint64(0,0);
+    _byteCount2 = new Uint64(0,0);
 
     _xBufOff = 0;
     for (var i = 0; i < _xBuf.length ; i++) {
@@ -45,7 +45,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
 
     _wOff = 0;
     for (var i = 0; i != _W.length; i++) {
-      _W[i] = new Uint64(0);
+      _W[i] = new Uint64(0,0);
     }
   }
 
@@ -207,7 +207,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
 
     // reset the offset and clean out the word buffer.
     _wOff = 0;
-    _W.fillRange(0, 16, new Uint64(0) );
+    _W.fillRange(0, 16, new Uint64(0,0) );
   }
 
   // SHA-384 and SHA-512 functions (as for SHA-256 but for longs)

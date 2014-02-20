@@ -58,7 +58,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
     }
   }
 
-  void processLength( int bitLength ) {
+  void processLength( Uint64 bitLength ) {
     if( _xOff > 14 ) {
       processBlock();
     }

@@ -16,7 +16,7 @@ class TigerDigest extends BaseDigest {
 
   // registers
   Uint64 _a, _b, _c;
-  int _byteCount;
+  Uint64 _byteCount;
 
   // buffers
   final _buf = new Uint8List(8);
@@ -34,17 +34,17 @@ class TigerDigest extends BaseDigest {
   int get digestSize => _DIGEST_LENGTH;
 
   void reset() {
-    _a = new Uint64(0x0123456789ABCDEF);
-    _b = new Uint64(0xFEDCBA9876543210);
-    _c = new Uint64(0xF096A5B4C3B2E187);
+    _a = new Uint64(0x01234567,0x89ABCDEF);
+    _b = new Uint64(0xFEDCBA98,0x76543210);
+    _c = new Uint64(0xF096A5B4,0xC3B2E187);
 
     _xOff = 0;
-    _x.fillRange(0, _x.length, new Uint64(0));
+    _x.fillRange(0, _x.length, new Uint64(0,0));
 
     _bOff = 0;
     _buf.fillRange(0, _buf.length, 0);
 
-    _byteCount = 0;
+    _byteCount = new Uint64(0,0);
   }
 
   int doFinal(Uint8List out, int outOff) {
@@ -170,20 +170,20 @@ class TigerDigest extends BaseDigest {
 
     // clear the x buffer
     _xOff = 0;
-    _x.fillRange(0, _x.length, new Uint64(0));
+    _x.fillRange(0, _x.length, new Uint64(0,0));
   }
 
-  void _processLength(int bitLength) {
-    _x[7] = new Uint64(bitLength);
+  void _processLength(Uint64 bitLength) {
+    _x[7] = bitLength;
   }
 
   void _finish() {
-    int bitLength = (_byteCount << 3);
+    var bitLength = (_byteCount << 3);
 
     updateByte(0x01);
 
     while (_bOff != 0) {
-        updateByte(0);
+      updateByte(0);
     }
 
     _processLength(bitLength);
@@ -193,28 +193,28 @@ class TigerDigest extends BaseDigest {
 
   void _roundABC(Uint64 x, int mul) {
      _c ^= x ;
-     _a -= t1[Uint8.clip(_c)] ^ t2[Uint8.clip(_c >> 16)]
-            ^ t3[Uint8.clip(_c >> 32)] ^ t4[Uint8.clip(_c >> 48)];
-     _b += t4[Uint8.clip(_c >> 8)] ^ t3[Uint8.clip(_c >> 24)]
-            ^ t2[Uint8.clip(_c >> 40)] ^ t1[Uint8.clip(_c >> 56)];
+     _a -= t1[(_c).toUint8().toInt()] ^ t2[(_c >> 16).toUint8().toInt()]
+            ^ t3[(_c >> 32).toUint8().toInt()] ^ t4[(_c >> 48).toUint8().toInt()];
+     _b += t4[(_c >> 8).toUint8().toInt()] ^ t3[(_c >> 24).toUint8().toInt()]
+            ^ t2[(_c >> 40).toUint8().toInt()] ^ t1[(_c >> 56).toUint8().toInt()];
      _b *= mul;
   }
 
   void _roundBCA(Uint64 x, int mul) {
      _a ^= x ;
-     _b -= t1[Uint8.clip(_a)] ^ t2[Uint8.clip(_a >> 16)]
-            ^ t3[Uint8.clip(_a >> 32)] ^ t4[Uint8.clip(_a >> 48)];
-     _c += t4[Uint8.clip(_a >> 8)] ^ t3[Uint8.clip(_a >> 24)]
-            ^ t2[Uint8.clip(_a >> 40)] ^ t1[Uint8.clip(_a >> 56)];
+     _b -= t1[(_a).toUint8().toInt()] ^ t2[(_a >> 16).toUint8().toInt()]
+            ^ t3[(_a >> 32).toUint8().toInt()] ^ t4[(_a >> 48).toUint8().toInt()];
+     _c += t4[(_a >> 8).toUint8().toInt()] ^ t3[(_a >> 24).toUint8().toInt()]
+            ^ t2[(_a >> 40).toUint8().toInt()] ^ t1[(_a >> 56).toUint8().toInt()];
      _c *= mul;
   }
 
   void _roundCAB(Uint64 x, int mul) {
        _b ^= x ;
-       _c -= t1[Uint8.clip(_b)] ^ t2[Uint8.clip(_b >> 16)]
-              ^ t3[Uint8.clip(_b >> 32)] ^ t4[Uint8.clip(_b >> 48)];
-       _a += t4[Uint8.clip(_b >> 8)] ^ t3[Uint8.clip(_b >> 24)]
-              ^ t2[Uint8.clip(_b >> 40)] ^ t1[Uint8.clip(_b >> 56)];
+       _c -= t1[(_b).toUint8().toInt()] ^ t2[(_b >> 16).toUint8().toInt()]
+              ^ t3[(_b >> 32).toUint8().toInt()] ^ t4[(_b >> 48).toUint8().toInt()];
+       _a += t4[(_b >> 8).toUint8().toInt()] ^ t3[(_b >> 24).toUint8().toInt()]
+              ^ t2[(_b >> 40).toUint8().toInt()] ^ t1[(_b >> 56).toUint8().toInt()];
        _a *= mul;
   }
 
