@@ -266,7 +266,7 @@ class Uint8 extends UintXSmall<Uint8> {
 /// Implementation of unsigned 16-bit size nums
 class Uint16 extends UintXSmall<Uint16> {
 
-  static int clip(int value) => (value.toInt()&0xFFFF);
+  static int clip(int value) => (value & 0xFFFF);
 
   Uint16(int value) : super(value.toInt());
 
@@ -287,7 +287,7 @@ class Uint16 extends UintXSmall<Uint16> {
 /// Implementation of unsigned 32-bit size nums
 class Uint32 extends UintXSmall<Uint32> {
 
-  static int clip(int value) => (value.toInt()&0xFFFFFFFF);
+  static int clip(int value) => (value & 0xFFFFFFFF);
 
   Uint32(int value) : super(value.toInt());
 
@@ -331,6 +331,46 @@ class Uint64 extends UintXBig<Uint64> {
   Uint64 _coerce(BigInteger value) => new Uint64.fromBigInteger(value);
 
 }
+/* Implementation of Uint64 based on native ints, which as of 20-feb-2014 was slower than the one based on BigInteger
+class Uint64 extends UintXSmall<Uint64> implements UintXBig<Uint64> {
+
+  static int clip(int value) => (value & 0xFFFFFFFFFFFFFFFF);
+
+  Uint64(int hvalue, int lvalue)
+    : super((hvalue << 32) | lvalue);
+
+  Uint64.fromBigInteger(BigInteger value)
+    : super(int.parse(value.toString()));
+
+  Uint64.fromBigEndian(Uint8List value, int offset) : super(
+    new ByteData.view(value.buffer).getUint32(offset, Endianness.BIG_ENDIAN )<<32 |
+    new ByteData.view(value.buffer).getUint32(offset+4, Endianness.BIG_ENDIAN )
+  );
+
+  Uint64.fromLittleEndian(Uint8List value, int offset) : super(
+    new ByteData.view(value.buffer).getUint32(offset+4, Endianness.LITTLE_ENDIAN )<<32 |
+    new ByteData.view(value.buffer).getUint32(offset, Endianness.LITTLE_ENDIAN )
+  );
+
+  int get bitLength => 64;
+  int get byteLength => 8;
+
+  int _clip(int value) => clip(value);
+  Uint64 _coerce(int value) => new Uint64(0,value);
+
+  int _int(value) {
+    if (value is int) {
+      return value;
+    } else if (value is BigInteger) {
+      return int.parse(value.toString());
+    } else if (value.runtimeType==runtimeType) {
+      return value.toInt();
+    } else {
+      throw new ArgumentError("Value is not an int, nor an ${runtimeType}: "+value);
+    }
+  }
+}
+*/
 
 /// Convert an array of bytes with the given [endianness] to a [List<int>] of 32 bits
 List<int> _toValues(Uint8List value, int offset, int byteLength, Endianness endianness) {
