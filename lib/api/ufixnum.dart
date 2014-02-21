@@ -5,6 +5,7 @@
 library cipher.api.ufixnum;
 
 import "dart:typed_data";
+
 import "package:bignum/bignum.dart";
 
 /// Interface for unsigned fixed size nums
@@ -70,7 +71,7 @@ abstract class UintXSmall<_UintXSmall_> implements UintX<_UintXSmall_> {
   Uint8 toUint8() => new Uint8(_value);
   Uint16 toUint16() => new Uint16(_value);
   Uint32 toUint32() => new Uint32(_value);
-  Uint64 toUint64() => new Uint64.fromBigInteger(new BigInteger(_value));
+  Uint64 toUint64() => new Uint64(0, _value);
 
   bool operator ==(other) => (_value == _int(other));
   bool operator < (other) => (_value <  _int(other));
@@ -238,6 +239,9 @@ abstract class UintXBig<_UintXBig_> implements UintX<_UintXBig_> {
     if (value is BigInteger) {
       return value;
     } else if (value is int) {
+      if (value > Uint32.MAX_VALUE.toInt()) {
+        throw new ArgumentError("Trying to coerce an int > 0x${Uint32.MAX_VALUE.toRadixString(16)} will fail in Javascript");
+      }
       return new BigInteger(value);
     } else if (value.runtimeType==runtimeType) {
       return value.toBigInteger();
@@ -250,6 +254,8 @@ abstract class UintXBig<_UintXBig_> implements UintX<_UintXBig_> {
 
 /// Implementation of unsigned 8-bit size nums
 class Uint8 extends UintXSmall<Uint8> {
+
+  static final MAX_VALUE = new Uint8(0xFF);
 
   static int clip(int value) => (value & 0xFF);
 
@@ -265,6 +271,8 @@ class Uint8 extends UintXSmall<Uint8> {
 
 /// Implementation of unsigned 16-bit size nums
 class Uint16 extends UintXSmall<Uint16> {
+
+  static final MAX_VALUE = new Uint16(0xFFFF);
 
   static int clip(int value) => (value & 0xFFFF);
 
@@ -286,6 +294,8 @@ class Uint16 extends UintXSmall<Uint16> {
 
 /// Implementation of unsigned 32-bit size nums
 class Uint32 extends UintXSmall<Uint32> {
+
+  static final MAX_VALUE = new Uint32(0xFFFFFFFF);
 
   static int clip(int value) => (value & 0xFFFFFFFF);
 
@@ -331,6 +341,35 @@ class Uint64 extends UintXBig<Uint64> {
   Uint64 _coerce(BigInteger value) => new Uint64.fromBigInteger(value);
 
 }
+
+/// Convert an array of bytes with the given [endianness] to a [List<int>] of 32 bits
+List<int> _toValues(Uint8List value, int offset, int byteLength, Endianness endianness) {
+  var values = [];
+  var bytes = new ByteData.view(value.buffer);
+
+  switch (endianness) {
+
+    case Endianness.BIG_ENDIAN:
+      for (var i=0; i<byteLength; i+=4) {
+        values.add(bytes.getUint32(offset+i, endianness));
+      }
+      break;
+
+    case Endianness.LITTLE_ENDIAN:
+      for (var i=byteLength-4; i>=0; i-=4) {
+        values.add(bytes.getUint32(offset+i, endianness));
+      }
+      break;
+
+    default:
+      throw new ArgumentError("Invalid endianness: ${endianness}");
+
+  }
+
+  return values;
+}
+
+
 /* Implementation of Uint64 based on native ints, which as of 20-feb-2014 was slower than the one based on BigInteger
 class Uint64 extends UintXSmall<Uint64> implements UintXBig<Uint64> {
 
@@ -372,30 +411,260 @@ class Uint64 extends UintXSmall<Uint64> implements UintXBig<Uint64> {
 }
 */
 
-/// Convert an array of bytes with the given [endianness] to a [List<int>] of 32 bits
-List<int> _toValues(Uint8List value, int offset, int byteLength, Endianness endianness) {
-  var values = [];
-  var bytes = new ByteData.view(value.buffer);
+/* Implementation of Uint64 based on Uint32 ints (not totally finished and I don't know if it runs faster than BigInteger one)
+class Uint64 implements UintX<Uint64> {
 
-  switch (endianness) {
+  static final MAX_VALUE = new Uint64(0xFFFFFFFF, 0xFFFFFFFF);
 
-    case Endianness.BIG_ENDIAN:
-      for (var i=0; i<byteLength; i+=4) {
-        values.add(bytes.getUint32(offset+i, endianness));
-      }
-      break;
+  static final _BI_HALF_MASK = new BigInteger(0xFFFFFFFF);
 
-    case Endianness.LITTLE_ENDIAN:
-      for (var i=byteLength-4; i>=0; i-=4) {
-        values.add(bytes.getUint32(offset+i, endianness));
-      }
-      break;
+  Uint32 _hvalue;
+  Uint32 _lvalue;
 
-    default:
-      throw new ArgumentError("Invalid endianness: ${endianness}");
-
+  /// Create a [UintXSmall] from a given [value]. The value can be clipped if it cannot fit into this [UintXSmall].
+  Uint64(int hvalue, int lvalue) {
+    _hvalue = new Uint32(hvalue);
+    _lvalue = new Uint32(lvalue);
   }
 
-  return values;
+  Uint64.fromBigEndian(Uint8List value, int offset) {
+    var view = new ByteData.view(value.buffer);
+    _hvalue = new Uint32(view.getUint32(offset+0, Endianness.BIG_ENDIAN));
+    _lvalue = new Uint32(view.getUint32(offset+4, Endianness.BIG_ENDIAN));
+  }
+
+  Uint64.fromLittleEndian(Uint8List value, int offset) {
+    var view = new ByteData.view(value.buffer);
+    _hvalue = new Uint32(view.getUint32(offset+4, Endianness.LITTLE_ENDIAN));
+    _lvalue = new Uint32(view.getUint32(offset+0, Endianness.LITTLE_ENDIAN));
+  }
+
+  int get bitLength => 64;
+  int get byteLength => 8;
+
+  Uint32 get highUint32 => _hvalue;
+  Uint32 get lowUint32 => _lvalue;
+
+  Uint8 toUint8() => _lvalue.toUint8();
+  Uint16 toUint16() => _lvalue.toUint16();
+  Uint32 toUint32() => _lvalue;
+  Uint64 toUint64() => this;
+
+  bool operator ==(other) {
+    var o = _coerce(other);
+    return (_hvalue == o._hvalue) && (_lvalue == o._lvalue);
+  }
+
+  bool operator < (other) {
+    var o = _coerce(other);
+    return (_hvalue < o._hvalue) || ((_hvalue == o._hvalue) && (_lvalue < o._lvalue));
+  }
+
+  bool operator <=(other) {
+    var o = _coerce(other);
+    return (this < o) || (this == o);
+  }
+
+  bool operator > (other) {
+    var o = _coerce(other);
+    return (_hvalue > o._hvalue) || ((_hvalue == o._hvalue) && (_lvalue > o._lvalue));
+  }
+
+  bool operator >=(other) {
+    var o = _coerce(other);
+    return (this > o) || (this == o);
+  }
+
+  Uint64 operator -() => ((~this) + 1);
+  Uint64 operator ~() => new Uint64((~_hvalue).toInt(), (~_lvalue).toInt());
+
+  Uint64 operator +(other) {
+    var o = _coerce(other);
+
+    var lvalue = _lvalue.toInt() + o._lvalue.toInt();
+
+    var carry = 0;
+    if (lvalue > Uint32.MAX_VALUE.toInt()) {
+      carry = 1;
+    }
+
+    var hvalue = _hvalue.toInt() + o._hvalue.toInt() + carry;
+
+    return new Uint64(hvalue, lvalue);
+  }
+
+  Uint64 operator -(other) {
+    var o = _coerce(other);
+    return (this + (-o));
+  }
+
+  Uint64 operator *(other) {
+    var o = _coerce(other);
+
+    // this * o = (h * oh * 2^64) + ((h * ol + l * oh) * 2^32) + (l * ol)
+    var h = _hvalue.toInt();
+    var l = _lvalue.toInt();
+    var oh = o._hvalue.toInt();
+    var ol = o._lvalue.toInt();
+
+    var hvalue = (h * ol) + (l * oh);
+    var lvalue = (l * ol);
+
+    return new Uint64(hvalue, lvalue);
+  }
+
+  Uint64 operator /(other) {
+    // TODO: Uint64./
+    var o = _coerce(other);
+    return _fromBigInteger(_toBigInteger() / o._toBigInteger());
+  }
+
+  Uint64 operator %(other) {
+    // TODO: Uint64.%
+    var o = _coerce(other);
+    return _fromBigInteger(_toBigInteger() % o._toBigInteger());
+  }
+
+  Uint64 operator &(other) {
+    var o = _coerce(other);
+    return new Uint64((_hvalue & o._hvalue).toInt(), (_lvalue & o._lvalue).toInt());
+  }
+
+  Uint64 operator |(other) {
+    var o = _coerce(other);
+    return new Uint64((_hvalue | o._hvalue).toInt(), (_lvalue | o._lvalue).toInt());
+  }
+
+  Uint64 operator ^(other) {
+    var o = _coerce(other);
+    return new Uint64((_hvalue ^ o._hvalue).toInt(), (_lvalue ^ o._lvalue).toInt());
+  }
+
+  Uint64 operator <<(int n) {
+    n = (n % 64);
+    if (n == 0) {
+      return this;
+    } else if(n >= 32) {
+      return new Uint64((_lvalue >> (32 - n)).toInt(), 0);
+    } else {
+      var o = new Uint64(_hvalue.toInt(), _lvalue.toInt());
+      o._hvalue <<= n;
+      o._hvalue |= (o._lvalue >> (32 - n));
+      o._lvalue <<= n;
+      return o;
+    }
+  }
+
+  Uint64 operator >>(int n) {
+    n = (n % 64);
+    if (n == 0) {
+      return this;
+    } else if(n >= 32) {
+      return new Uint64(0, (_hvalue << (32 - n)).toInt());
+    } else {
+      var o = new Uint64(_hvalue.toInt(), _lvalue.toInt());
+      o._lvalue >>= n;
+      o._lvalue |= (o._hvalue << (32 - n));
+      o._hvalue >>= n;
+      return o;
+    }
+  }
+
+  Uint64 rotl(int n) {
+    n = (n % 64);
+    if (n == 0) {
+      return this;
+    } else {
+      var o;
+
+      if(n >= 32) {
+        o = new Uint64(_lvalue.toInt(), _hvalue.toInt());
+        n -= 32;
+      } else {
+        o = new Uint64(_hvalue.toInt(), _lvalue.toInt());
+      }
+
+      if (n == 0) {
+        return o;
+      } else {
+        o._hvalue <<= n;
+        o._hvalue |= (o._lvalue << (32 - n));
+        o._lvalue <<= n;
+        o._lvalue |= (o._hvalue << (32 - n));
+        return o;
+      }
+    }
+  }
+
+  Uint64 rotr(int n) {
+    n = (n % 64);
+    if (n == 0) {
+      return this;
+    } else {
+      var o;
+
+      if(n >= 32) {
+        o = new Uint64(_lvalue.toInt(), _hvalue.toInt());
+        n -= 32;
+      } else {
+        o = new Uint64(_hvalue.toInt(), _lvalue.toInt());
+      }
+
+      if (n == 0) {
+        return o;
+      } else {
+        o._hvalue >>= n;
+        o._lvalue |= (o._hvalue >> (32 - n));
+        o._lvalue >>= n;
+        o._hvalue |= (o._lvalue >> (32 - n));
+        return o;
+      }
+    }
+  }
+
+  void toBigEndian( Uint8List out, int outOff ) {
+    _hvalue.toBigEndian(out, outOff+0);
+    _lvalue.toBigEndian(out, outOff+4);
+  }
+
+  void toLittleEndian( Uint8List out, int outOff ) {
+    _hvalue.toLittleEndian(out, outOff+4);
+    _lvalue.toLittleEndian(out, outOff+0);
+  }
+
+  String toString() => _toBigInteger().toString();
+  String toRadixString(int radix) => _toBigInteger().toRadix(16);
+
+  int get hashCode => _lvalue.hashCode; // TODO: Uint64.hashCode
+
+  Uint64 _coerce(value) {
+    if( value is int ) {
+      if (value > Uint32.MAX_VALUE.toInt()) {
+        throw new ArgumentError("Trying to coerce an int >0x${Uint32.MAX_VALUE.toRadixString(16)} won't work in Javascript");
+      }
+      return new Uint64(0,value);
+    } else if( value is BigInteger ) {
+      return _fromBigInteger(value);
+    } else if( value.runtimeType==runtimeType ) {
+      return value;
+    } else {
+      throw new ArgumentError("Value is not an int, nor an ${runtimeType}: "+value);
+    }
+  }
+
+  Uint64 _fromBigInteger(BigInteger bi) {
+    var hvalue = (bi >> 32);
+    var lvalue = (bi & _BI_HALF_MASK);
+    return new Uint64(hvalue.intValue(), lvalue.intValue());
+  }
+
+  BigInteger _toBigInteger() {
+    var bi = new BigInteger(_lvalue.toInt());
+    var hbi = new BigInteger(_hvalue.toInt());
+    bi |= (hbi<<32);
+    return bi;
+  }
+
 }
+*/
 

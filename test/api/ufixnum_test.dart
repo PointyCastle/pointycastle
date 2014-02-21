@@ -162,6 +162,7 @@ void _testUint8() {
       expect( (val<<3).toInt(),  0x80 );
       expect( (val<<4).toInt(),  0x00 );
       expect( (val<<-5).toInt(), 0x80 );
+      expect( (val<<8).toInt(),  0x10 );
     });
 
     test( "operator >>", () {
@@ -170,6 +171,7 @@ void _testUint8() {
       expect( (val>>3).toInt(),  0x10 );
       expect( (val>>4).toInt(),  0x08 );
       expect( (val>>-5).toInt(), 0x10 );
+      expect( (val>>8).toInt(),  0x80 );
     });
 
     test( "rotl()", () {
@@ -375,6 +377,7 @@ void _testUint16() {
       expect( (val<<3).toInt(),   0x8000 );
       expect( (val<<4).toInt(),   0x0000 );
       expect( (val<<-13).toInt(), 0x8000 );
+      expect( (val<<16).toInt(),  0x1000 );
     });
 
     test( "operator >>", () {
@@ -383,6 +386,7 @@ void _testUint16() {
       expect( (val>>3).toInt(),   0x1000 );
       expect( (val>>4).toInt(),   0x0800 );
       expect( (val>>-13).toInt(), 0x1000 );
+      expect( (val>>16).toInt(),  0x8000 );
     });
 
     test( "rotl()", () {
@@ -590,6 +594,7 @@ void _testUint32() {
       expect( (val<<3).toInt(),   0x80000000 );
       expect( (val<<4).toInt(),   0x00000000 );
       expect( (val<<-29).toInt(), 0x80000000 );
+      expect( (val<<32).toInt(),  0x10000000 );
     });
 
     test( "operator >>", () {
@@ -598,6 +603,7 @@ void _testUint32() {
       expect( (val>>3).toInt(),   0x10000000 );
       expect( (val>>4).toInt(),   0x08000000 );
       expect( (val>>-29).toInt(), 0x10000000 );
+      expect( (val>>32).toInt(),  0x80000000 );
     });
 
     test( "rotl()", () {
@@ -800,11 +806,13 @@ void _testUint64() {
     });
 
     test( "operator <<", () {
-      var val = new Uint64(0x10000000,0x00000000);
-      expect( (val<<0).toRadixString(16),   "1000000000000000" );
-      expect( (val<<3).toRadixString(16),   "8000000000000000" );
-      expect( (val<<4).toRadixString(16),                  "0" );
-      expect( (val<<-61).toRadixString(16), "8000000000000000" );
+      var val = new Uint64(0x00000000,0x00000001);
+      expect( (val<<0).toRadixString(16),                  "1" );
+      expect( (val<<3).toRadixString(16),                  "8" );
+      expect( (val<<4).toRadixString(16),                 "10" );
+      expect( (val<<32).toRadixString(16),         "100000000" );
+      expect( (val<<-61).toRadixString(16),                "8" );
+      expect( (val<<64).toRadixString(16),                 "1" );
     });
 
     test( "operator >>", () {
@@ -812,7 +820,9 @@ void _testUint64() {
       expect( (val>>0).toRadixString(16),   "8000000000000000" );
       expect( (val>>3).toRadixString(16),   "1000000000000000" );
       expect( (val>>4).toRadixString(16),    "800000000000000" );
+      expect( (val>>32).toRadixString(16),          "80000000" );
       expect( (val>>-61).toRadixString(16), "1000000000000000" );
+      expect( (val>>64).toRadixString(16),  "8000000000000000" );
     });
 
     test( "rotl()", () {
