@@ -359,7 +359,7 @@ class SHA3Digest extends BaseDigest {
       for (j = 0; j < 7; j++) {
         bitPosition = (1 << j) - 1;
         if (_LFSR86540(LFSRstate)) {
-          keccakRoundConstants[i] ^= 1 << bitPosition;
+          keccakRoundConstants[i] ^= new Uint64(0,1) << bitPosition;
         }
       }
     }

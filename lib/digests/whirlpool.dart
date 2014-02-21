@@ -284,18 +284,27 @@ class _Constants {
     for (var r = 1; r <= WhirlpoolDigest._ROUNDS; r++) {
       var i = 8 * (r - 1);
       rc[r] =
-        (C0[i    ] & 0xff00000000000000) ^
-        (C1[i + 1] & 0x00ff000000000000) ^
-        (C2[i + 2] & 0x0000ff0000000000) ^
-        (C3[i + 3] & 0x000000ff00000000) ^
-        (C4[i + 4] & 0x00000000ff000000) ^
-        (C5[i + 5] & 0x0000000000ff0000) ^
-        (C6[i + 6] & 0x000000000000ff00) ^
-        (C7[i + 7] & 0x00000000000000ff);
+        (C0[i    ] & _MASK_C0) ^
+        (C1[i + 1] & _MASK_C1) ^
+        (C2[i + 2] & _MASK_C2) ^
+        (C3[i + 3] & _MASK_C3) ^
+        (C4[i + 4] & _MASK_C4) ^
+        (C5[i + 5] & _MASK_C5) ^
+        (C6[i + 6] & _MASK_C6) ^
+        (C7[i + 7] & _MASK_C7);
     }
 
     EIGHT[WhirlpoolDigest._BITCOUNT_ARRAY_SIZE-1] = new Uint16(8);
   }
+
+  static final _MASK_C0 = new Uint64(0xff000000,0x00000000);
+  static final _MASK_C1 = new Uint64(0x00ff0000,0x00000000);
+  static final _MASK_C2 = new Uint64(0x0000ff00,0x00000000);
+  static final _MASK_C3 = new Uint64(0x000000ff,0x00000000);
+  static final _MASK_C4 = new Uint64(0x00000000,0xff000000);
+  static final _MASK_C5 = new Uint64(0x00000000,0x00ff0000);
+  static final _MASK_C6 = new Uint64(0x00000000,0x0000ff00);
+  static final _MASK_C7 = new Uint64(0x00000000,0x000000ff);
 
   Uint64 _packIntoLong(int b7, int b6, int b5, int b4, int b3, int b2, int b1, int b0)
     => new Uint64( ((b7 << 24) | (b6 << 16) | (b5 << 8) | b4), ((b3 << 24) | (b2 << 16) | (b1 << 8) | b0));

@@ -24,14 +24,14 @@ class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
 
     // SHA-512 initial hash value: the first 64 bits of the fractional parts of the square roots of the first eight prime
     // numbers
-    H1 = new Uint64(0x6a09e667,0xf3bcc908);
-    H2 = new Uint64(0xbb67ae85,0x84caa73b);
-    H3 = new Uint64(0x3c6ef372,0xfe94f82b);
-    H4 = new Uint64(0xa54ff53a,0x5f1d36f1);
-    H5 = new Uint64(0x510e527f,0xade682d1);
-    H6 = new Uint64(0x9b05688c,0x2b3e6c1f);
-    H7 = new Uint64(0x1f83d9ab,0xfb41bd6b);
-    H8 = new Uint64(0x5be0cd19,0x137e2179);
+    H1 = new Uint64(0x6a09e667, 0xf3bcc908);
+    H2 = new Uint64(0xbb67ae85, 0x84caa73b);
+    H3 = new Uint64(0x3c6ef372, 0xfe94f82b);
+    H4 = new Uint64(0xa54ff53a, 0x5f1d36f1);
+    H5 = new Uint64(0x510e527f, 0xade682d1);
+    H6 = new Uint64(0x9b05688c, 0x2b3e6c1f);
+    H7 = new Uint64(0x1f83d9ab, 0xfb41bd6b);
+    H8 = new Uint64(0x5be0cd19, 0x137e2179);
   }
 
   int doFinal( Uint8List out, int outOff ) {
