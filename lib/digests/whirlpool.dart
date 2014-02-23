@@ -21,7 +21,7 @@ class WhirlpoolDigest extends BaseDigest {
   final _buffer = new Uint8List(64);
   var _bufferPos = 0;
 
-  final _bitCount = new List<Uint16>(_BITCOUNT_ARRAY_SIZE);
+  final _bitCount = new Uint8List(_BITCOUNT_ARRAY_SIZE);
 
   final _hash  = new List<Uint64>(8);
   final _K = new List<Uint64>(8); // the round key
@@ -44,7 +44,7 @@ class WhirlpoolDigest extends BaseDigest {
     _bufferPos = 0;
     _buffer.fillRange(0, _buffer.length, 0);
 
-    _bitCount.fillRange(0, _bitCount.length, new Uint16(0));
+    _bitCount.fillRange(0, _bitCount.length, 0);//);new Uint16(0));
 
     _hash.fillRange(0, _hash.length, new Uint64(0,0));
     _K.fillRange(0, _K.length, new Uint64(0,0));
@@ -98,26 +98,10 @@ class WhirlpoolDigest extends BaseDigest {
 
   Uint64 _bytesToLongFromBuffer(Uint8List buffer, int startPos) {
     return new Uint64.fromBigEndian(buffer, startPos);
-/*
-    long rv = (((buffer[startPos + 0] & 0xffL) << 56) |
-                 ((buffer[startPos + 1] & 0xffL) << 48) |
-                 ((buffer[startPos + 2] & 0xffL) << 40) |
-                 ((buffer[startPos + 3] & 0xffL) << 32) |
-                 ((buffer[startPos + 4] & 0xffL) << 24) |
-                 ((buffer[startPos + 5] & 0xffL) << 16) |
-                 ((buffer[startPos + 6] & 0xffL) <<  8) |
-                 ((buffer[startPos + 7]) & 0xffL));
-
-      return rv;*/
   }
 
   void _convertLongToByteArray(Uint64 inputLong, Uint8List outputArray, int offSet) {
     inputLong.toBigEndian(outputArray, offSet);
-    /*
-      for (int i = 0; i < 8; i++)
-      {
-          outputArray[offSet + i] = (byte)((inputLong >> (56 - (i * 8))) & 0xff);
-      }*/
   }
 
   void _processBlock() {
@@ -172,28 +156,13 @@ class WhirlpoolDigest extends BaseDigest {
 
   }
 
-  /*
-   * increment() can be implemented in this way using 2 arrays or
-   * by having some temporary variables that are used to set the
-   * value provided by EIGHT[i] and carry within the loop.
-   *
-   * not having done any timing, this seems likely to be faster
-   * at the slight expense of 32*(sizeof short) bytes
-   */
-  /*static*/
-  /*
-  static {
-      EIGHT[BITCOUNT_ARRAY_SIZE - 1] = 8;
-  }
-  */
-
   void _increment() {
-    var carry = 0;
-    for (var i = _bitCount.length - 1; i >= 0; i--) {
-      var sum = (_bitCount[i] & 0xff) + _CT.EIGHT[i] + carry;
+    var i = (_bitCount.length - 1);
+    _bitCount[i] += 8;
 
-      carry = sum >> 8;
-      _bitCount[i] = (sum & 0xff);
+    while (_bitCount[i] == 0) {
+      i--;
+      _bitCount[i]++;
     }
   }
 
@@ -259,8 +228,6 @@ class _Constants {
 
   final rc = new List<Uint64>(WhirlpoolDigest._ROUNDS + 1);
 
-  final EIGHT = new List<Uint16>.filled(WhirlpoolDigest._BITCOUNT_ARRAY_SIZE, new Uint16(0));
-
   _Constants() {
     for (var i = 0; i < 256; i++) {
       var v1 = _SBOX[i];
@@ -293,8 +260,6 @@ class _Constants {
         (C6[i + 6] & _MASK_C6) ^
         (C7[i + 7] & _MASK_C7);
     }
-
-    EIGHT[WhirlpoolDigest._BITCOUNT_ARRAY_SIZE-1] = new Uint16(8);
   }
 
   static final _MASK_C0 = new Uint64(0xff000000,0x00000000);
