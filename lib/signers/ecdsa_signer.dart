@@ -39,8 +39,8 @@ class ECDSASigner implements Signer {
 
   /**
    * Init this [Signer]. The [params] argument can be:
-   * -A [ParametersWithRandom] containing an [ECPrivateKeyParameters] or an [ECPrivateKeyParameters] for signing
-   * -An [ECPublicKeyParameters] for verifying.
+   * -A [ParametersWithRandom] containing a [PrivateKeyParameter] or a raw [PrivateKeyParameter] for signing
+   * -An [PublicKeyParameter] for verifying.
    */
   void init(bool forSigning, CipherParameters params) {
     _pbkey = _pvkey = null;
