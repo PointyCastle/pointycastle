@@ -35,9 +35,22 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   Uint8List process(Uint8List data) {
-    var out = new Uint8List(blockSize);
-    var len = doFinal(data, 0, out, 0);
-    return out.sublist(0, len);
+    var blocks = (data.length ~/ blockSize) + 1;
+
+    var out = new Uint8List(blocks * blockSize);
+    for (var i = 0; i < (blocks - 1); i++) {
+      var offset = (i * blockSize);
+      processBlock(data, offset, out, offset);
+    }
+
+    var remainder = (data.length % blockSize);
+    if (remainder == 0) {
+      remainder = blockSize;
+    }
+    var offset = ((blocks - 1) * blockSize);
+    doFinal(data, offset, out, offset);
+
+    return out;
   }
 
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {

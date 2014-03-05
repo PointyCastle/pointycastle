@@ -28,9 +28,7 @@ void main() {
       pbc.init( true, params );
 
       var inp = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
-      var out = new Uint8List( 2*pbc.blockSize );
-      pbc.processBlock( inp, 0, out, 0 );
-      pbc.doFinal( inp, pbc.blockSize, out, pbc.blockSize );
+      var out = pbc.process(inp);
 
       expect( formatBytesAsHexString(out), "000102030405060708090a0b0c0d0e0f10111213141516170808080808080808" );
 

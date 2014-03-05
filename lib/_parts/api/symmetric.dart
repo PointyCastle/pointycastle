@@ -32,7 +32,12 @@ abstract class BlockCipher {
    */
   void init( bool forEncryption, CipherParameters params );
 
-  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  /**
+   * Process a whole block of [blockSize] bytes stored in [data] at once, returning the result in a
+   * new byte array.
+   *
+   * This call is equivalent to [processBlock] but it allocates the array under the hood.
+   */
   Uint8List process(Uint8List data);
 
   /**
@@ -68,7 +73,12 @@ abstract class PaddedBlockCipher implements BlockCipher {
   /// Get the underlying [BlockCipher] used by this cipher.
   BlockCipher get cipher;
 
-  /// Process a whole block of [data] at once, returning the result in a new byte array.
+  /**
+   * Process a whole block of [data] at once, returning the result in a new byte array.
+   *
+   * This call does as many calls to [processBlock] as needed to process all the given data and a
+   * final one to [doFinal] so that the padding can do its job.
+   */
   Uint8List process(Uint8List data);
 
   /**
