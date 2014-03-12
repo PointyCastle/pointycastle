@@ -40,7 +40,7 @@ test-client: depends
 
 
 doc: doc-api doc-impl
-doc-drone: doc
+doc-drone: #doc
 
 
 doc-api: depends
