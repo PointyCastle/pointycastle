@@ -81,7 +81,7 @@ doc-impl: depends
 
 
 bundle: bundle-package bundle-doc
-bundle-drone: bundle-package-drone bundle-doc 
+bundle-drone: bundle-package-drone #bundle-doc 
 
 
 bundle-package: test bundle-package-drone
