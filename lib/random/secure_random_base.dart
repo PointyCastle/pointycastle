@@ -10,7 +10,10 @@ import "package:bignum/bignum.dart";
 import "package:cipher/api.dart";
 import "package:cipher/api/ufixnum.dart";
 
-/// An utility base implementation of [SecureRandom] so that only [nextUint8] method needs to be implemented.
+/**
+ * An utility base implementation of [SecureRandom] so that only [nextUint8] method needs to be
+ * implemented.
+ */
 abstract class SecureRandomBase implements SecureRandom {
 
   int nextUint16() {
@@ -24,7 +27,7 @@ abstract class SecureRandomBase implements SecureRandom {
     var b1 = nextUint8();
     var b2 = nextUint8();
     var b3 = nextUint8();
-    return Uint32.clip( (b3<<24) | (b2<<16) | (b1<<8) | b0 );
+    return clip32( (b3<<24) | (b2<<16) | (b1<<8) | b0 );
   }
 
   BigInteger nextBigInteger( int bitLength ) {
