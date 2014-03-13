@@ -15,170 +15,157 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
 
   static const _DIGEST_LENGTH = 20;
 
-  Uint32 _H1, _H2, _H3, _H4, _H5;
-
-  var _X = new List<Uint32>(80);
+  int _H1, _H2, _H3, _H4, _H5;
+  final _X = new List<int>(80);
   int _xOff;
 
   SHA1Digest() {
     reset();
   }
 
-  String get algorithmName => "SHA-1";
-
-  int get digestSize => _DIGEST_LENGTH;
+  final algorithmName = "SHA-1";
+  final digestSize = _DIGEST_LENGTH;
 
   void reset() {
     super.reset();
 
-    _H1 = new Uint32(0x67452301);
-    _H2 = new Uint32(0xefcdab89);
-    _H3 = new Uint32(0x98badcfe);
-    _H4 = new Uint32(0x10325476);
-    _H5 = new Uint32(0xc3d2e1f0);
+    _H1 = 0x67452301;
+    _H2 = 0xefcdab89;
+    _H3 = 0x98badcfe;
+    _H4 = 0x10325476;
+    _H5 = 0xc3d2e1f0;
 
-    // Reset buffer
     _xOff = 0;
-    _X.fillRange( 0, _X.length, new Uint32(0) );
+    _X.fillRange(0, _X.length, 0);
   }
 
   int doFinal(Uint8List out, int outOff) {
     finish();
 
-    _H1.toBigEndian(out, outOff);
-    _H2.toBigEndian(out, outOff+4);
-    _H3.toBigEndian(out, outOff+8);
-    _H4.toBigEndian(out, outOff+12);
-    _H5.toBigEndian(out, outOff+16);
+    pack32(_H1, out, (outOff     ), Endianness.BIG_ENDIAN);
+    pack32(_H2, out, (outOff +  4), Endianness.BIG_ENDIAN);
+    pack32(_H3, out, (outOff +  8), Endianness.BIG_ENDIAN);
+    pack32(_H4, out, (outOff + 12), Endianness.BIG_ENDIAN);
+    pack32(_H5, out, (outOff + 16), Endianness.BIG_ENDIAN);
 
     reset();
 
     return _DIGEST_LENGTH;
   }
 
-  void processWord( Uint8List inp, int inpOff ) {
-    var n = new Uint32.fromBigEndian(inp, inpOff);
-    _X[_xOff] = n;
+  void processWord(Uint8List inp, int inpOff) {
+    _X[_xOff++] = unpack32(inp, inpOff, Endianness.BIG_ENDIAN);
 
-    if( ++_xOff==16 ) {
+    if (_xOff == 16) {
       processBlock();
     }
   }
 
-  void processLength(Uint64 bitLength) {
-    if( _xOff>14 ) {
+  void processLength(Register64 bitLength) {
+    if (_xOff > 14) {
       processBlock();
     }
+
     packLittleEndianLength(bitLength, _X, 14);
   }
 
   void processBlock() {
     // expand 16 word block into 80 word block.
-    for( var i=16 ; i<80 ; i++ ) {
+    for (var i = 16; i < 80; i++) {
       var t = _X[i - 3] ^ _X[i - 8] ^ _X[i - 14] ^ _X[i - 16];
-      _X[i] = t << 1 | t >> 31;
+      _X[i] = rotl32(t, 1);
     }
 
     // set up working variables.
-    Uint32 A = _H1;
-    Uint32 B = _H2;
-    Uint32 C = _H3;
-    Uint32 D = _H4;
-    Uint32 E = _H5;
+    var A = _H1;
+    var B = _H2;
+    var C = _H3;
+    var D = _H4;
+    var E = _H5;
 
-    // round 1
     var idx = 0;
 
-    for( var j=0 ; j<4 ; j++ ) {
+    // round 1
+    for (var j = 0; j < 4; j++) {
+      E = clip32(E + rotl32(A, 5) + _f(B, C, D) + _X[idx++] + Y1);
+      B = rotl32(B, 30);
 
-      // E = rotateLeft(A, 5) + f(B, C, D) + E + X[idx++] + Y1
-      // B = rotateLeft(B, 30)
-      E += (A << 5 | A >> 27) + _f(B, C, D) + _X[idx++] + Y1;
-      B = B << 30 | B >> 2;
+      D = clip32(D + rotl32(E, 5) + _f(A, B, C) + _X[idx++] + Y1);
+      A = rotl32(A, 30);
 
-      D += (E << 5 | E >> 27) + _f(A, B, C) + _X[idx++] + Y1;
-      A = A << 30 | A >> 2;
+      C = clip32(C + rotl32(D, 5) + _f(E, A, B) + _X[idx++] + Y1);
+      E = rotl32(E, 30);
 
-      C += (D << 5 | D >> 27) + _f(E, A, B) + _X[idx++] + Y1;
-      E = E << 30 | E >> 2;
+      B = clip32(B + rotl32(C, 5) + _f(D, E, A) + _X[idx++] + Y1);
+      D = rotl32(D, 30);
 
-      B += (C << 5 | C >> 27) + _f(D, E, A) + _X[idx++] + Y1;
-      D = D << 30 | D >> 2;
-
-      A += (B << 5 | B >> 27) + _f(C, D, E) + _X[idx++] + Y1;
-      C = C << 30 | C >> 2;
+      A = clip32(A + rotl32(B, 5) + _f(C, D, E) + _X[idx++] + Y1);
+      C = rotl32(C, 30);
     }
 
     // round 2
-    for (int j=0 ; j<4 ; j++ ) {
-      // E = rotateLeft(A, 5) + h(B, C, D) + E + X[idx++] + Y2
-      // B = rotateLeft(B, 30)
-      E += (A << 5 | A >> 27) + _h(B, C, D) + _X[idx++] + Y2;
-      B = B << 30 | B >> 2;
+    for (var j = 0; j < 4; j++) {
+      E = clip32(E + rotl32(A, 5) + _h(B, C, D) + _X[idx++] + Y2);
+      B = rotl32(B, 30);
 
-      D += (E << 5 | E >> 27) + _h(A, B, C) + _X[idx++] + Y2;
-      A = A << 30 | A >> 2;
+      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + _X[idx++] + Y2);
+      A = rotl32(A, 30);
 
-      C += (D << 5 | D >> 27) + _h(E, A, B) + _X[idx++] + Y2;
-      E = E << 30 | E >> 2;
+      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + _X[idx++] + Y2);
+      E = rotl32(E, 30);
 
-      B += (C << 5 | C >> 27) + _h(D, E, A) + _X[idx++] + Y2;
-      D = D << 30 | D >> 2;
+      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + _X[idx++] + Y2);
+      D = rotl32(D, 30);
 
-      A += (B << 5 | B >> 27) + _h(C, D, E) + _X[idx++] + Y2;
-      C = C << 30 | C >> 2;
+      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + _X[idx++] + Y2);
+      C = rotl32(C, 30);
     }
 
     // round 3
-    for( var j=0 ; j<4 ; j++ ) {
-      // E = rotateLeft(A, 5) + g(B, C, D) + E + X[idx++] + Y3
-      // B = rotateLeft(B, 30)
-      E += (A << 5 | A >> 27) + _g(B, C, D) + _X[idx++] + Y3;
-      B = B << 30 | B >> 2;
+    for (var j = 0; j < 4; j++) {
+      E = clip32(E + rotl32(A, 5) + _g(B, C, D) + _X[idx++] + Y3);
+      B = rotl32(B, 30);
 
-      D += (E << 5 | E >> 27) + _g(A, B, C) + _X[idx++] + Y3;
-      A = A << 30 | A >> 2;
+      D = clip32(D + rotl32(E, 5) + _g(A, B, C) + _X[idx++] + Y3);
+      A = rotl32(A, 30);
 
-      C += (D << 5 | D >> 27) + _g(E, A, B) + _X[idx++] + Y3;
-      E = E << 30 | E >> 2;
+      C = clip32(C + rotl32(D, 5) + _g(E, A, B) + _X[idx++] + Y3);
+      E = rotl32(E, 30);
 
-      B += (C << 5 | C >> 27) + _g(D, E, A) + _X[idx++] + Y3;
-      D = D << 30 | D >> 2;
+      B = clip32(B + rotl32(C, 5) + _g(D, E, A) + _X[idx++] + Y3);
+      D = rotl32(D, 30);
 
-      A += (B << 5 | B >> 27) + _g(C, D, E) + _X[idx++] + Y3;
-      C = C << 30 | C >> 2;
+      A = clip32(A + rotl32(B, 5) + _g(C, D, E) + _X[idx++] + Y3);
+      C = rotl32(C, 30);
     }
 
     // round 4
-    for( int j=0 ; j<=3 ; j++ ) {
-      // E = rotateLeft(A, 5) + h(B, C, D) + E + X[idx++] + Y4
-      // B = rotateLeft(B, 30)
-      E += (A << 5 | A >> 27) + _h(B, C, D) + _X[idx++] + Y4;
-      B = B << 30 | B >> 2;
+    for (var j = 0; j < 4; j++) {
+      E = clip32(E + rotl32(A, 5) + _h(B, C, D) + _X[idx++] + Y4);
+      B = rotl32(B, 30);
 
-      D += (E << 5 | E >> 27) + _h(A, B, C) + _X[idx++] + Y4;
-      A = A << 30 | A >> 2;
+      D = clip32(D + rotl32(E, 5) + _h(A, B, C) + _X[idx++] + Y4);
+      A = rotl32(A, 30);
 
-      C += (D << 5 | D >> 27) + _h(E, A, B) + _X[idx++] + Y4;
-      E = E << 30 | E >> 2;
+      C = clip32(C + rotl32(D, 5) + _h(E, A, B) + _X[idx++] + Y4);
+      E = rotl32(E, 30);
 
-      B += (C << 5 | C >> 27) + _h(D, E, A) + _X[idx++] + Y4;
-      D = D << 30 | D >> 2;
+      B = clip32(B + rotl32(C, 5) + _h(D, E, A) + _X[idx++] + Y4);
+      D = rotl32(D, 30);
 
-      A += (B << 5 | B >> 27) + _h(C, D, E) + _X[idx++] + Y4;
-      C = C << 30 | C >> 2;
+      A = clip32(A + rotl32(B, 5) + _h(C, D, E) + _X[idx++] + Y4);
+      C = rotl32(C, 30);
     }
 
-
-    _H1 += A;
-    _H2 += B;
-    _H3 += C;
-    _H4 += D;
-    _H5 += E;
+    _H1 = clip32(_H1 + A);
+    _H2 = clip32(_H2 + B);
+    _H3 = clip32(_H3 + C);
+    _H4 = clip32(_H4 + D);
+    _H5 = clip32(_H5 + E);
 
     // reset start of the buffer.
     _xOff = 0;
-    _X.fillRange(0, 16, new Uint32(0));
+    _X.fillRange(0, 16, 0);
   }
 
   // Additive constants
@@ -187,11 +174,11 @@ class SHA1Digest extends MD4FamilyDigest implements Digest {
   static final Y3 = 0x8f1bbcdc;
   static final Y4 = 0xca62c1d6;
 
-  Uint32 _f( Uint32 u, Uint32 v, Uint32 w ) => ((u & v) | ((~u) & w));
+  int _f(int u, int v, int w) => ((u & v) | ((~u) & w));
 
-  Uint32 _h( Uint32 u, Uint32 v, Uint32 w ) => (u ^ v ^ w);
+  int _h(int u, int v, int w) => (u ^ v ^ w);
 
-  Uint32 _g( Uint32 u, Uint32 v, Uint32 w ) => ((u & v) | (u & w) | (v & w));
+  int _g(int u, int v, int w) => ((u & v) | (u & w) | (v & w));
 
 }
 

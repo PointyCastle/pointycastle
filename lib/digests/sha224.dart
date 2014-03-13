@@ -15,72 +15,69 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
 
   static const _DIGEST_LENGTH = 28;
 
-  Uint32 _H1, _H2, _H3, _H4, _H5, _H6, _H7, _H8;
-
-  final _X = new List<Uint32>(64);
+  int _H1, _H2, _H3, _H4, _H5, _H6, _H7, _H8;
+  final _X = new List<int>(64);
   int _xOff;
 
   SHA224Digest() {
     reset();
   }
 
-  String get algorithmName => "SHA-224";
-
-  int get digestSize => _DIGEST_LENGTH;
+  final algorithmName = "SHA-224";
+  final digestSize = _DIGEST_LENGTH;
 
   void reset() {
     super.reset();
 
-    _H1 = new Uint32(0xc1059ed8);
-    _H2 = new Uint32(0x367cd507);
-    _H3 = new Uint32(0x3070dd17);
-    _H4 = new Uint32(0xf70e5939);
-    _H5 = new Uint32(0xffc00b31);
-    _H6 = new Uint32(0x68581511);
-    _H7 = new Uint32(0x64f98fa7);
-    _H8 = new Uint32(0xbefa4fa4);
+    _H1 = 0xc1059ed8;
+    _H2 = 0x367cd507;
+    _H3 = 0x3070dd17;
+    _H4 = 0xf70e5939;
+    _H5 = 0xffc00b31;
+    _H6 = 0x68581511;
+    _H7 = 0x64f98fa7;
+    _H8 = 0xbefa4fa4;
 
     _xOff = 0;
-    _X.fillRange( 0, _X.length, new Uint32(0) );
+    _X.fillRange(0, _X.length, 0);
   }
 
-  int doFinal( Uint8List out, int outOff ) {
+  int doFinal(Uint8List out, int outOff) {
     finish();
 
-    _H1.toBigEndian(out, outOff);
-    _H2.toBigEndian(out, outOff+4);
-    _H3.toBigEndian(out, outOff+8);
-    _H4.toBigEndian(out, outOff+12);
-    _H5.toBigEndian(out, outOff+16);
-    _H6.toBigEndian(out, outOff+20);
-    _H7.toBigEndian(out, outOff+24);
+    pack32(_H1, out, (outOff     ), Endianness.BIG_ENDIAN);
+    pack32(_H2, out, (outOff +  4), Endianness.BIG_ENDIAN);
+    pack32(_H3, out, (outOff +  8), Endianness.BIG_ENDIAN);
+    pack32(_H4, out, (outOff + 12), Endianness.BIG_ENDIAN);
+    pack32(_H5, out, (outOff + 16), Endianness.BIG_ENDIAN);
+    pack32(_H6, out, (outOff + 20), Endianness.BIG_ENDIAN);
+    pack32(_H7, out, (outOff + 24), Endianness.BIG_ENDIAN);
 
     reset();
 
     return _DIGEST_LENGTH;
   }
 
-  void processWord( Uint8List inp, int inpOff ) {
-    _X[_xOff] = new Uint32.fromBigEndian( inp, inpOff );
+  void processWord(Uint8List inp, int inpOff) {
+    _X[_xOff++] = unpack32(inp, inpOff, Endianness.BIG_ENDIAN);
 
-    if( ++_xOff == 16 ) {
+    if (_xOff == 16) {
       processBlock();
     }
   }
 
-  void processLength( Uint64 bitLength ) {
-    if( _xOff > 14 ) {
+  void processLength(Register64 bitLength) {
+    if (_xOff > 14) {
       processBlock();
     }
 
-    packLittleEndianLength( bitLength, _X, 14 );
+    packLittleEndianLength(bitLength, _X, 14);
   }
 
   void processBlock() {
     // expand 16 word block into 64 word blocks.
-    for (var t = 16; t <= 63; t++)
-    {
-      _X[t] = Theta1(_X[t - 2]) + _X[t - 7] + Theta0(_X[t - 15]) + _X[t - 16];
+    for (var t = 16; t < 64; t++) {
+      _X[t] = clip32(Theta1(_X[t - 2]) + _X[t - 7] + Theta0(_X[t - 15]) + _X[t - 16]);
     }
 
     // set up working variables.
@@ -93,88 +90,87 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
     var g = _H7;
     var h = _H8;
 
-
     var t = 0;
-    for(var i = 0; i < 8; i ++) {
+
+    for (var i = 0; i < 8; i ++) {
       // t = 8 * i
-      h += Sum1(e) + Ch(e, f, g) + K[t] + _X[t];
-      d += h;
-      h += Sum0(a) + Maj(a, b, c);
+      h = clip32(h + Sum1(e) + Ch(e, f, g) + K[t] + _X[t]);
+      d = clip32(d + h);
+      h = clip32(h + Sum0(a) + Maj(a, b, c));
       ++t;
 
       // t = 8 * i + 1
-      g += Sum1(d) + Ch(d, e, f) + K[t] + _X[t];
-      c += g;
-      g += Sum0(h) + Maj(h, a, b);
+      g = clip32(g + Sum1(d) + Ch(d, e, f) + K[t] + _X[t]);
+      c = clip32(c + g);
+      g = clip32(g + Sum0(h) + Maj(h, a, b));
       ++t;
 
       // t = 8 * i + 2
-      f += Sum1(c) + Ch(c, d, e) + K[t] + _X[t];
-      b += f;
-      f += Sum0(g) + Maj(g, h, a);
+      f = clip32(f + Sum1(c) + Ch(c, d, e) + K[t] + _X[t]);
+      b = clip32(b + f);
+      f = clip32(f + Sum0(g) + Maj(g, h, a));
       ++t;
 
       // t = 8 * i + 3
-      e += Sum1(b) + Ch(b, c, d) + K[t] + _X[t];
-      a += e;
-      e += Sum0(f) + Maj(f, g, h);
+      e = clip32(e + Sum1(b) + Ch(b, c, d) + K[t] + _X[t]);
+      a = clip32(a + e);
+      e = clip32(e + Sum0(f) + Maj(f, g, h));
       ++t;
 
       // t = 8 * i + 4
-      d += Sum1(a) + Ch(a, b, c) + K[t] + _X[t];
-      h += d;
-      d += Sum0(e) + Maj(e, f, g);
+      d = clip32(d + Sum1(a) + Ch(a, b, c) + K[t] + _X[t]);
+      h = clip32(h + d);
+      d = clip32(d + Sum0(e) + Maj(e, f, g));
       ++t;
 
       // t = 8 * i + 5
-      c += Sum1(h) + Ch(h, a, b) + K[t] + _X[t];
-      g += c;
-      c += Sum0(d) + Maj(d, e, f);
+      c = clip32(c + Sum1(h) + Ch(h, a, b) + K[t] + _X[t]);
+      g = clip32(g + c);
+      c = clip32(c + Sum0(d) + Maj(d, e, f));
       ++t;
 
       // t = 8 * i + 6
-      b += Sum1(g) + Ch(g, h, a) + K[t] + _X[t];
-      f += b;
-      b += Sum0(c) + Maj(c, d, e);
+      b = clip32(b + Sum1(g) + Ch(g, h, a) + K[t] + _X[t]);
+      f = clip32(f + b);
+      b = clip32(b + Sum0(c) + Maj(c, d, e));
       ++t;
 
       // t = 8 * i + 7
-      a += Sum1(f) + Ch(f, g, h) + K[t] + _X[t];
-      e += a;
-      a += Sum0(b) + Maj(b, c, d);
+      a = clip32(a + Sum1(f) + Ch(f, g, h) + K[t] + _X[t]);
+      e = clip32(e + a);
+      a = clip32(a + Sum0(b) + Maj(b, c, d));
       ++t;
     }
 
-    _H1 += a;
-    _H2 += b;
-    _H3 += c;
-    _H4 += d;
-    _H5 += e;
-    _H6 += f;
-    _H7 += g;
-    _H8 += h;
+    _H1 = clip32(_H1 + a);
+    _H2 = clip32(_H2 + b);
+    _H3 = clip32(_H3 + c);
+    _H4 = clip32(_H4 + d);
+    _H5 = clip32(_H5 + e);
+    _H6 = clip32(_H6 + f);
+    _H7 = clip32(_H7 + g);
+    _H8 = clip32(_H8 + h);
 
     // reset the offset and clean out the word buffer.
     _xOff = 0;
-    _X.fillRange(0, 16, new Uint32(0));
+    _X.fillRange(0, 16, 0);
   }
 
-  // SHA-224 functions
-  Uint32 Ch( Uint32 x, Uint32 y, Uint32 z ) => ((x & y) ^ ((~x) & z));
+  int Ch(int x, int y, int z) => ((x & y) ^ ((~x) & z));
 
-  Uint32 Maj( Uint32 x, Uint32 y, Uint32 z ) => ((x & y) ^ (x & z) ^ (y & z));
+  int Maj(int x, int y, int z) => ((x & y) ^ (x & z) ^ (y & z));
 
-  Uint32 Sum0( Uint32 x ) => ((x >> 2) | (x << 30)) ^ ((x >> 13) | (x << 19)) ^ ((x >> 22) | (x << 10));
+  int Sum0(int x) => rotr32(x, 2) ^ rotr32(x, 13) ^ rotr32(x, 22);
 
-  Uint32 Sum1( Uint32 x ) => ((x >> 6) | (x << 26)) ^ ((x >> 11) | (x << 21)) ^ ((x >> 25) | (x << 7));
+  int Sum1(int x) => rotr32(x, 6) ^ rotr32(x, 11) ^ rotr32(x, 25);
 
-  Uint32 Theta0( Uint32 x ) => ((x >> 7) | (x << 25)) ^ ((x >> 18) | (x << 14)) ^ (x >> 3);
+  int Theta0(int x) => rotr32(x, 7) ^ rotr32(x, 18) ^ shiftr32(x, 3);
 
-  Uint32 Theta1( Uint32 x ) => ((x >> 17) | (x << 15)) ^ ((x >> 19) | (x << 13)) ^ (x >> 10);
+  int Theta1(int x) => rotr32(x, 17) ^ rotr32(x, 19) ^ shiftr32(x, 10);
 
   /**
-   * SHA-224 Constants (represent the first 32 bits of the fractional parts of the cube roots of the first sixty-four prime
-   * numbers)
+   * SHA-224 Constants (represent the first 32 bits of the fractional parts of the cube roots of the
+   * first sixty-four prime numbers)
    */
   static final K = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,

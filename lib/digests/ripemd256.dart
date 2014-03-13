@@ -15,46 +15,44 @@ class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
 
   static const _DIGEST_LENGTH = 32;
 
-  Uint32 _H0, _H1, _H2, _H3, _H4, _H5, _H6, _H7;
-
-  var _X = new List<Uint32>(16);
+  int _H0, _H1, _H2, _H3, _H4, _H5, _H6, _H7;
+  final _X = new List<int>(16);
   int _xOff;
 
   RIPEMD256Digest() {
       reset();
   }
 
-  String get algorithmName => "RIPEMD-256";
-
-  int get digestSize => _DIGEST_LENGTH;
+  final algorithmName = "RIPEMD-256";
+  final digestSize = _DIGEST_LENGTH;
 
   void reset(){
     super.reset();
 
-    _H0 = new Uint32(0x67452301);
-    _H1 = new Uint32(0xefcdab89);
-    _H2 = new Uint32(0x98badcfe);
-    _H3 = new Uint32(0x10325476);
-    _H4 = new Uint32(0x76543210);
-    _H5 = new Uint32(0xFEDCBA98);
-    _H6 = new Uint32(0x89ABCDEF);
-    _H7 = new Uint32(0x01234567);
+    _H0 = 0x67452301;
+    _H1 = 0xefcdab89;
+    _H2 = 0x98badcfe;
+    _H3 = 0x10325476;
+    _H4 = 0x76543210;
+    _H5 = 0xFEDCBA98;
+    _H6 = 0x89ABCDEF;
+    _H7 = 0x01234567;
 
     _xOff = 0;
-    _X.fillRange(0, _X.length, new Uint32(0));
+    _X.fillRange(0, _X.length, 0);
   }
 
   int doFinal(Uint8List out, int outOff) {
     finish();
 
-    _unpackWord(_H0, out, outOff);
-    _unpackWord(_H1, out, outOff + 4);
-    _unpackWord(_H2, out, outOff + 8);
-    _unpackWord(_H3, out, outOff + 12);
-    _unpackWord(_H4, out, outOff + 16);
-    _unpackWord(_H5, out, outOff + 20);
-    _unpackWord(_H6, out, outOff + 24);
-    _unpackWord(_H7, out, outOff + 28);
+    pack32(_H0, out, (outOff     ), Endianness.LITTLE_ENDIAN);
+    pack32(_H1, out, (outOff +  4), Endianness.LITTLE_ENDIAN);
+    pack32(_H2, out, (outOff +  8), Endianness.LITTLE_ENDIAN);
+    pack32(_H3, out, (outOff + 12), Endianness.LITTLE_ENDIAN);
+    pack32(_H4, out, (outOff + 16), Endianness.LITTLE_ENDIAN);
+    pack32(_H5, out, (outOff + 20), Endianness.LITTLE_ENDIAN);
+    pack32(_H6, out, (outOff + 24), Endianness.LITTLE_ENDIAN);
+    pack32(_H7, out, (outOff + 28), Endianness.LITTLE_ENDIAN);
 
     reset();
 
@@ -62,17 +60,18 @@ class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
   }
 
   void processWord(Uint8List inp, int inpOff) {
-    _X[_xOff++] = new Uint32.fromLittleEndian(inp, inpOff);
+    _X[_xOff++] = unpack32(inp, inpOff, Endianness.LITTLE_ENDIAN);
 
     if (_xOff == 16) {
         processBlock();
     }
   }
 
-  void processLength(Uint64 bitLength) {
+  void processLength(Register64 bitLength) {
     if (_xOff > 14) {
         processBlock();
     }
+
     packBigEndianLength(bitLength, _X, 14);
   }
 
@@ -148,12 +147,12 @@ class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
     b = _F2(b, c, d, a, _X[ 8], 12);
 
     aa = _FF3(aa, bb, cc, dd, _X[ 6],  9);
-    dd = _FF3(dd, aa, bb, cc, _X[ 11], 13);
-    cc = _FF3(cc, dd, aa, bb, _X[3], 15);
-    bb = _FF3(bb, cc, dd, aa, _X[ 7],  7);
-    aa = _FF3(aa, bb, cc, dd, _X[0], 12);
+    dd = _FF3(dd, aa, bb, cc, _X[11], 13);
+    cc = _FF3(cc, dd, aa, bb, _X[ 3], 15);
+    bb = _FF3(bb, cc, dd, aa, _X[ 7], 7);
+    aa = _FF3(aa, bb, cc, dd, _X[ 0], 12);
     dd = _FF3(dd, aa, bb, cc, _X[13],  8);
-    cc = _FF3(cc, dd, aa, bb, _X[5],  9);
+    cc = _FF3(cc, dd, aa, bb, _X[ 5],  9);
     bb = _FF3(bb, cc, dd, aa, _X[10], 11);
     aa = _FF3(aa, bb, cc, dd, _X[14],  7);
     dd = _FF3(dd, aa, bb, cc, _X[15],  7);
@@ -240,42 +239,45 @@ class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
 
     t = d; d = dd; dd = t;
 
-    _H0 += a;
-    _H1 += b;
-    _H2 += c;
-    _H3 += d;
-    _H4 += aa;
-    _H5 += bb;
-    _H6 += cc;
-    _H7 += dd;
+    _H0 = sum32(_H0, a);
+    _H1 = sum32(_H1, b);
+    _H2 = sum32(_H2, c);
+    _H3 = sum32(_H3, d);
+    _H4 = sum32(_H4, aa);
+    _H5 = sum32(_H5, bb);
+    _H6 = sum32(_H6, cc);
+    _H7 = sum32(_H7, dd);
 
     // reset the offset and clean out the word buffer.
     _xOff = 0;
-    _X.fillRange(0, _X.length, new Uint32(0));
+    _X.fillRange(0, _X.length, 0);
   }
 
-  Uint32 _f1( Uint32 x, Uint32 y, Uint32 z ) => x ^ y ^ z;
-  Uint32 _f2( Uint32 x, Uint32 y, Uint32 z ) => (x & y) | (~x & z);
-  Uint32 _f3( Uint32 x, Uint32 y, Uint32 z ) => (x | ~y) ^ z;
-  Uint32 _f4( Uint32 x, Uint32 y, Uint32 z ) => (x & z) | (y & ~z);
-  Uint32 _F1(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f1(b, c, d) + x, s);
-  Uint32 _F2(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f2(b, c, d) + x + 0x5a827999, s);
-  Uint32 _F3(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f3(b, c, d) + x + 0x6ed9eba1, s);
-  Uint32 _F4(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f4(b, c, d) + x + 0x8f1bbcdc, s);
-  Uint32 _FF1(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f1(b, c, d) + x, s);
-  Uint32 _FF2(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f2(b, c, d) + x + 0x6d703ef3, s);
-  Uint32 _FF3(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f3(b, c, d) + x + 0x5c4dd124, s);
-  Uint32 _FF4(Uint32 a, Uint32 b, Uint32 c, Uint32 d, Uint32 x, int s) => _rotl(a + _f4(b, c, d) + x + 0x50a28be6, s);
+  int _f1( int x, int y, int z ) => x ^ y ^ z;
+  int _f2( int x, int y, int z ) => (x & y) | (~x & z);
+  int _f3( int x, int y, int z ) => (x | ~y) ^ z;
+  int _f4( int x, int y, int z ) => (x & z) | (y & ~z);
+
+  int _F1(int a, int b, int c, int d, int x, int s) => crotl32(a + _f1(b, c, d) + x, s);
+
+  int _F2(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f2(b, c, d) + x + 0x5a827999, s);
+
+  int _F3(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f3(b, c, d) + x + 0x6ed9eba1, s);
+
+  int _F4(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f4(b, c, d) + x + 0x8f1bbcdc, s);
+
+  int _FF1(int a, int b, int c, int d, int x, int s) => crotl32(a + _f1(b, c, d) + x, s);
+
+  int _FF2(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f2(b, c, d) + x + 0x6d703ef3, s);
+
+  int _FF3(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f3(b, c, d) + x + 0x5c4dd124, s);
+
+  int _FF4(int a, int b, int c, int d, int x, int s) =>
+      crotl32(a + _f4(b, c, d) + x + 0x50a28be6, s);
 
 }
-
-void _unpackWord(Uint32 word, Uint8List out, int outOff) => word.toLittleEndian(out, outOff);
-
-/** Cyclic logical shift left for 32 bit signed integers */
-Uint32 _rotl( Uint32 x, int n ) => x.rotl(n);
-
-/** Logical shift right for 32 bit signed integers */
-Uint32 _lsr( Uint32 n, int shift ) => n >> shift;
-
-
-
