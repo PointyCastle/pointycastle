@@ -9,34 +9,31 @@ import "dart:typed_data";
 import "package:cipher/api/ufixnum.dart";
 import "package:cipher/digests/base_digest.dart";
 
-/// Base implementation of MD4 family style digest as outlined in "Handbook of Applied Cryptography", pages 344 - 347.
+/// Base implementation of MD4 family style digest as outlined in "Handbook of Applied
+/// Cryptography", pages 344 - 347.
 abstract class MD4FamilyDigest extends BaseDigest {
 
-  /// Working word (4 bytes) buffer
   var _xBuf = new Uint8List(4);
-
-  /// Offset to next position to fill in buffer
   int _xBufOff = 0;
 
-  /// Number of procesed bytes
-  Uint64 _byteCount;
+  final _byteCount = new Register64(0);
 
   void reset() {
-    _byteCount = new Uint64(0,0);
+    _byteCount.set(0);
     _xBufOff = 0;
-    _xBuf.fillRange( 0, _xBuf.length, 0 );
+    _xBuf.fillRange(0, _xBuf.length, 0);
   }
 
-  void updateByte( int inp ) {
-    _xBuf[_xBufOff++] = inp;
+  void updateByte(int inp) {
+    _xBuf[_xBufOff++] = clip8(inp);
     _processWordIfBufferFull();
-    _byteCount++;
+    _byteCount.sum(1);
   }
 
-  void update( Uint8List inp, int inpOff, int len ) {
+  void update(Uint8List inp, int inpOff, int len) {
     var nbytes;
 
-    nbytes = _processUntilNextWord( inp, inpOff, len );
+    nbytes = _processUntilNextWord(inp, inpOff, len);
     inpOff += nbytes;
     len -= nbytes;
 
@@ -49,37 +46,37 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   /// Finish digestion of data adding padding and processing data's bit length.
   void finish() {
-    var bitLength = (_byteCount << 3);
+    var bitLength = new Register64(_byteCount)..shiftl(3);
     _addPadding();
-    processLength( bitLength );
+    processLength(bitLength);
     processBlock();
   }
 
   /// Process a word (4 bytes) of data stored in [inp], starting at [inpOff].
-  void processWord( Uint8List inp, int inpOff );
+  void processWord(Uint8List inp, int inpOff);
 
   /// Called from [finish] so that extender can process the number of bits processed.
-  void processLength( Uint64 bitLength );
+  void processLength(Register64 bitLength);
 
   /// Process a whole block of data in extender digest.
   void processBlock();
 
-  /// Pack a 64-bit length into an array of [Uint32]s in big endian format
-  void packBigEndianLength(Uint64 bitLength, List<Uint32> _X, int i) {
-    _X[i+1] = (bitLength >> 32).toUint32();
-    _X[i] = bitLength.toUint32();
+  /// Pack a 64-bit length into an array of [int]s in big endian format
+  void packBigEndianLength(Register64 bitLength, List<int> _X, int i) {
+    _X[i+1] = bitLength.hi32;
+    _X[i]   = bitLength.lo32;
   }
 
-  /// Pack a 64-bit length into an array of [Uint32]s in little endian format
-  void packLittleEndianLength(Uint64 bitLength, List<Uint32> _X, int i) {
-    _X[i] = (bitLength>>32).toUint32();
-    _X[i+1] = bitLength.toUint32();
+  /// Pack a 64-bit length into an array of [int]s in little endian format
+  void packLittleEndianLength(Register64 bitLength, List<int> _X, int i) {
+    _X[i]   = bitLength.hi32;
+    _X[i+1] = bitLength.lo32;
   }
 
   /// Process [len] bytes from [inp]
   void _processBytes(Uint8List inp, int inpOff, int len) {
     while( len > 0 ) {
-      updateByte( inp[inpOff] );
+      updateByte(inp[inpOff]);
 
       inpOff++;
       len--;
@@ -89,43 +86,45 @@ abstract class MD4FamilyDigest extends BaseDigest {
   /// Process data word by word until no more words can be extracted from [inp] and return the number of bytes processed.
   int _processWholeWords(Uint8List inp, int inpOff, int len) {
     var processed = 0;
-    while( len > _xBuf.length ) {
+    while (len > _xBuf.length) {
       processWord( inp, inpOff );
 
       inpOff += _xBuf.length;
       len -= _xBuf.length;
-      _byteCount += _xBuf.length;
+      _byteCount.sum(_xBuf.length);
       processed += 4;
     }
     return processed;
   }
 
   /// Process bytes from [inp] until the word buffer [_xBuf] is full and reset and return the number of bytes processed.
-  int _processUntilNextWord( Uint8List inp, int inpOff, int len ) {
+  int _processUntilNextWord(Uint8List inp, int inpOff, int len) {
     var processed = 0;
+
     while( (_xBufOff != 0) && (len > 0) ) {
-      updateByte( inp[inpOff] );
+      updateByte(inp[inpOff]);
 
       inpOff++;
       len--;
       processed++;
     }
+
     return processed;
   }
 
   /// Process a word in [_xBuff] if it is already full and then reset it
   void _processWordIfBufferFull() {
-    if( _xBufOff == _xBuf.length ) {
-      processWord( _xBuf, 0 );
+    if (_xBufOff == _xBuf.length) {
+      processWord(_xBuf, 0);
       _xBufOff = 0;
     }
   }
 
   /// Add final padding to the digest
   void _addPadding() {
-    updateByte( 128 );
-    while( _xBufOff != 0 ) {
-      updateByte( 0 );
+    updateByte(128);
+    while (_xBufOff != 0) {
+      updateByte(0);
     }
   }
 
