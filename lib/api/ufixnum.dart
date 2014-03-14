@@ -137,15 +137,27 @@ int rotr32(int x, int n) {
   return ((x >> n) | ((x << (32 - n)) & _MASK_32));
 }
 
-void pack32(int x, Uint8List out, int offset, Endianness endian) {
+/**
+ * Packs a 32 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
+ * [ByteData] if you will run it several times against the same buffer and want faster execution.
+ */
+void pack32(int x, dynamic out, int offset, Endianness endian) {
   assert((x >= 0) && (x <= _MASK_32));
-  var view = new ByteData.view(out.buffer);
-  view.setUint32(offset, x, endian);
+  if (out is! ByteData) {
+    out = new ByteData.view(out.buffer);
+  }
+  (out as ByteData).setUint32(offset, x, endian);
 }
 
-int unpack32(Uint8List out, int offset, Endianness endian) {
-  var view = new ByteData.view(out.buffer);
-  return view.getUint32(offset, endian);
+/**
+ * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+ * [ByteData] if you will run it several times against the same buffer and want faster execution.
+ */
+int unpack32(dynamic inp, int offset, Endianness endian) {
+  if (inp is! ByteData) {
+    inp = new ByteData.view(inp.buffer);
+  }
+  return (inp as ByteData).getUint32(offset, endian);
 }
 
 
@@ -313,7 +325,11 @@ class Register64 {
     }
   }
 
-  void pack(Uint8List out, int offset, Endianness endian) {
+  /**
+   * Packs a 64 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
+   * [ByteData] if you will run it several times against the same buffer and want faster execution.
+   */
+  void pack(dynamic out, int offset, Endianness endian) {
     switch (endian) {
       case Endianness.BIG_ENDIAN:
         pack32(hi32, out, offset    , endian);
@@ -330,7 +346,11 @@ class Register64 {
     }
   }
 
-  void unpack(Uint8List inp, int offset, Endianness endian) {
+  /**
+   * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+   * [ByteData] if you will run it several times against the same buffer and want faster execution.
+   */
+  void unpack(dynamic inp, int offset, Endianness endian) {
     switch (endian) {
       case Endianness.BIG_ENDIAN:
         _hi32 = unpack32(inp, offset  , endian);

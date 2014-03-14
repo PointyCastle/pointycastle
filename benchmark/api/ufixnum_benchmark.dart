@@ -4,11 +4,18 @@
 
 library cipher.benchmark.api.ufixnum_benchmark;
 
+import "dart:typed_data";
+
 import "package:bignum/bignum.dart";
 import "package:cipher/api/ufixnum.dart";
 import "../benchmark/operation_benchmark.dart";
 
 void main() {
+  _benchmarkSum();
+  _benchmarkUnpack();
+}
+
+void _benchmarkSum() {
   final x8 = 0xFF;
   final y8 = 0x80;
   final x32 = 0xFF00FF00;
@@ -29,4 +36,25 @@ void main() {
   new OperationBenchmark("sum | Reg64 ", () => rx64.sum(ry64) ).report();
   new OperationBenchmark("sum | bigint", () => x64 + y64      ).report();
   new OperationBenchmark("sum | bignum", () => bix + biy      ).report();
+}
+
+void _benchmarkUnpack() {
+  var bytes = new Uint8List(8);
+  var view = new ByteData.view(bytes.buffer);
+  var r64 = new Register64();
+  new OperationBenchmark("unpack | ByteData           ", () {
+    view.getUint32(0, Endianness.LITTLE_ENDIAN);
+  }).report();
+  new OperationBenchmark("unpack | unpack32(ByteData) ", () {
+    unpack32(view, 0, Endianness.LITTLE_ENDIAN);
+  }).report();
+  new OperationBenchmark("unpack | unpack32(Uint8List)", () {
+    unpack32(bytes, 0, Endianness.LITTLE_ENDIAN);
+  }).report();
+  new OperationBenchmark("unpack | unpack64(ByteData) ", () {
+    r64.unpack(view, 0, Endianness.LITTLE_ENDIAN);
+  }).report();
+  new OperationBenchmark("unpack | unpack64(Uint8List)", () {
+    r64.unpack(bytes, 0, Endianness.LITTLE_ENDIAN);
+  }).report();
 }
