@@ -39,7 +39,7 @@ class AESFastEngine extends BaseBlockCipher {
   static const _BLOCK_SIZE = 16;
 
   bool _forEncryption;
-  List<List<Uint32>> _workingKey;
+  List<List<int>> _workingKey;
   int _ROUNDS;
   int _C0, _C1, _C2, _C3;
 
@@ -64,13 +64,13 @@ class AESFastEngine extends BaseBlockCipher {
 
     this._forEncryption = forEncryption;
     _ROUNDS = KC + 6;  // This is not always true for the generalized Rijndael that allows larger block sizes
-    _workingKey = new List.generate( _ROUNDS+1, (int i) => new List<Uint32>(4) ); // 4 words in a block
+    _workingKey = new List.generate( _ROUNDS+1, (int i) => new List<int>(4) ); // 4 words in a block
 
     // Copy the key into the round key array.
-    var keyView = new ByteData.view( params.key.buffer );
+    var keyView = new ByteData.view(params.key.buffer);
     for( var i=0, t=0 ; i<key.lengthInBytes ; i+=4, t++ ) {
-      var value = keyView.getUint32( i, Endianness.LITTLE_ENDIAN );
-      _workingKey[t>>2][t&3] = new Uint32(value);
+      var value = unpack32(keyView, i, Endianness.LITTLE_ENDIAN);
+      _workingKey[t>>2][t&3] = value;
     }
 
     // While not enough round key material calculated calculate new values.
@@ -91,7 +91,7 @@ class AESFastEngine extends BaseBlockCipher {
       for( var j=1 ; j<_ROUNDS; j++ ) {
         for( var i=0 ; i<4; i++ ) {
           var value = _inv_mcol( _workingKey[j][i].toInt() );
-          _workingKey[j][i] = new Uint32(value);
+          _workingKey[j][i] = value;
         }
       }
     }
@@ -110,20 +110,22 @@ class AESFastEngine extends BaseBlockCipher {
         throw new ArgumentError("Output buffer too short");
     }
 
+    var inpView = new ByteData.view(inp.buffer);
+    var outView = new ByteData.view(out.buffer);
     if (_forEncryption) {
-        _unpackBlock(inp,inpOff);
+        _unpackBlock(inpView,inpOff);
         _encryptBlock(_workingKey);
-        _packBlock(out,outOff);
+        _packBlock(outView,outOff);
     } else {
-        _unpackBlock(inp,inpOff);
+        _unpackBlock(inpView,inpOff);
         _decryptBlock(_workingKey);
-        _packBlock(out,outOff);
+        _packBlock(outView,outOff);
     }
 
     return _BLOCK_SIZE;
   }
 
-  void _encryptBlock( List<List<Uint32>> KW ) {
+  void _encryptBlock( List<List<int>> KW ) {
       int r, r0, r1, r2, r3;
 
       _C0 ^= KW[0][0].toInt();
@@ -158,7 +160,7 @@ class AESFastEngine extends BaseBlockCipher {
       _C3 = (_S[r3&255]&255) ^ ((_S[(r0>>8)&255]&255)<<8) ^ ((_S[(r1>>16)&255]&255)<<16) ^ (_S[(r2>>24)&255]<<24) ^ KW[r][3].toInt();
   }
 
-  void _decryptBlock( List<List<Uint32>> KW ) {
+  void _decryptBlock( List<List<int>> KW ) {
       int r, r0, r1, r2, r3;
 
       _C0 ^= KW[_ROUNDS][0].toInt();
@@ -192,28 +194,23 @@ class AESFastEngine extends BaseBlockCipher {
       _C3 = (_Si[r3&255]&255) ^ ((_Si[(r2>>8)&255]&255)<<8) ^ ((_Si[(r1>>16)&255]&255)<<16) ^ (_Si[(r0>>24)&255]<<24) ^ KW[0][3].toInt();
   }
 
-  void _unpackBlock( Uint8List bytes, int off ) {
-    var bytesView = new ByteData.view( bytes.buffer );
-    _C0 = bytesView.getUint32( off, Endianness.LITTLE_ENDIAN );
-    _C1 = bytesView.getUint32( off+4, Endianness.LITTLE_ENDIAN );
-    _C2 = bytesView.getUint32( off+8, Endianness.LITTLE_ENDIAN );
-    _C3 = bytesView.getUint32( off+12, Endianness.LITTLE_ENDIAN );
+  void _unpackBlock( ByteData view, int off ) {
+    _C0 = unpack32(view, off, Endianness.LITTLE_ENDIAN);
+    _C1 = unpack32(view, off + 4, Endianness.LITTLE_ENDIAN);
+    _C2 = unpack32(view, off + 8, Endianness.LITTLE_ENDIAN);
+    _C3 = unpack32(view, off + 12, Endianness.LITTLE_ENDIAN);
   }
 
-  void _packBlock( Uint8List bytes, int off ) {
-    var bytesView = new ByteData.view( bytes.buffer );
-
-    bytesView.setUint32( off, _C0, Endianness.LITTLE_ENDIAN );
-    bytesView.setUint32( off+4, _C1, Endianness.LITTLE_ENDIAN );
-    bytesView.setUint32( off+8, _C2, Endianness.LITTLE_ENDIAN );
-    bytesView.setUint32( off+12, _C3, Endianness.LITTLE_ENDIAN );
+  void _packBlock( ByteData view, int off ) {
+    pack32(_C0, view, off,      Endianness.LITTLE_ENDIAN);
+    pack32(_C1, view, off +  4, Endianness.LITTLE_ENDIAN);
+    pack32(_C2, view, off +  8, Endianness.LITTLE_ENDIAN);
+    pack32(_C3, view, off + 12, Endianness.LITTLE_ENDIAN);
   }
 
 }
 
-int _shift(int r, int shift) {
-  return new Uint32(r).rotr(shift).toInt();
-}
+int _shift(int r, int shift) => rotr32(r, shift);
 
 /* multiply four bytes in GF(2^8) by 'x' {02} in parallel */
 
@@ -222,8 +219,8 @@ const int _m2 = 0x7f7f7f7f;
 const int _m3 = 0x0000001b;
 
 int _FFmulX(int x) {
-  Uint32 lsr = new Uint32(x & _m1)>>7;
-  return (((x & _m2) << 1) ^ lsr.toInt() * _m3);
+  var lsr = shiftr32((x & _m1), 7);
+  return (((x & _m2) << 1) ^ lsr * _m3);
 }
 
 /*
