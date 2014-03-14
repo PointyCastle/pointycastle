@@ -3,13 +3,15 @@
 // See the LICENSE file for more information.
 
 /**
- * This library contains all out-of-the-box implementations of the interfaces provided in the API which are compatible with
- * client and server sides.
+ * This library contains all out-of-the-box implementations of the interfaces provided in the API
+ * which are compatible with client and server sides.
  *
- * You can extend it with client side algorithms by including library [cipher.impl_client] in addition to this one. You can
- * also extend is with its server side counterpart by including library [cipher.impl_server] in addition to this one
+ * You can extend it with client side algorithms by including library [cipher.impl_client] in
+ * addition to this one. You can also extend is with its server side counterpart by including
+ * library [cipher.impl_server] in addition to this one
  *
- * You must call [initCipher] method before using this library to load all implementations into cipher's API factories.
+ * You must call [initCipher] method before using this library to load all implementations into
+ * cipher's API factories.
  */
 library cipher.impl.base;
 
@@ -119,7 +121,7 @@ void _registerDigests() {
   Digest.registry["SHA-512"] = (_) => new SHA512Digest();
   Digest.registry["Tiger"] = (_) => new TigerDigest();
   Digest.registry["Whirlpool"] = (_) => new WhirlpoolDigest();
-  Digest.registry.registerDynamicFactory( _sha3DigestFactory );
+//  Digest.registry.registerDynamicFactory( _sha3DigestFactory );
   Digest.registry.registerDynamicFactory( _sha512tDigestFactory );
 }
 

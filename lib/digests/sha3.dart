@@ -116,7 +116,7 @@ class SHA3Digest extends BaseDigest {
   }
 
   void _absorb(Uint8List data, int off, int databitlen) {
-    var i, j, wholeBlocks;
+    int i, j, wholeBlocks;
 
     if ((_bitsInQueue % 8) != 0) {
       throw new StateError("Attempt to absorb with odd length queue");
@@ -128,7 +128,7 @@ class SHA3Digest extends BaseDigest {
     i = 0;
     while (i < databitlen) {
       if ((_bitsInQueue == 0) && (databitlen >= _rate) && (i <= (databitlen - _rate))) {
-        wholeBlocks = (databitlen - i) / _rate;
+        wholeBlocks = (databitlen - i) ~/ _rate;
 
         for (j = 0; j < wholeBlocks; j++) {
           var chunk = new Uint8List(_rate ~/ 8);

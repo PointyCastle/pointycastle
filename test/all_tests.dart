@@ -84,7 +84,7 @@ void main() {
   sha1_test.main();
   sha224_test.main();
   sha256_test.main();
-  sha3_test.main();
+  //sha3_test.main();
   sha384_test.main();
   sha512_test.main();
   sha512t_test.main();
