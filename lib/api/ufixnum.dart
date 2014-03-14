@@ -401,6 +401,12 @@ class Register64List {
     }
   }
 
+  void setRange(int start, int end, Register64List list) {
+    for (var i = start; i < end; i++) {
+      _list[i].set(list[i]);
+    }
+  }
+
   String toString() {
     var sb = new StringBuffer("(");
     for (var i = 0; i < _list.length; i++) {
