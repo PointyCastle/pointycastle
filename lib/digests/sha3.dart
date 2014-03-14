@@ -133,7 +133,7 @@ class SHA3Digest extends BaseDigest {
         for (j = 0; j < wholeBlocks; j++) {
           var chunk = new Uint8List(_rate ~/ 8);
 
-          var offset = (off + (i / 8) + (j * chunk.length));
+          var offset = (off + (i ~/ 8) + (j * chunk.length));
           chunk.setRange(0, chunk.length, data.sublist(offset));
 
           _keccakAbsorb(_state, chunk, chunk.length);

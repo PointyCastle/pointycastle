@@ -24,5 +24,25 @@ void main() {
 
   ]);
 
+  runDigestTests(new Digest("SHA-3/384"), [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "bcd5faf4aa3485814bd2181d107e0bd0ac103855380a2148b8e66f1795a62331d890b60836a00a53950f66963b199c14",
+  ]);
+
+  runDigestTests(new Digest("SHA-3/288"), [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "27a8bf18a7e801e5d2acb3da4535d9fd241c36d5eee464bcd91890b465710cd3650c8b1e",
+  ]);
+
+  runDigestTests(new Digest("SHA-3/256"), [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "21db045624a9cc36738c01429ef0c87df055e8ba3b71ba809d0b9126c47df47c",
+  ]);
+
+  runDigestTests(new Digest("SHA-3/224"), [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "adbce0aaa3f486fcd21638f7e5c500c687b34581195ef557e940ef60",
+  ]);
+
 }
 
