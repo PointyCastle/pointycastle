@@ -11,6 +11,9 @@ import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_derivators/scrypt_parameters.dart";
 import "package:cipher/params/key_derivators/pbkdf2_parameters.dart";
 import "package:cipher/key_derivators/base_key_derivator.dart";
+import "package:cipher/key_derivators/pbkdf2.dart";
+import "package:cipher/macs/hmac.dart";
+import "package:cipher/digests/sha256.dart";
 
 /**
  * Implementation of SCrypt password based key derivation function. See the next link for info on how to choose N, r, and p:
@@ -57,7 +60,7 @@ class Scrypt extends BaseKeyDerivator {
     var XY = new Uint8List(256 * r);
     var V  = new Uint8List(128 * r * N);
 
-    var pbkdf2 = new KeyDerivator("SHA-256/HMAC/PBKDF2");
+    var pbkdf2 = new PBKDF2KeyDerivator(new HMac(new SHA256Digest(), 64));
 
     pbkdf2.init(new Pbkdf2Parameters(salt, 1, p * 128 * r));
     pbkdf2.deriveKey( passwd, 0, B, 0 );
