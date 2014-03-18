@@ -107,31 +107,31 @@ class WhirlpoolDigest extends BaseDigest {
     for (int round = 1; round <= _ROUNDS; round++) {
       for (int i = 0; i < 8; i++) {
         _L[i].set(0);
-        _L[i].xor(C0[clip8(_K[(i - 0) & 7].hi32 >> 24)]);
-        _L[i].xor(C1[clip8(_K[(i - 1) & 7].hi32 >> 16)]);
-        _L[i].xor(C2[clip8(_K[(i - 2) & 7].hi32 >>  8)]);
-        _L[i].xor(C3[clip8(_K[(i - 3) & 7].hi32      )]);
-        _L[i].xor(C4[clip8(_K[(i - 4) & 7].lo32 >> 24)]);
-        _L[i].xor(C5[clip8(_K[(i - 5) & 7].lo32 >> 16)]);
-        _L[i].xor(C6[clip8(_K[(i - 6) & 7].lo32 >>  8)]);
-        _L[i].xor(C7[clip8(_K[(i - 7) & 7].lo32      )]);
+        _L[i].xor(_C0[clip8(_K[(i - 0) & 7].hi32 >> 24)]);
+        _L[i].xor(_C1[clip8(_K[(i - 1) & 7].hi32 >> 16)]);
+        _L[i].xor(_C2[clip8(_K[(i - 2) & 7].hi32 >>  8)]);
+        _L[i].xor(_C3[clip8(_K[(i - 3) & 7].hi32      )]);
+        _L[i].xor(_C4[clip8(_K[(i - 4) & 7].lo32 >> 24)]);
+        _L[i].xor(_C5[clip8(_K[(i - 5) & 7].lo32 >> 16)]);
+        _L[i].xor(_C6[clip8(_K[(i - 6) & 7].lo32 >>  8)]);
+        _L[i].xor(_C7[clip8(_K[(i - 7) & 7].lo32      )]);
       }
 
       _K.setRange(0, _K.length, _L);
 
-      _K[0].xor(rc[round]);
+      _K[0].xor(_rc[round]);
 
       // apply the round transformation
       for (int i = 0; i < 8; i++) {
           _L[i].set(_K[i]);
-          _L[i].xor(C0[clip8(_state[(i - 0) & 7].hi32 >> 24)]);
-          _L[i].xor(C1[clip8(_state[(i - 1) & 7].hi32 >> 16)]);
-          _L[i].xor(C2[clip8(_state[(i - 2) & 7].hi32 >>  8)]);
-          _L[i].xor(C3[clip8(_state[(i - 3) & 7].hi32      )]);
-          _L[i].xor(C4[clip8(_state[(i - 4) & 7].lo32 >> 24)]);
-          _L[i].xor(C5[clip8(_state[(i - 5) & 7].lo32 >> 16)]);
-          _L[i].xor(C6[clip8(_state[(i - 6) & 7].lo32 >>  8)]);
-          _L[i].xor(C7[clip8(_state[(i - 7) & 7].lo32      )]);
+          _L[i].xor(_C0[clip8(_state[(i - 0) & 7].hi32 >> 24)]);
+          _L[i].xor(_C1[clip8(_state[(i - 1) & 7].hi32 >> 16)]);
+          _L[i].xor(_C2[clip8(_state[(i - 2) & 7].hi32 >>  8)]);
+          _L[i].xor(_C3[clip8(_state[(i - 3) & 7].hi32      )]);
+          _L[i].xor(_C4[clip8(_state[(i - 4) & 7].lo32 >> 24)]);
+          _L[i].xor(_C5[clip8(_state[(i - 5) & 7].lo32 >> 16)]);
+          _L[i].xor(_C6[clip8(_state[(i - 6) & 7].lo32 >>  8)]);
+          _L[i].xor(_C7[clip8(_state[(i - 7) & 7].lo32      )]);
       }
 
       // save the current state
@@ -198,7 +198,7 @@ class WhirlpoolDigest extends BaseDigest {
 
 }
 
-final C0 = new Register64List.from([
+final _C0 = new Register64List.from([
   [0x18186018, 0xc07830d8], [0x23238c23, 0x05af4626], [0xc6c63fc6, 0x7ef991b8],
   [0xe8e887e8, 0x136fcdfb], [0x87872687, 0x4ca113cb], [0xb8b8dab8, 0xa9626d11],
   [0x01010401, 0x08050209], [0x4f4f214f, 0x426e9e0d], [0x3636d836, 0xadee6c9b],
@@ -287,7 +287,7 @@ final C0 = new Register64List.from([
   [0x86862286, 0x44a411c2]
 ]);
 
-final C1 = new Register64List.from([
+final _C1 = new Register64List.from([
   [0xd8181860, 0x18c07830], [0x2623238c, 0x2305af46], [0xb8c6c63f, 0xc67ef991],
   [0xfbe8e887, 0xe8136fcd], [0xcb878726, 0x874ca113], [0x11b8b8da, 0xb8a9626d],
   [0x09010104, 0x01080502], [0x0d4f4f21, 0x4f426e9e], [0x9b3636d8, 0x36adee6c],
@@ -376,7 +376,7 @@ final C1 = new Register64List.from([
   [0xc2868622, 0x8644a411]
 ]);
 
-final C2 = new Register64List.from([
+final _C2 = new Register64List.from([
   [0x30d81818, 0x6018c078], [0x46262323, 0x8c2305af], [0x91b8c6c6, 0x3fc67ef9],
   [0xcdfbe8e8, 0x87e8136f], [0x13cb8787, 0x26874ca1], [0x6d11b8b8, 0xdab8a962],
   [0x02090101, 0x04010805], [0x9e0d4f4f, 0x214f426e], [0x6c9b3636, 0xd836adee],
@@ -465,7 +465,7 @@ final C2 = new Register64List.from([
   [0x11c28686, 0x228644a4]
 ]);
 
-final C3 = new Register64List.from([
+final _C3 = new Register64List.from([
   [0x7830d818, 0x186018c0], [0xaf462623, 0x238c2305], [0xf991b8c6, 0xc63fc67e],
   [0x6fcdfbe8, 0xe887e813], [0xa113cb87, 0x8726874c], [0x626d11b8, 0xb8dab8a9],
   [0x05020901, 0x01040108], [0x6e9e0d4f, 0x4f214f42], [0xee6c9b36, 0x36d836ad],
@@ -554,7 +554,7 @@ final C3 = new Register64List.from([
   [0xa411c286, 0x86228644]
 ]);
 
-final C4 = new Register64List.from([
+final _C4 = new Register64List.from([
   [0xc07830d8, 0x18186018], [0x05af4626, 0x23238c23], [0x7ef991b8, 0xc6c63fc6],
   [0x136fcdfb, 0xe8e887e8], [0x4ca113cb, 0x87872687], [0xa9626d11, 0xb8b8dab8],
   [0x08050209, 0x01010401], [0x426e9e0d, 0x4f4f214f], [0xadee6c9b, 0x3636d836],
@@ -643,7 +643,7 @@ final C4 = new Register64List.from([
   [0x44a411c2, 0x86862286]
 ]);
 
-final C5 = new Register64List.from([
+final _C5 = new Register64List.from([
   [0x18c07830, 0xd8181860], [0x2305af46, 0x2623238c], [0xc67ef991, 0xb8c6c63f],
   [0xe8136fcd, 0xfbe8e887], [0x874ca113, 0xcb878726], [0xb8a9626d, 0x11b8b8da],
   [0x01080502, 0x09010104], [0x4f426e9e, 0x0d4f4f21], [0x36adee6c, 0x9b3636d8],
@@ -732,7 +732,7 @@ final C5 = new Register64List.from([
   [0x8644a411, 0xc2868622]
 ]);
 
-final C6 = new Register64List.from([
+final _C6 = new Register64List.from([
   [0x6018c078, 0x30d81818], [0x8c2305af, 0x46262323], [0x3fc67ef9, 0x91b8c6c6],
   [0x87e8136f, 0xcdfbe8e8], [0x26874ca1, 0x13cb8787], [0xdab8a962, 0x6d11b8b8],
   [0x04010805, 0x02090101], [0x214f426e, 0x9e0d4f4f], [0xd836adee, 0x6c9b3636],
@@ -821,7 +821,7 @@ final C6 = new Register64List.from([
   [0x228644a4, 0x11c28686]
 ]);
 
-final C7 = new Register64List.from([
+final _C7 = new Register64List.from([
   [0x186018c0, 0x7830d818], [0x238c2305, 0xaf462623], [0xc63fc67e, 0xf991b8c6],
   [0xe887e813, 0x6fcdfbe8], [0x8726874c, 0xa113cb87], [0xb8dab8a9, 0x626d11b8],
   [0x01040108, 0x05020901], [0x4f214f42, 0x6e9e0d4f], [0x36d836ad, 0xee6c9b36],
@@ -910,7 +910,7 @@ final C7 = new Register64List.from([
   [0x86228644, 0xa411c286]
 ]);
 
-final rc = new Register64List.from([
+final _rc = new Register64List.from([
   [0x00000000, 0x00000000], [0x1823c6e8, 0x87b8014f], [0x36a6d2f5, 0x796f9152],
   [0x60bc9b8e, 0xa30c7b35], [0x1de0d7c2, 0x2e4bfe57], [0x157737e5, 0x9ff04ada],
   [0x58c9290a, 0xb1a06b85], [0xbd5d10f4, 0xcb3e0567], [0xe427418b, 0xa77d95d8],
