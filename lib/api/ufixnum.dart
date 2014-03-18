@@ -166,7 +166,7 @@ int unpack32(dynamic inp, int offset, Endianness endian) {
 //
 class Register64 {
 
-  static final Register64 MAX_VALUE = new Register64(0xFFFFFFFF, 0xFFFFFFFF);
+  static final Register64 _MAX_VALUE = new Register64(0xFFFFFFFF, 0xFFFFFFFF);
 
   int _hi32;
   int _lo32;
@@ -388,8 +388,12 @@ class Register64List {
 
   final List<Register64> _list;
 
+  Register64List.from(List<List<int>> values) :
+    _list = new List<Register64>.generate(
+        values.length, (i) => new Register64(values[i][0], values[i][1]));
+
   Register64List(int length) :
-    _list = new List<Register64>.generate(length, (_) => new Register64() );
+    _list = new List<Register64>.generate(length, (_) => new Register64());
 
   int get length => _list.length;
 

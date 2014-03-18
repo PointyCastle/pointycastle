@@ -14,6 +14,7 @@ void main() {
   _test8();
   _test32();
   _testRegister64();
+  _testRegister64List();
 
   _testUint8();
   _testUint16();
@@ -175,19 +176,19 @@ void _test32() {
 
 void _testRegister64() {
 
-  group( "int64:", () {
+  group( "Register64:", () {
 
-    test( "int64(hi,lo)", () {
+    test( "Register64(hi,lo)", () {
       expect(new Register64(0x00000000, 0x00000000), new Register64(0x00000000, 0x00000000));
       expect(new Register64(0x10203040, 0xFFFFFFFF), new Register64(0x10203040, 0xFFFFFFFF));
     });
 
-    test( "int64(lo)", () {
+    test( "Register64(lo)", () {
       expect(new Register64(0x00000000), new Register64(0x00000000, 0x00000000));
       expect(new Register64(0x10203040), new Register64(0x00000000, 0x10203040));
     });
 
-    test( "int64(y)", () {
+    test( "Register64(y)", () {
       expect(
           new Register64(new Register64(0x00000000, 0x00000000)),
           new Register64(0x00000000, 0x00000000));
@@ -520,6 +521,21 @@ void _testRegister64() {
 
   });
 
+}
+
+void _testRegister64List() {
+
+  group( "Register64List:", () {
+
+    test( "Register64.from()", () {
+      final list = new Register64List.from([ [0,1], [2,3], [4,5] ]);
+
+      expect(list[0], new Register64(0x00000000, 0x00000001));
+      expect(list[1], new Register64(0x00000002, 0x00000003));
+      expect(list[2], new Register64(0x00000004, 0x00000005));
+    });
+
+  });
 }
 
 void _testUint8() {
