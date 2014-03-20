@@ -240,6 +240,24 @@ class Register64 {
     sum(new Register64(y)..neg());
   }
 
+  void mul(dynamic y) {
+    if (y is int) {
+      final lo32 = _lo32*y;
+      final carry = (lo32 >> 32);
+      final hi32 = clip32(_hi32*y) + carry;
+
+      _hi32 = clip32(hi32);
+      _lo32 = clip32(lo32);
+    } else {
+      final lo32 = _lo32*y._lo32;
+      final carry = (lo32 >> 32);
+      final hi32 = clip32(_hi32*y._lo32) + clip32(_lo32*y._hi32) + carry;
+
+      _hi32 = clip32(hi32);
+      _lo32 = clip32(lo32);
+    }
+  }
+
   void neg() {
     not();
     sum(1);

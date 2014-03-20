@@ -22,7 +22,7 @@ import "./digests/sha256_benchmark.dart" as sha256_benchmark;
 import "./digests/sha384_benchmark.dart" as sha384_benchmark;
 import "./digests/sha512_benchmark.dart" as sha512_benchmark;
 import "./digests/sha512t_benchmark.dart" as sha512t_benchmark;
-//import "./digests/tiger_benchmark.dart" as tiger_benchmark;
+import "./digests/tiger_benchmark.dart" as tiger_benchmark;
 import "./digests/whirlpool_benchmark.dart" as whirlpool_benchmark;
 
 import "./stream/salsa20_benchmark.dart" as salsa20_benchmark;
@@ -50,7 +50,7 @@ void main() {
   sha384_benchmark.main();
   sha512_benchmark.main();
   sha512t_benchmark.main();
-  //tiger_benchmark.main();
+  tiger_benchmark.main();
   whirlpool_benchmark.main();
 
   // stream ciphers

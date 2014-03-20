@@ -374,6 +374,60 @@ void _testRegister64() {
           new Register64(0xFFFFFFFF, 0xFFFFFFFE));
     });
 
+    test( "mul(int)", () {
+      expect(
+          new Register64(0x00000000, 0x00000000)..mul(0x00000000),
+          new Register64(0x00000000, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000000)..mul(0x00000001),
+          new Register64(0x00000000, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000001)..mul(0x00000001),
+          new Register64(0x00000000, 0x00000001));
+      expect(
+          new Register64(0x00000001, 0x00000000)..mul(0x00000001),
+          new Register64(0x00000001, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000001)..mul(0xFFFFFFFF),
+          new Register64(0x00000000, 0xFFFFFFFF));
+      expect(
+          new Register64(0x00000000, 0x80000000)..mul(0x00000004),
+          new Register64(0x00000002, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x80000001)..mul(0x00000004),
+          new Register64(0x00000002, 0x00000004));
+      expect(
+          new Register64(0x80000001, 0x80000001)..mul(0x00000004),
+          new Register64(0x00000006, 0x00000004));
+    });
+
+    test( "mul(y)", () {
+      expect(
+          new Register64(0x00000000, 0x00000000)..mul(new Register64(0x00000000, 0x00000000)),
+          new Register64(0x00000000, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000000)..mul(new Register64(0x00000000, 0x00000001)),
+          new Register64(0x00000000, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000001)..mul(new Register64(0x00000000, 0x00000001)),
+          new Register64(0x00000000, 0x00000001));
+      expect(
+          new Register64(0x00000001, 0x00000000)..mul(new Register64(0x00000000, 0x00000001)),
+          new Register64(0x00000001, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x00000001)..mul(new Register64(0x00000000, 0xFFFFFFFF)),
+          new Register64(0x00000000, 0xFFFFFFFF));
+      expect(
+          new Register64(0x00000000, 0x80000000)..mul(new Register64(0x00000000, 0x00000004)),
+          new Register64(0x00000002, 0x00000000));
+      expect(
+          new Register64(0x00000000, 0x80000001)..mul(new Register64(0x00000000, 0x00000004)),
+          new Register64(0x00000002, 0x00000004));
+      expect(
+          new Register64(0x80000001, 0x80000001)..mul(new Register64(0x00000000, 0x00000004)),
+          new Register64(0x00000006, 0x00000004));
+    });
+
     test( "neg()", () {
       expect(new Register64(0x00000000, 0x00000000)..neg(), new Register64(0x00000000, 0x00000000));
       expect(new Register64(0xFFFFFFFF, 0xFFFFFFFF)..neg(), new Register64(0x00000000, 0x00000001));
