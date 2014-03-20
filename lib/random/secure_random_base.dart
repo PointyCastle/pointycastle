@@ -19,7 +19,7 @@ abstract class SecureRandomBase implements SecureRandom {
   int nextUint16() {
     var b0 = nextUint8();
     var b1 = nextUint8();
-    return Uint16.clip( (b1<<8) | b0 );
+    return clip16((b1 << 8) | b0);
   }
 
   int nextUint32() {

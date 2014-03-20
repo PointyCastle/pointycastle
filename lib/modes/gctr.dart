@@ -131,21 +131,11 @@ class GCTRBlockCipher extends BaseBlockCipher {
   }
 
   int _bytesToint( Uint8List inp, int inpOff ) {
-    return new Uint32.fromLittleEndian( inp, inpOff ).toInt();
-    /*
-    return  ((inp[inpOff + 3] << 24) & 0xff000000) + ((inp[inpOff + 2] << 16) & 0xff0000) +
-        ((inp[inpOff + 1] << 8) & 0xff00) + (inp[inpOff] & 0xff);
-    */
+    return unpack32(inp, inpOff, Endianness.LITTLE_ENDIAN);
   }
 
-  void _intTobytes( int num, Uint8List out, int outOff ) {
-    new Uint32(num).toLittleEndian(out, outOff);
-    /*
-    out[outOff + 3] = (byte)(num >>> 24);
-    out[outOff + 2] = (byte)(num >>> 16);
-    out[outOff + 1] = (byte)(num >>> 8);
-    out[outOff] =     (byte)num;
-    */
+  void _intTobytes(int num, Uint8List out, int outOff ) {
+    pack32(num, out, outOff, Endianness.LITTLE_ENDIAN);
   }
 
 }

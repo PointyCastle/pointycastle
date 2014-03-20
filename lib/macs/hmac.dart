@@ -7,7 +7,6 @@ library cipher.macs.hmac;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/macs/base_mac.dart";
 
@@ -18,8 +17,8 @@ import "package:cipher/macs/base_mac.dart";
  */
 class HMac extends BaseMac {
 
-    static final _IPAD = new Uint8(0x36);
-    static final _OPAD = new Uint8(0x5C);
+    static final _IPAD = 0x36;
+    static final _OPAD = 0x5C;
 
     Digest _digest;
     int _digestSize;
@@ -91,9 +90,9 @@ class HMac extends BaseMac {
       return len;
     }
 
-    void _xorPad(Uint8List pad, int len, Uint8 n) {
+    void _xorPad(Uint8List pad, int len, int n) {
       for( var i=0 ; i<len ; i++ ) {
-        pad[i] ^= n.toInt();
+        pad[i] ^= n;
       }
     }
 }

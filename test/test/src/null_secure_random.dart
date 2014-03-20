@@ -18,7 +18,7 @@ class NullSecureRandom extends SecureRandomBase {
   void seed(CipherParameters params) {
   }
 
-  int nextUint8() => Uint8.clip(_nextValue++);
+  int nextUint8() => clip8(_nextValue++);
 
 }
 

@@ -41,7 +41,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
       _incrementInput();
     }
 
-    return Uint8.clip(_output[_used++]);
+    return clip8(_output[_used++]);
   }
 
   void _incrementInput() {

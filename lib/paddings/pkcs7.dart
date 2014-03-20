@@ -31,7 +31,7 @@ class PKCS7Padding extends BasePadding {
   }
 
   int padCount( Uint8List data ) {
-    var count = Uint8.clip( data[data.length - 1] );
+    var count = clip8(data[data.length - 1]);
 
     if( count > data.length || count == 0 ) {
       throw new ArgumentError("Invalid or corrupted pad block");

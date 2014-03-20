@@ -8,7 +8,6 @@ import "dart:typed_data";
 
 import 'package:bignum/bignum.dart';
 import "package:cipher/api.dart";
-import "package:cipher/api/ufixnum.dart";
 import "package:cipher/ecc/ecc_base.dart" hide ECFieldElementBase, ECPointBase, ECCurveBase;
 import "package:cipher/ecc/ecc_base.dart" as ecc;
 
@@ -180,12 +179,12 @@ class ECPoint extends ecc.ECPointBase {
     var qLength = x.byteLength;
     if( compressed ) {
 
-      Uint8 PC;
+      int PC;
 
       if( y.toBigInteger().testBit(0) ) {
-        PC = new Uint8(0x03);
+        PC = 0x03;
       } else {
-        PC = new Uint8(0x02);
+        PC = 0x02;
       }
 
       Uint8List X = _x9IntegerToBytes( x.toBigInteger(), qLength );
