@@ -12,6 +12,7 @@ import "package:unittest/unittest.dart";
 
 void main() {
   _test8();
+  _test16();
   _test32();
   _testRegister64();
   _testRegister64List();
@@ -78,6 +79,20 @@ void _test8() {
       expect(rotr8(0xFE, 1), 0x7F);
       expect(rotr8(0xAB, 4), 0xBA);
       expect(rotr8(0xAB, 8), 0xAB);
+    });
+
+  });
+
+}
+
+void _test16() {
+
+  group( "int16:", () {
+
+    test( "clip16()", () {
+      expect(clip16( 0x0000), 0x0000);
+      expect(clip16( 0xFFFF), 0xFFFF);
+      expect(clip16(0x10000), 0x0000);
     });
 
   });
