@@ -14,8 +14,8 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   final _byteCount = new Register64(0);
 
-  final _tmpBuffer = new Uint8List(4);
-  int _tmpBufferOffset;
+  final _wordBuffer = new Uint8List(4);
+  int _wordBufferOffset;
 
   final Endianness _endian;
   final _packedStateSize;
@@ -41,8 +41,8 @@ abstract class MD4FamilyDigest extends BaseDigest {
   void reset() {
     _byteCount.set(0);
 
-    _tmpBufferOffset = 0;
-    _tmpBuffer.fillRange(0, _tmpBuffer.length, 0);
+    _wordBufferOffset = 0;
+    _wordBuffer.fillRange(0, _wordBuffer.length, 0);
 
     bufferOffset = 0;
     buffer.fillRange(0, buffer.length, 0);
@@ -51,7 +51,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   }
 
   void updateByte(int inp) {
-    _tmpBuffer[_tmpBufferOffset++] = clip8(inp);
+    _wordBuffer[_wordBufferOffset++] = clip8(inp);
     _processWordIfBufferFull();
     _byteCount.sum(1);
   }
@@ -115,22 +115,22 @@ abstract class MD4FamilyDigest extends BaseDigest {
   /// Process data word by word until no more words can be extracted from [inp] and return the number of bytes processed.
   int _processWholeWords(Uint8List inp, int inpOff, int len) {
     int processed = 0;
-    while (len > _tmpBuffer.length) {
+    while (len > _wordBuffer.length) {
       _processWord( inp, inpOff );
 
-      inpOff += _tmpBuffer.length;
-      len -= _tmpBuffer.length;
-      _byteCount.sum(_tmpBuffer.length);
+      inpOff += _wordBuffer.length;
+      len -= _wordBuffer.length;
+      _byteCount.sum(_wordBuffer.length);
       processed += 4;
     }
     return processed;
   }
 
-  /// Process bytes from [inp] until the word buffer [_tmpBuffer] is full and reset and return the number of bytes processed.
+  /// Process bytes from [inp] until the word buffer [_wordBuffer] is full and reset and return the number of bytes processed.
   int _processUntilNextWord(Uint8List inp, int inpOff, int len) {
     var processed = 0;
 
-    while( (_tmpBufferOffset != 0) && (len > 0) ) {
+    while( (_wordBufferOffset != 0) && (len > 0) ) {
       updateByte(inp[inpOff]);
 
       inpOff++;
@@ -143,16 +143,16 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   /// Process a word in [_xBuff] if it is already full and then reset it
   void _processWordIfBufferFull() {
-    if (_tmpBufferOffset == _tmpBuffer.length) {
-      _processWord(_tmpBuffer, 0);
-      _tmpBufferOffset = 0;
+    if (_wordBufferOffset == _wordBuffer.length) {
+      _processWord(_wordBuffer, 0);
+      _wordBufferOffset = 0;
     }
   }
 
   /// Add final padding to the digest
   void _processPadding() {
     updateByte(128);
-    while (_tmpBufferOffset != 0) {
+    while (_wordBufferOffset != 0) {
       updateByte(0);
     }
   }

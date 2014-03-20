@@ -25,8 +25,8 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
   final H7 = new Register64();
   final H8 = new Register64();
 
-  final _xBuf = new Uint8List(8);
-  int _xBufOff = 0;
+  final _wordBuffer = new Uint8List(8);
+  int _wordBufferOffset = 0;
 
   final _W = new Register64List(80);
   int _wOff = 0;
@@ -44,19 +44,19 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     _byteCount1.set(0);
     _byteCount2.set(0);
 
-    _xBufOff = 0;
-    _xBuf.fillRange(0, _xBuf.length, 0);
+    _wordBufferOffset = 0;
+    _wordBuffer.fillRange(0, _wordBuffer.length, 0);
 
     _wOff = 0;
     _W.fillRange(0, _W.length, 0);
   }
 
   void updateByte(int inp) {
-    _xBuf[_xBufOff++] = inp;
+    _wordBuffer[_wordBufferOffset++] = inp;
 
-    if( _xBufOff == _xBuf.length ) {
-      _processWord(_xBuf, 0);
-      _xBufOff = 0;
+    if( _wordBufferOffset == _wordBuffer.length ) {
+      _processWord(_wordBuffer, 0);
+      _wordBufferOffset = 0;
     }
 
     _byteCount1.sum(1);
@@ -64,7 +64,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
 
   void update(Uint8List inp, int inpOff, int len) {
     // fill the current word
-    while ((_xBufOff != 0) && (len > 0)) {
+    while ((_wordBufferOffset != 0) && (len > 0)) {
       updateByte(inp[inpOff]);
 
       inpOff++;
@@ -72,12 +72,12 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     }
 
     // process whole words.
-    while (len > _xBuf.length) {
+    while (len > _wordBuffer.length) {
       _processWord(inp, inpOff);
 
-      inpOff += _xBuf.length;
-      len -= _xBuf.length;
-      _byteCount1.sum(_xBuf.length);
+      inpOff += _wordBuffer.length;
+      len -= _wordBuffer.length;
+      _byteCount1.sum(_wordBuffer.length);
     }
 
     // load in the remainder.
@@ -98,7 +98,7 @@ abstract class LongSHA2FamilyDigest extends BaseDigest {
     // add the pad bytes.
     updateByte(128);
 
-    while (_xBufOff != 0) {
+    while (_wordBufferOffset != 0) {
       updateByte(0);
     }
 
