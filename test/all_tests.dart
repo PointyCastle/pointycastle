@@ -24,7 +24,7 @@ import "./digests/ripemd320_test.dart" as ripemd320_test;
 import "./digests/sha1_test.dart" as sha1_test;
 import "./digests/sha224_test.dart" as sha224_test;
 import "./digests/sha256_test.dart" as sha256_test;
-import "./digests/sha3_test.dart" as sha3_test;
+//import "./digests/sha3_test.dart" as sha3_test;
 import "./digests/sha384_test.dart" as sha384_test;
 import "./digests/sha512_test.dart" as sha512_test;
 import "./digests/sha512t_test.dart" as sha512t_test;

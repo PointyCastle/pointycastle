@@ -4,8 +4,6 @@
 
 library cipher.test.padded_block_cipher_test;
 
-import "dart:typed_data";
-
 import "package:cipher/cipher.dart";
 import "package:cipher/impl/base.dart";
 import "package:unittest/unittest.dart";
