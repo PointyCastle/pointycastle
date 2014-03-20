@@ -60,7 +60,7 @@ class SICStreamCipher extends BaseStreamCipher {
 
   int returnByte(int inp) {
     _feedCounterIfNeeded();
-    return Uint8.clip(inp) ^ _counterOut[_consumed++];
+    return clip8(inp) ^ _counterOut[_consumed++];
   }
 
   /// Calls [_feedCounter] if all [_counterOut] bytes have been consumed

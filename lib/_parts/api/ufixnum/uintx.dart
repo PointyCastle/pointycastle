@@ -353,7 +353,7 @@ class Uint32 {
   Uint32 rotr(int n) {
     if( n<0 ) throw new ArgumentError("Shift offset cannot be negative");
     n = (n % bitLength);
-    return new Uint32(((_value >> n) & _MASK) | ((_value << (bitLength - n)) & _MASK));
+    return new Uint32(rotr32(_value, n));
   }
 
   void toBigEndian( Uint8List out, int outOff ) {
