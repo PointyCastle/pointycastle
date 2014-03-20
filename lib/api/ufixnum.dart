@@ -17,6 +17,14 @@ const _MASK_8 = 0xFF;
 const _MASK_16 = 0xFFFF;
 const _MASK_32 = 0xFFFFFFFF;
 
+final _MASK32_HI_BITS = [
+  0xFFFFFFFF, 0x7FFFFFFF, 0x3FFFFFFF, 0x1FFFFFFF, 0x0FFFFFFF, 0x07FFFFFF, 0x03FFFFFF, 0x01FFFFFF,
+  0x00FFFFFF, 0x007FFFFF, 0x003FFFFF, 0x001FFFFF, 0x000FFFFF, 0x0007FFFF, 0x0003FFFF, 0x0001FFFF,
+  0x0000FFFF, 0x00007FFF, 0x00003FFF, 0x00001FFF, 0x00000FFF, 0x000007FF, 0x000003FF, 0x000001FF,
+  0x000000FF, 0x0000007F, 0x0000003F, 0x0000001F, 0x0000000F, 0x00000007, 0x00000003, 0x00000001,
+  0x00000000
+];
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8 bit operations
 //
@@ -106,6 +114,7 @@ int cshiftl32(int x, int n) => shiftl32(clip32(x), n);
 int shiftl32(int x, int n) {
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
+  x &= _MASK32_HI_BITS[n];
   return ((x << n) & _MASK_32);
 }
 
@@ -133,7 +142,7 @@ int rotl32(int x, int n) {
   assert(n >= 0);
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
-  return ((x << n) & _MASK_32) | (x >> (32 - n));
+  return shiftl32(x, n) | (x >> (32 - n));
 }
 
 int crotr32(int x, int n) => rotr32(clip32(x), n);
@@ -141,7 +150,7 @@ int rotr32(int x, int n) {
   assert(n >= 0);
   assert((x >= 0) && (x <= _MASK_32));
   n &= _MASK_5;
-  return ((x >> n) | ((x << (32 - n)) & _MASK_32));
+  return (x >> n) | shiftl32(x, (32 - n));
 }
 
 /**
@@ -260,13 +269,13 @@ class Register64 {
     n &= _MASK_6;
     if (n == 0) {
       // do nothing
-    } else if (n > 32) {
-      _hi32 = (_lo32 << (n - 32)) & _MASK_32;
+    } else if (n >= 32) {
+      _hi32 = shiftl32(_lo32, (n - 32));
       _lo32 = 0;
     } else {
-      _hi32  = (_hi32 << n) & _MASK_32;
+      _hi32  = shiftl32(_hi32, n);
       _hi32 |= _lo32 >> (32 - n);
-      _lo32  = (_lo32 << n) & _MASK_32;
+      _lo32  = shiftl32(_lo32, n);
     }
   }
 
@@ -274,12 +283,12 @@ class Register64 {
     n &= _MASK_6;
     if (n == 0) {
       // do nothing
-    } else if (n > 32) {
+    } else if (n >= 32) {
       _lo32 = _hi32 >> (n - 32);
       _hi32 = 0;
     } else {
       _lo32  = _lo32 >> n;
-      _lo32 |= (_hi32 << (32 - n)) & _MASK_32;
+      _lo32 |= shiftl32(_hi32, 32 - n);
       _hi32  = _hi32 >> n;
     }
   }
@@ -300,9 +309,9 @@ class Register64 {
         // do nothing
       } else {
         var hi32 = _hi32;
-        _hi32  = (_hi32 << n) & _MASK_32;
+        _hi32  = shiftl32(_hi32, n);
         _hi32 |= _lo32 >> (32 - n);
-        _lo32  = (_lo32 << n) & _MASK_32;
+        _lo32  = shiftl32(_lo32, n);
         _lo32 |= hi32 >> (32 - n);
       }
     }
@@ -325,9 +334,9 @@ class Register64 {
       } else {
         var hi32 = _hi32;
         _hi32  = _hi32 >> n;
-        _hi32 |= (_lo32 << (32 - n)) & _MASK_32;
+        _hi32 |= shiftl32(_lo32, (32 - n));
         _lo32  = _lo32 >> n;
-        _lo32 |= (hi32 << (32 - n)) & _MASK_32;
+        _lo32 |= shiftl32(hi32, (32 - n));
       }
     }
   }
