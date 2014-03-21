@@ -12,14 +12,29 @@ import "package:cipher/digests/base_digest.dart";
 /// Implementation of SHA-3 digest.
 class SHA3Digest extends BaseDigest {
 
-  static List<Uint64> _keccakRoundConstants = _keccakInitializeRoundConstants();
-  static List<Uint32> _keccakRhoOffsets = _keccakInitializeRhoOffsets();
+  static final _keccakRoundConstants = new Register64List.from([
+    [0x00000000, 0x00000001], [0x00000000, 0x00008082], [0x80000000, 0x0000808a],
+    [0x80000000, 0x80008000], [0x00000000, 0x0000808b], [0x00000000, 0x80000001],
+    [0x80000000, 0x80008081], [0x80000000, 0x00008009], [0x00000000, 0x0000008a],
+    [0x00000000, 0x00000088], [0x00000000, 0x80008009], [0x00000000, 0x8000000a],
+    [0x00000000, 0x8000808b], [0x80000000, 0x0000008b], [0x80000000, 0x00008089],
+    [0x80000000, 0x00008003], [0x80000000, 0x00008002], [0x80000000, 0x00000080],
+    [0x00000000, 0x0000800a], [0x80000000, 0x8000000a], [0x80000000, 0x80008081],
+    [0x80000000, 0x00008080], [0x00000000, 0x80000001], [0x80000000, 0x80008008]
+  ]);
+
+  static final _keccakRhoOffsets = [
+    0x00000000, 0x00000001, 0x0000003e, 0x0000001c, 0x0000001b, 0x00000024, 0x0000002c,
+    0x00000006, 0x00000037, 0x00000014, 0x00000003, 0x0000000a, 0x0000002b, 0x00000019,
+    0x00000027, 0x00000029, 0x0000002d, 0x0000000f, 0x00000015, 0x00000008, 0x00000012,
+    0x00000002, 0x0000003d, 0x00000038, 0x0000000e
+  ];
 
   int _rate;
   int _fixedOutputLength;
 
-  final _state = new Uint8List(1600 ~/ 8);
-  final _dataQueue = new Uint8List(1536 ~/ 8);
+  final _state = new Uint8List(200);
+  final _dataQueue = new Uint8List(192);
 
   int _bitsInQueue;
   bool _squeezing;
@@ -58,19 +73,25 @@ class SHA3Digest extends BaseDigest {
       case 288:
         _initSponge(1024, 576);
         break;
+
       case 224:
         _initSponge(1152, 448);
         break;
+
       case 256:
         _initSponge(1088, 512);
         break;
+
       case 384:
         _initSponge(832, 768);
         break;
+
       case 512:
         _initSponge(576, 1024);
         break;
-      default: throw new ArgumentError("bitLength (${bitLength}) must be one of 224, 256, 384, or 512");
+
+      default:
+        throw new ArgumentError("bitLength (${bitLength}) must be one of 224, 256, 384, or 512");
     }
   }
 
@@ -86,7 +107,7 @@ class SHA3Digest extends BaseDigest {
 
       var lastByte = new Uint8List(1);
 
-      lastByte[0] = (new Uint8(data[off + (databitlen ~/ 8)]) >> (8 - (databitlen % 8))).toInt();
+      lastByte[0] = data[off + (databitlen ~/ 8)] >> (8 - (databitlen % 8));
       _absorb(lastByte, off, databitlen % 8);
     }
   }
@@ -121,6 +142,7 @@ class SHA3Digest extends BaseDigest {
     if ((_bitsInQueue % 8) != 0) {
       throw new StateError("Attempt to absorb with odd length queue");
     }
+
     if (_squeezing) {
       throw new StateError("Attempt to absorb while squeezing");
     }
@@ -131,9 +153,9 @@ class SHA3Digest extends BaseDigest {
         wholeBlocks = (databitlen - i) ~/ _rate;
 
         for (j = 0; j < wholeBlocks; j++) {
-          var chunk = new Uint8List(_rate ~/ 8);
+          final chunk = new Uint8List(_rate ~/ 8);
 
-          var offset = (off + (i ~/ 8) + (j * chunk.length));
+          final offset = (off + (i ~/ 8) + (j * chunk.length));
           chunk.setRange(0, chunk.length, data.sublist(offset));
 
           _keccakAbsorb(_state, chunk, chunk.length);
@@ -147,12 +169,12 @@ class SHA3Digest extends BaseDigest {
           partialBlock = (_rate - _bitsInQueue);
         }
 
-        var partialByte = (partialBlock % 8);
+        final partialByte = (partialBlock % 8);
         partialBlock -= partialByte;
 
-        var start = (_bitsInQueue ~/ 8);
-        var end = start + (partialBlock ~/ 8);
-        var offset = (off + (i ~/ 8));
+        final start = (_bitsInQueue ~/ 8);
+        final end = start + (partialBlock ~/ 8);
+        final offset = (off + (i ~/ 8));
         _dataQueue.setRange(start, end, data.sublist(offset));
 
         _bitsInQueue += partialBlock;
@@ -194,11 +216,12 @@ class SHA3Digest extends BaseDigest {
   }
 
   void _squeeze(Uint8List output, int offset, int outputLength) {
-    var i, partialBlock;
+    int i, partialBlock;
 
     if (!_squeezing) {
       _padAndSwitchToSqueezingPhase();
     }
+
     if ((outputLength % 8) != 0) {
       throw new StateError("Output length not a multiple of 8: ${outputLength}");
     }
@@ -230,27 +253,38 @@ class SHA3Digest extends BaseDigest {
     }
   }
 
-  void _fromBytesToWords(List<Uint64> stateAsWords, Uint8List state) {
+  void _fromBytesToWords(Register64List stateAsWords, Uint8List state) {
+    final r = new Register64();
+
     for (int i = 0; i < (1600 ~/ 64); i++) {
-      stateAsWords[i] = new Uint64(0,0);
-      int index = i * (64 ~/ 8);
+      final index = i * (64 ~/ 8);
+
+      stateAsWords[i].set(0);
+
       for (int j = 0; j < (64 ~/ 8); j++) {
-        stateAsWords[i] |= (new Uint64(0,state[index + j]) << (8 * j));
+        r.set(state[index + j]);
+        r.shiftl(8 * j);
+        stateAsWords[i].or(r);
       }
     }
   }
 
-  void _fromWordsToBytes(Uint8List state, List<Uint64> stateAsWords) {
+  void _fromWordsToBytes(Uint8List state, Register64List stateAsWords) {
+    final r = new Register64();
+
     for (int i = 0; i < (1600 ~/ 64); i++) {
-      int index = i * (64 ~/ 8);
+      final index = i * (64 ~/ 8);
+
       for (int j = 0; j < (64 ~/ 8); j++) {
-        state[index + j] = (stateAsWords[i] >> (8 * j)).toUint8().toInt();
+        r.set(stateAsWords[i]);
+        r.shiftr(8 * j);
+        state[index + j] = r.lo32;
       }
     }
   }
 
   void _keccakPermutation(Uint8List state) {
-    var longState = new List<Uint64>(state.length ~/ 8);
+    final longState = new Register64List(state.length ~/ 8);
 
     _fromBytesToWords(longState, state);
     _keccakPermutationOnWords(longState);
@@ -258,16 +292,14 @@ class SHA3Digest extends BaseDigest {
   }
 
   void _keccakPermutationAfterXor(Uint8List state, Uint8List data, int dataLengthInBytes) {
-    for (var i = 0; i < dataLengthInBytes; i++) {
+    for (int i = 0; i < dataLengthInBytes; i++) {
       state[i] ^= data[i];
     }
     _keccakPermutation(state);
   }
 
-  void _keccakPermutationOnWords(List<Uint64> state) {
-    int i;
-
-    for (i = 0; i < 24; i++) {
+  void _keccakPermutationOnWords(Register64List state) {
+    for (int i = 0; i < 24; i++) {
       theta(state);
       rho(state);
       pi(state);
@@ -276,61 +308,84 @@ class SHA3Digest extends BaseDigest {
     }
   }
 
-  var C = new List<Uint64>(5);
+  void theta(Register64List A) {
+    final C = new Register64List(5);
+    final r0 = new Register64();
+    final r1 = new Register64();
 
-  void theta(List<Uint64> A) {
-    for (var x = 0; x < 5; x++) {
-      C[x] = new Uint64(0,0);
-      for (var y = 0; y < 5; y++) {
-        C[x] ^= A[x + 5 * y];
+    for (int x = 0; x < 5; x++) {
+      C[x].set(0);
+
+      for (int y = 0; y < 5; y++) {
+        C[x].xor(A[x + 5 * y]);
       }
     }
-    for (var x = 0; x < 5; x++) {
-      var dX = ((((C[(x + 1) % 5]) << 1) ^ ((C[(x + 1) % 5]) >> (64 - 1)))) ^ C[(x + 4) % 5];
+
+    for (int x = 0; x < 5; x++) {
+      r0.set(C[(x + 1) % 5]);
+      r0.shiftl(1);
+
+      r1.set(C[(x + 1) % 5]);
+      r1.shiftr(63);
+
+      r0.xor(r1);
+      r0.xor(C[(x + 4) % 5]);
+
       for (int y = 0; y < 5; y++) {
-        A[x + 5 * y] ^= dX;
+        A[x + 5 * y].xor(r0);
       }
     }
   }
 
-  void rho(List<Uint64> A) {
-    for (var x = 0; x < 5; x++) {
-      for (var y = 0; y < 5; y++) {
-        var index = x + 5 * y;
+  void rho(Register64List A) {
+    final r = new Register64();
+
+    for (int x = 0; x < 5; x++) {
+      for (int y = 0; y < 5; y++) {
+        final index = x + 5 * y;
+
         if (_keccakRhoOffsets[index] != 0) {
-          A[index] = (A[index] << _keccakRhoOffsets[index].toInt()) ^ ((A[index]) >> (64 - _keccakRhoOffsets[index].toInt()));
+          r.set(A[index]);
+          r.shiftr(64 - _keccakRhoOffsets[index]);
+
+          A[index].shiftl(_keccakRhoOffsets[index]);
+          A[index].xor(r);
         }
       }
     }
   }
 
-  var tempA = new List<Uint64>(25);
 
-  void pi(List<Uint64> A) {
+  void pi(Register64List A) {
+    final tempA = new Register64List(25);
+
     tempA.setRange(0, tempA.length, A);
 
-    for (var x = 0; x < 5; x++) {
-      for (var y = 0; y < 5; y++) {
-        A[y + 5 * ((2 * x + 3 * y) % 5)] = tempA[x + 5 * y];
+    for (int x = 0; x < 5; x++) {
+      for (int y = 0; y < 5; y++) {
+        A[y + 5 * ((2 * x + 3 * y) % 5)].set(tempA[x + 5 * y]);
       }
     }
   }
 
-  var chiC = new List<Uint64>(5);
+  void chi(Register64List A) {
+    final chiC = new Register64List(5);
 
-  void chi(List<Uint64> A) {
-    for (var y = 0; y < 5; y++) {
-      for (var x = 0; x < 5; x++) {
-        chiC[x] = A[x + 5 * y] ^ ((~A[(((x + 1) % 5) + 5 * y)]) & A[(((x + 2) % 5) + 5 * y)]);
+    for (int y = 0; y < 5; y++) {
+      for (int x = 0; x < 5; x++) {
+        chiC[x].set(A[((x + 1) % 5) + (5 * y)]);
+        chiC[x].not();
+        chiC[x].and(A[((x + 2) % 5) + (5 * y)]);
+        chiC[x].xor(A[x + 5 * y]);
       }
-      for (var x = 0; x < 5; x++) {
-        A[x + 5 * y] = chiC[x];
+      for (int x = 0; x < 5; x++) {
+        A[x + 5 * y].set(chiC[x]);
       }
     }
   }
 
-  void _iota(List<Uint64> A, int indexRound) {
-    A[(((0) % 5) + 5 * ((0) % 5))] ^= _keccakRoundConstants[indexRound];
+  void _iota(Register64List A, int indexRound) {
+    A[(((0) % 5) + 5 * ((0) % 5))].xor(_keccakRoundConstants[indexRound]);
   }
 
   void _keccakAbsorb(Uint8List byteState, Uint8List data, int dataInBytes) {
@@ -345,55 +400,6 @@ class SHA3Digest extends BaseDigest {
 
   void _keccakExtract(Uint8List byteState, Uint8List data, int laneCount) {
     data.setRange(0, laneCount * 8, byteState);
-  }
-
-  static List<Uint64> _keccakInitializeRoundConstants() {
-    var keccakRoundConstants = new List<Uint64>(24);
-    var LFSRstate = new Uint8List(1);
-
-    LFSRstate[0] = 0x01;
-    var i, j, bitPosition;
-
-    for (i = 0; i < 24; i++) {
-      keccakRoundConstants[i] = new Uint64(0,0);
-      for (j = 0; j < 7; j++) {
-        bitPosition = (1 << j) - 1;
-        if (_LFSR86540(LFSRstate)) {
-          keccakRoundConstants[i] ^= new Uint64(0,1) << bitPosition;
-        }
-      }
-    }
-
-    return keccakRoundConstants;
-  }
-
-  static bool _LFSR86540(Uint8List LFSR) {
-    bool result = (((LFSR[0]) & 0x01) != 0);
-    if (((LFSR[0]) & 0x80) != 0) {
-      LFSR[0] = ((LFSR[0] << 1) ^ 0x71);
-    } else {
-      LFSR[0] <<= 1;
-    }
-
-    return result;
-  }
-
-  static List<Uint32> _keccakInitializeRhoOffsets() {
-    var keccakRhoOffsets = new List<Uint32>(25);
-    int x, y, t, newX, newY;
-
-    keccakRhoOffsets[(((0) % 5) + 5 * ((0) % 5))] = new Uint32(0);
-    x = 1;
-    y = 0;
-    for (t = 0; t < 24; t++) {
-      keccakRhoOffsets[(((x) % 5) + 5 * ((y) % 5))] = new Uint32(((t + 1) * (t + 2) ~/ 2) % 64);
-      newX = (0 * x + 1 * y) % 5;
-      newY = (2 * x + 3 * y) % 5;
-      x = newX;
-      y = newY;
-    }
-
-    return keccakRhoOffsets;
   }
 
 }

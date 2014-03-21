@@ -121,7 +121,7 @@ void _registerDigests() {
   Digest.registry["SHA-512"] = (_) => new SHA512Digest();
   Digest.registry["Tiger"] = (_) => new TigerDigest();
   Digest.registry["Whirlpool"] = (_) => new WhirlpoolDigest();
-//  Digest.registry.registerDynamicFactory( _sha3DigestFactory );
+  Digest.registry.registerDynamicFactory( _sha3DigestFactory );
   Digest.registry.registerDynamicFactory( _sha512tDigestFactory );
 }
 

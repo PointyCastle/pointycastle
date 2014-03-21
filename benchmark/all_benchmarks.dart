@@ -18,7 +18,7 @@ import "./digests/ripemd320_benchmark.dart" as ripemd320_benchmark;
 import "./digests/sha1_benchmark.dart" as sha1_benchmark;
 import "./digests/sha224_benchmark.dart" as sha224_benchmark;
 import "./digests/sha256_benchmark.dart" as sha256_benchmark;
-//import "./digests/sha3_benchmark.dart" as sha3_benchmark;
+import "./digests/sha3_benchmark.dart" as sha3_benchmark;
 import "./digests/sha384_benchmark.dart" as sha384_benchmark;
 import "./digests/sha512_benchmark.dart" as sha512_benchmark;
 import "./digests/sha512t_benchmark.dart" as sha512t_benchmark;
@@ -46,7 +46,7 @@ void main() {
   sha1_benchmark.main();
   sha224_benchmark.main();
   sha256_benchmark.main();
-  //sha3_benchmark.main();
+  sha3_benchmark.main();
   sha384_benchmark.main();
   sha512_benchmark.main();
   sha512t_benchmark.main();
