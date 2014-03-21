@@ -6,10 +6,6 @@ library cipher.api.ufixnum;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
-
-part "../_parts/api/ufixnum/uintx.dart";
-
 const _MASK_3 = 0x07;
 const _MASK_5 = 0x1F;
 const _MASK_6 = 0x3F;
