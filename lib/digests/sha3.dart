@@ -6,7 +6,7 @@ library cipher.digests.sha3;
 
 import "dart:typed_data";
 
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/digests/base_digest.dart";
 
 /// Implementation of SHA-3 digest.

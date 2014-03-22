@@ -7,7 +7,7 @@ library cipher.random.block_ctr_random;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/random/secure_random_base.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 

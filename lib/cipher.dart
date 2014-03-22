@@ -12,7 +12,7 @@ library cipher;
 export "package:cipher/api.dart";
 export "package:cipher/api/ecc.dart";
 export "package:cipher/api/rsa.dart";
-export "package:cipher/api/ufixnum.dart";
+//export "package:cipher/api/ufixnum.dart";
 
 export 'package:cipher/params/asymmetric_key_parameter.dart';
 export 'package:cipher/params/key_parameter.dart';

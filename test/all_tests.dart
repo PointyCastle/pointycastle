@@ -6,7 +6,7 @@ library cipher.test.all_tests;
 
 import "./adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_block_cipher_test;
 
-import "./api/ufixnum_test.dart" as ufixnum_test;
+import "./src/ufixnum_test.dart" as ufixnum_test;
 import "./api/registry_test.dart" as registry_test;
 
 import "./asymmetric/rsa_test.dart" as rsa_test;

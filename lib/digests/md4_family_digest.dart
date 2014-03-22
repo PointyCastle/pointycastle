@@ -6,7 +6,7 @@ library cipher.digests.md4_family_digest;
 
 import "dart:typed_data";
 
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/digests/base_digest.dart";
 
 /// Base implementation of MD4 family style digest

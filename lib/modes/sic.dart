@@ -7,7 +7,7 @@ library cipher.modes.sic;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/stream/base_stream_cipher.dart";
 

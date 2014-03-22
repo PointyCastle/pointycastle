@@ -7,10 +7,8 @@ library cipher.digests.md5;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/digests/md4_family_digest.dart";
-
-// | Digest | MD5 | 78.31 MB/s | 470 iterations | 6002 ms | 470.00 MB | (start)
 
 /// Implementation of MD5 digest
 class MD5Digest extends MD4FamilyDigest implements Digest {

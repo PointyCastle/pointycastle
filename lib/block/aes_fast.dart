@@ -6,7 +6,7 @@ library cipher.block.aes_fast;
 
 import "dart:typed_data";
 
-import "package:cipher/api/ufixnum.dart";
+import "package:cipher/src/ufixnum.dart";
 import "package:cipher/params/key_parameter.dart";
 import "package:cipher/block/base_block_cipher.dart";
 

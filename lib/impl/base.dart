@@ -73,7 +73,7 @@ import "package:cipher/signers/rsa_signer.dart";
 
 import "package:cipher/stream/salsa20.dart";
 
-part "../_parts/impl/base/ecc_curves.dart";
+part "../src/impl/base/ecc_curves.dart";
 
 bool _initialized = false;
 
