@@ -123,6 +123,7 @@ void _test32() {
       expect(shiftr32(0x10203040,  0), 0x10203040);
       expect(shiftr32(0x10203040, 16), 0x00001020);
       expect(shiftr32(0x10203040, 32), 0x10203040);
+      expect(shiftr32(0x80000000,  8), 0x00800000);
     });
 
     test( "neg32()", () {
