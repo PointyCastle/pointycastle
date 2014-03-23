@@ -77,13 +77,6 @@ class CommandEntropySource implements EntropySource {
       (ProcessResult result) {
         var entropy = (result.stdout as List<int>);
 
-        if (entropy[entropy.length-1] == 13) {
-          entropy = entropy.sublist(0, entropy.length-1);
-        }
-        if (entropy[entropy.length-1] == 10) {
-          entropy = entropy.sublist(0, entropy.length-1);
-        }
-
         int end = _bufferCount + entropy.length;
         if (end > _buffer.length) {
           end = _buffer.length;

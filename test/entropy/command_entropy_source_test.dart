@@ -21,12 +21,41 @@ void main() {
 
       return source.getBytes(count).then((bytes) {
         expect(bytes.length, count);
-        expect(bytes, "12345123451234512345123451234512".codeUnits);
+        expectValid(bytes);
       });
 
     });
 
   });
 
+}
+
+void expectValid(List<int> bytes) {
+  switch (bytes.length) {
+    case 1:
+      expect(bytes.sublist(0, 1), "1".codeUnits);
+      break;
+
+    case 2:
+      expect(bytes.sublist(0, 2), "12".codeUnits);
+      break;
+
+    case 3:
+      expect(bytes.sublist(0, 3), "123".codeUnits);
+      break;
+
+    case 4:
+      expect(bytes.sublist(0, 4), "1234".codeUnits);
+      break;
+
+    default:
+      expect(bytes.sublist(0, 5), "12345".codeUnits);
+  }
+
+  for (int i = 5; i < bytes.length; i++) {
+    if ((bytes[i] != 10) && (bytes[i] != 13)) {
+      return expectValid(bytes.sublist(i));
+    }
+  }
 }
 
