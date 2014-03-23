@@ -13,13 +13,14 @@ void main() {
 
   initCipher();
 
-  group( "registry_server:", () {
+  group("registry_server:", () {
 
-    test( "EntropySource returns valid implementations", () {
+    test("EntropySource returns valid implementations", () {
 
-      testEntropySource( "file:///dev/random" );
-      testEntropySource( "http://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f" );
-      testEntropySource( "https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f" );
+      testEntropySource("file:///dev/random");
+      testEntropySource("http://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f");
+      testEntropySource("https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f");
+      testEntropySource("command:echo|hola");
 
     });
 

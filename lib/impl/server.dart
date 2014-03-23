@@ -17,7 +17,7 @@ import "package:cipher/impl/base.dart" as base;
 
 import "package:cipher/entropy/file_entropy_source.dart";
 import "package:cipher/entropy/url_entropy_source.dart";
-
+import "package:cipher/entropy/command_entropy_source.dart";
 
 bool _initialized = false;
 
@@ -31,8 +31,9 @@ void initCipher() {
 }
 
 void _registerEntropySources() {
-  EntropySource.registry.registerDynamicFactory( _fileEntropySourceFactory );
-  EntropySource.registry.registerDynamicFactory( _urlEntropySourceFactory );
+  EntropySource.registry.registerDynamicFactory(_fileEntropySourceFactory);
+  EntropySource.registry.registerDynamicFactory(_urlEntropySourceFactory);
+  EntropySource.registry.registerDynamicFactory(_commandEntropySourceFactory);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +50,16 @@ EntropySource _fileEntropySourceFactory(String algorithmName) {
 EntropySource _urlEntropySourceFactory(String algorithmName) {
   if( algorithmName.startsWith("http://") || algorithmName.startsWith("https://") ) {
     return new UrlEntropySource(algorithmName);
+  }
+
+  return null;
+}
+
+EntropySource _commandEntropySourceFactory(String algorithmName) {
+  if (algorithmName.startsWith("command:")) {
+    final cmdLine = algorithmName.substring(8);
+    final parts = cmdLine.split("|");
+    return new CommandEntropySource(1024, parts[0], parts.sublist(1));
   }
 
   return null;

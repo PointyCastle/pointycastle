@@ -56,15 +56,15 @@ abstract class EntropySource {
   static final registry = new Registry<EntropySource>();
 
   /// Create the entropy source specified by the standard [sourceName].
-  factory EntropySource( [String sourceName=""] ) => registry.create(sourceName);
+  factory EntropySource([String sourceName=""]) => registry.create(sourceName);
 
   /// Get this entropy source name.
   String get sourceName;
 
   /// Seed the [EntropySource].
-  void seed( CipherParameters params );
+  void seed(CipherParameters params);
 
   /// Get [count] random bytes from the entropy source.
-  Future<Uint8List> getBytes( int count );
+  Future<Uint8List> getBytes(int count);
 
 }
