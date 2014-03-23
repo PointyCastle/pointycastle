@@ -12,8 +12,8 @@ import "./all_tests.dart" as all_tests;
 import "./api/registry_server_test.dart" as registry_server_test;
 
 import "./entropy/command_entropy_source_test.dart" as command_entropy_source_test;
-import "./entropy/file_entropy_source_test.dart" as file_entropy_source_test;
-import "./entropy/url_entropy_source_test.dart" as url_entropy_source_test;
+//import "./entropy/file_entropy_source_test.dart" as file_entropy_source_test;
+//import "./entropy/url_entropy_source_test.dart" as url_entropy_source_test;
 
 /// Some tests are commented out because they need external dependencies and thus, cannot be run automatically.
 void main() {
@@ -26,7 +26,7 @@ void main() {
 
   // entropy sources
   command_entropy_source_test.main();
-  file_entropy_source_test.main();
-  url_entropy_source_test.main();
+  //file_entropy_source_test.main();
+  //url_entropy_source_test.main();
 
 }
