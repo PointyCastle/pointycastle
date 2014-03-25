@@ -13,8 +13,11 @@ import "package:cipher/asymmetric/base_asymmetric_block_cipher.dart";
 
 class RSAEngine extends BaseAsymmetricBlockCipher {
 
-  RSAAsymmetricKey _key;
   bool _forEncryption;
+  RSAAsymmetricKey _key;
+  BigInteger _dP;
+  BigInteger _dQ;
+  BigInteger _qInv;
 
   String get algorithmName => "RSA";
 
@@ -50,6 +53,15 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
   void init(bool forEncryption, AsymmetricKeyParameter<RSAAsymmetricKey> params) {
     _forEncryption = forEncryption;
     _key = params.key;
+
+    if (_key is RSAPrivateKey) {
+      var privKey = (_key as RSAPrivateKey);
+      var pSub1 = (privKey.p - BigInteger.ONE);
+      var qSub1 = (privKey.q - BigInteger.ONE);
+      _dP = privKey.d.remainder(pSub1);
+      _dQ = privKey.d.remainder(qSub1);
+      _qInv = privKey.q.modInverse(privKey.p);
+    }
   }
 
   int processBlock(Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
@@ -106,63 +118,26 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
     return output.length;
   }
 
-  BigInteger _processBigInteger(BigInteger input) => input.modPow(_key.exponent, _key.modulus);
+  BigInteger _processBigInteger(BigInteger input) {
+    if (_key is RSAPrivateKey) {
+      var privKey = (_key as RSAPrivateKey);
+      var mP, mQ, h, m;
 
+      mP = (input.remainder(privKey.p)).modPow(_dP, privKey.p);
 
-  // TODO: make use of Chinese Remainder Theorem
-  /*
-  CRT: calculate dP, dQ, etc. inside init and cache them
-    // calculate the CRT factors
-    var pSub1 = (p - BigInteger.ONE);
-    var qSub1 = (q - BigInteger.ONE);
-    var dP = d.remainder(pSub1);
-    var dQ = d.remainder(qSub1);
-    var qInv = q.modInverse(p);
+      mQ = (input.remainder(privKey.q)).modPow(_dQ, privKey.q);
 
-    var dP = d.remainder(pSub1);
-    var dQ = d.remainder(qSub1);
-    var qInv = q.modInverse(p);
-  */
-
-  /*
-  CRT: use it in _processBigInteger()
-  if (key is RSAPrivateCrtKeyParameters)
-  {
-      //
-      // we have the extra factors, use the Chinese Remainder Theorem - the author
-      // wishes to express his thanks to Dirk Bonekaemper at rtsffm.com for
-      // advice regarding the expression of this.
-      //
-      RSAPrivateCrtKeyParameters crtKey = (RSAPrivateCrtKeyParameters)key;
-
-      BigInteger p = crtKey.getP();
-      BigInteger q = crtKey.getQ();
-      BigInteger dP = crtKey.getDP();
-      BigInteger dQ = crtKey.getDQ();
-      BigInteger qInv = crtKey.getQInv();
-
-      BigInteger mP, mQ, h, m;
-
-      // mP = ((input mod p) ^ dP)) mod p
-      mP = (input.remainder(p)).modPow(dP, p);
-
-      // mQ = ((input mod q) ^ dQ)) mod q
-      mQ = (input.remainder(q)).modPow(dQ, q);
-
-      // h = qInv * (mP - mQ) mod p
       h = mP.subtract(mQ);
-      h = h.multiply(qInv);
-      h = h.mod(p);               // mod (in Java) returns the positive residual
+      h = h.multiply(_qInv);
+      h = h.mod(privKey.p);
 
-      // m = h * q + mQ
-      m = h.multiply(q);
+      m = h.multiply(privKey.q);
       m = m.add(mQ);
 
       return m;
-  }
-  else
-  {
+    } else {
       return input.modPow(_key.exponent, _key.modulus);
+    }
   }
-  */
+
 }
