@@ -1,3 +1,7 @@
+// Copyright (c) 2013, Iván Zaera Avellón - izaera@gmail.com
+// Use of this source code is governed by a LGPL v3 license.
+// See the LICENSE file for more information.
+
 library cipher.random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
@@ -10,20 +14,22 @@ import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/params/key_parameter.dart";
 
 /**
- * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random values and automatically
- * self reseeds itself after each request for data, in order to achieve forward security. See section 4.1 of the paper:
+ * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
+ * values and automatically self reseeds itself after each request for data, in order to achieve
+ * forward security. See section 4.1 of the paper:
  * Practical Random Number Generation in Software (by John Viega).
  */
 class AutoSeedBlockCtrRandom implements SecureRandom {
 
   BlockCtrRandom _delegate;
+  final bool _reseedIV;
 
   var _inAutoReseed = false;
   var _autoReseedKeyLength;
 
   String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
 
-  AutoSeedBlockCtrRandom(BlockCipher cipher) {
+  AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV=true]) {
     _delegate = new BlockCtrRandom(cipher);
   }
 
@@ -66,9 +72,15 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
 
   void _doAutoReseed() {
     var newKey = nextBytes(_autoReseedKeyLength);
-    var newIV = nextBytes(_delegate.cipher.blockSize);
     var keyParam = new KeyParameter(newKey);
-    var params = new ParametersWithIV(keyParam, newIV);
+
+    var params;
+    if (_reseedIV) {
+      params = new ParametersWithIV(keyParam, nextBytes(_delegate.cipher.blockSize));
+    } else {
+      params = keyParam;
+    }
+
     _delegate.seed( params );
   }
 

@@ -11,7 +11,10 @@ import "package:cipher/src/ufixnum.dart";
 import "package:cipher/random/secure_random_base.dart";
 import "package:cipher/params/parameters_with_iv.dart";
 
-/// An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random values
+/**
+ * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
+ * values.
+ */
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
 
   final BlockCipher cipher;
@@ -28,10 +31,14 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
 
   String get algorithmName => "${cipher.algorithmName}/CTR/PRNG";
 
-  void seed(ParametersWithIV<CipherParameters> params) {
+  void seed(CipherParameters params) {
     _used = _output.length;
-    _input.setAll(0, params.iv);
-    cipher.init(true, params.parameters);
+    if (params is ParametersWithIV) {
+      _input.setAll(0, params.iv);
+      cipher.init(true, params.parameters);
+    } else {
+      cipher.init(true, params);
+    }
   }
 
   int nextUint8() {

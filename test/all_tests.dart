@@ -51,6 +51,7 @@ import "./paddings/pkcs7_test.dart" as pkcs7_test;
 
 import "./random/auto_seed_block_ctr_random_test.dart" as auto_seed_block_ctr_random_test;
 import "./random/block_ctr_random_test.dart" as block_ctr_random_test;
+import "./random/fortuna_random_test.dart" as fortuna_random_test;
 
 import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 import "./signers/rsa_signer_test.dart" as rsa_signer_test;
@@ -117,6 +118,7 @@ void main() {
   // secure randoms
   auto_seed_block_ctr_random_test.main();
   block_ctr_random_test.main();
+  fortuna_random_test.main();
 
   // signers
   ecdsa_signer_test.main();

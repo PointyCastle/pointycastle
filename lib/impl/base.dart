@@ -67,6 +67,7 @@ import "package:cipher/paddings/pkcs7.dart";
 
 import "package:cipher/random/auto_seed_block_ctr_random.dart";
 import "package:cipher/random/block_ctr_random.dart";
+import "package:cipher/random/fortuna_random.dart";
 
 import "package:cipher/signers/ecdsa_signer.dart";
 import "package:cipher/signers/rsa_signer.dart";
@@ -200,6 +201,7 @@ void _registerPaddings() {
 }
 
 void _registerSecureRandoms() {
+  SecureRandom.registry["Fortuna"] = (_) => new FortunaRandom();
   SecureRandom.registry.registerDynamicFactory( _ctrPrngSecureRandomFactory );
   SecureRandom.registry.registerDynamicFactory( _ctrAutoSeedPrngSecureRandomFactory );
 }
