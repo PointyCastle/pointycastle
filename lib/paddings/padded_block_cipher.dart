@@ -35,7 +35,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   Uint8List process(Uint8List data) {
-    var blocks = (data.length ~/ blockSize) + 1;
+    var blocks = (data.length + blockSize - 1) ~/ blockSize;
 
     var out = new Uint8List(blocks * blockSize);
     for (var i = 0; i < (blocks - 1); i++) {
@@ -48,7 +48,11 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
       remainder = blockSize;
     }
     var offset = ((blocks - 1) * blockSize);
-    doFinal(data, offset, out, offset);
+    var count = doFinal(data, offset, out, offset);
+
+    if (!_encrypting) {
+      out = out.sublist(0, out.length - blockSize + count);
+    }
 
     return out;
   }

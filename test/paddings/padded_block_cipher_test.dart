@@ -16,7 +16,7 @@ void main() {
   initCipher();
   BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
-  group( "PaddedBlockCipherTest works", () {
+  group( "PaddedBlockCipher:", () {
 
     test( "cipher", () {
 
@@ -32,6 +32,21 @@ void main() {
 
     });
 
+    test( "decipher", () {
+
+      var params = new PaddedBlockCipherParameters( null, null );
+      var pbc = new PaddedBlockCipher("Null/PKCS7");
+
+      pbc.init(false, params);
+
+      var inp = createUint8ListFromHexString("000102030405060708090a0b0c0d0e0f10111213141516170808080808080808");
+      var out = pbc.process(inp);
+
+      var expected = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
+
+      expect( formatBytesAsHexString(out), formatBytesAsHexString(expected) );
+
+    });
   });
 
 }
