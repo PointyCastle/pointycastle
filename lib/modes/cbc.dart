@@ -44,9 +44,10 @@ class CBCBlockCipher extends BaseBlockCipher {
 
     this._encrypting = forEncryption;
     _IV.setAll( 0, params.iv );
-    _underlyingCipher.init( forEncryption, params.parameters );
 
     reset();
+
+    _underlyingCipher.init( forEncryption, params.parameters );
   }
 
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff)
