@@ -17,9 +17,9 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   bool _encrypting;
 
-  PaddedBlockCipherImpl(this.padding,this.cipher);
+  PaddedBlockCipherImpl(this.padding, this.cipher);
 
-  String get algorithmName => cipher.algorithmName+"/"+padding.algorithmName;
+  String get algorithmName => cipher.algorithmName + "/" + padding.algorithmName;
 
   int get blockSize => cipher.blockSize;
 
@@ -28,33 +28,36 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
     cipher.reset();
   }
 
-  void init( bool forEncryption, PaddedBlockCipherParameters params ) {
+  void init(bool forEncryption, PaddedBlockCipherParameters params) {
     _encrypting = forEncryption;
-    cipher.init( forEncryption, params.underlyingCipherParameters );
-    padding.init( params.paddingCipherParameters );
+    cipher.init(forEncryption, params.underlyingCipherParameters);
+    padding.init(params.paddingCipherParameters);
   }
 
   Uint8List process(Uint8List data) {
-    var blocks = (data.length + blockSize - 1) ~/ blockSize;
+    var inputBlocks = (data.length + blockSize - 1) ~/ blockSize;
 
-    var out = new Uint8List(blocks * blockSize);
-    for (var i = 0; i < (blocks - 1); i++) {
+    var outputBlocks;
+    if (_encrypting) {
+      outputBlocks = (data.length + blockSize) ~/ blockSize;
+    } else {
+      if ((data.length % blockSize) != 0) {
+        throw new ArgumentError("Input data length must be a multiple of cipher's block size");
+      }
+      outputBlocks = inputBlocks;
+    }
+
+    var out = new Uint8List(outputBlocks * blockSize);
+
+    for (var i = 0; i < (inputBlocks - 1); i++) {
       var offset = (i * blockSize);
       processBlock(data, offset, out, offset);
     }
 
-    var remainder = (data.length % blockSize);
-    if (remainder == 0) {
-      remainder = blockSize;
-    }
-    var offset = ((blocks - 1) * blockSize);
-    var count = doFinal(data, offset, out, offset);
+    var lastBlockOffset = ((inputBlocks - 1) * blockSize);
+    var lastBlockSize = doFinal(data, lastBlockOffset, out, lastBlockOffset);
 
-    if (!_encrypting) {
-      out = out.sublist(0, out.length - blockSize + count);
-    }
-
-    return out;
+    return out.sublist(0, lastBlockOffset + lastBlockSize);
   }
 
   int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
@@ -62,17 +65,39 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
   }
 
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {
-    if( _encrypting ) {
-      Uint8List tmp = new Uint8List(blockSize)
-        ..setAll( 0, inp.sublist(inpOff) );
-      var padCount = inp.length-inpOff;
-      padding.addPadding( tmp, padCount );
-      var processed = processBlock(tmp, 0, out, outOff);
-      return processed - padCount;
+    if (_encrypting) {
+      var lastInputBlock = new Uint8List(blockSize)..setAll(0, inp.sublist(inpOff));
+
+      var remainder = inp.length - inpOff;
+
+      if (remainder < blockSize) {
+        // Padding goes embedded in last block of data
+        padding.addPadding(lastInputBlock, (inp.length - inpOff));
+
+        processBlock(lastInputBlock, 0, out, outOff);
+
+        return blockSize;
+      } else {
+        // Padding goes alone in an additional block
+        processBlock(inp, inpOff, out, outOff);
+
+        padding.addPadding(lastInputBlock, 0);
+
+        processBlock(lastInputBlock, 0, out, outOff + blockSize);
+
+        return 2 * blockSize;
+      }
     } else {
-      var processed = processBlock(inp, inpOff, out, outOff);
+      // Decrypt last block and remove padding
+      processBlock(inp, inpOff, out, outOff);
+
       var padCount = padding.padCount(out.sublist(outOff));
-      return processed - padCount;
+
+      var padOffsetInBlock = blockSize - padCount;
+
+      out.fillRange(outOff + padOffsetInBlock, out.length, 0);
+
+      return padOffsetInBlock;
     }
   }
 

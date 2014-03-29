@@ -1,3 +1,10 @@
+#### Version 0.8.0 (2014-??-??) (Dart SDK version ???)
+
+* **[bug 80]** PaddedBlockCipher doesn't add padding when data length is a multiple of the block 
+                size. This fix introduces a **BREAKING CHANGE** in PaddedBlockCipher specification.
+                Read its API documentation to know about the changes.
+
+
 #### Version 0.7.0 (2014-03-22) (Dart SDK version 1.3.0-dev.5.2)
 
 * **[enh 15]** Implement stream cipher benchmarks.

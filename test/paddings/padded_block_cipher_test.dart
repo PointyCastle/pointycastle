@@ -12,42 +12,53 @@ import "../test/src/null_block_cipher.dart";
 import "../test/src/helpers.dart";
 
 void main() {
-
   initCipher();
   BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
-  group( "PaddedBlockCipher:", () {
+  var params = new PaddedBlockCipherParameters(null, null);
+  var pbc = new PaddedBlockCipher("Null/PKCS7");
 
-    test( "cipher", () {
+  group("PaddedBlockCipher:", () {
+    group("partial blocks:", () {
+      var sequence = createUint8ListFromSequentialNumbers(24);
+      var paddedSequenceHex = "000102030405060708090a0b0c0d0e0f10111213141516170808080808080808";
 
-      var params = new PaddedBlockCipherParameters( null, null );
-      var pbc = new PaddedBlockCipher("Null/PKCS7");
+      test("cipher", () {
+        pbc.init(true, params);
 
-      pbc.init( true, params );
+        var out = pbc.process(sequence);
 
-      var inp = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
-      var out = pbc.process(inp);
+        expect(formatBytesAsHexString(out), paddedSequenceHex);
+      });
 
-      expect( formatBytesAsHexString(out), "000102030405060708090a0b0c0d0e0f10111213141516170808080808080808" );
+      test("decipher", () {
+        pbc.init(false, params);
 
+        var out = pbc.process(createUint8ListFromHexString(paddedSequenceHex));
+
+        expect(formatBytesAsHexString(out), formatBytesAsHexString(sequence));
+      });
     });
 
-    test( "decipher", () {
+    group("whole blocks:", () {
+      var sequence = createUint8ListFromSequentialNumbers(16);
+      var paddedSequenceHex = "000102030405060708090a0b0c0d0e0f10101010101010101010101010101010";
 
-      var params = new PaddedBlockCipherParameters( null, null );
-      var pbc = new PaddedBlockCipher("Null/PKCS7");
+      test("cipher", () {
+        pbc.init(true, params);
 
-      pbc.init(false, params);
+        var out = pbc.process(sequence);
 
-      var inp = createUint8ListFromHexString("000102030405060708090a0b0c0d0e0f10111213141516170808080808080808");
-      var out = pbc.process(inp);
+        expect(formatBytesAsHexString(out), paddedSequenceHex);
+      });
 
-      var expected = createUint8ListFromSequentialNumbers(3*pbc.blockSize~/2);
+      test("decipher", () {
+        pbc.init(false, params);
 
-      expect( formatBytesAsHexString(out), formatBytesAsHexString(expected) );
+        var out = pbc.process(createUint8ListFromHexString(paddedSequenceHex));
 
+        expect(formatBytesAsHexString(out), formatBytesAsHexString(sequence));
+      });
     });
   });
-
 }
-
