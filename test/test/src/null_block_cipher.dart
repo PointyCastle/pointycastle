@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.engines.null_block_cipher;
+library cipher.test.src.null_block_cipher;
 
 import "dart:typed_data";
 

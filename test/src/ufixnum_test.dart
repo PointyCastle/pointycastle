@@ -89,6 +89,30 @@ void _test16() {
       expect(clip16(0x10000), 0x0000);
     });
 
+    test( "pack16(BIG_ENDIAN)", () {
+      var out = new Uint8List(2);
+      pack16(0x1020, out, 0, Endianness.BIG_ENDIAN);
+      expect(out[0], 0x10);
+      expect(out[1], 0x20);
+    });
+
+    test( "pack16(LITTLE_ENDIAN)", () {
+      var out = new Uint8List(2);
+      pack16(0x1020, out, 0, Endianness.LITTLE_ENDIAN);
+      expect(out[1], 0x10);
+      expect(out[0], 0x20);
+    });
+
+    test( "unpack16(BIG_ENDIAN)", () {
+      var inp = new Uint8List.fromList([0x10, 0x20]);
+      expect(unpack16(inp, 0, Endianness.BIG_ENDIAN), 0x1020);
+    });
+
+    test( "unpack16(LITTLE_ENDIAN)", () {
+      var inp = new Uint8List.fromList([0x20, 0x10]);
+      expect(unpack16(inp, 0, Endianness.LITTLE_ENDIAN), 0x1020);
+    });
+
   });
 
 }

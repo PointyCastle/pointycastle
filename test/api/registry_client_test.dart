@@ -7,13 +7,19 @@ library cipher.test.api.registry_client_test;
 import "package:cipher/impl/client.dart";
 import "package:unittest/unittest.dart";
 
-//import '../test/registry_tests.dart';
+import '../test/registry_tests.dart';
 
 void main() {
 
   initCipher();
 
   group( "registry_client:", () {
+
+    test("EntropyCollector returns valid implementations", () {
+
+      testEntropyCollector("User");
+
+    });
 
   });
 

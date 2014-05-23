@@ -31,6 +31,14 @@ import "./digests/sha512t_test.dart" as sha512t_test;
 import "./digests/tiger_test.dart" as tiger_test;
 import "./digests/whirlpool_test.dart" as whirlpool_test;
 
+import "./entropy/fortuna_entropy_source_test.dart" as fortuna_entropy_source_test;
+
+import "./entropy_collector/jitter_entropy_collector_test.dart" as jitter_entropy_collector_test;
+import "./entropy_collector/source_entropy_collector_test.dart" as source_entropy_collector_test;
+
+import "./entropy_estimator/mean_entropy_estimator_test.dart" as mean_entropy_estimator_test;
+import "./entropy_estimator/shannon_entropy_estimator_test.dart" as shannon_entropy_estimator_test;
+
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
 
@@ -91,6 +99,17 @@ void main() {
   sha512t_test.main();
   tiger_test.main();
   whirlpool_test.main();
+
+  // entropy sources
+  fortuna_entropy_source_test.main();
+
+  // entropy collectors
+  jitter_entropy_collector_test.main();
+  source_entropy_collector_test.main();
+
+  // entropy estimators
+  mean_entropy_estimator_test.main();
+  shannon_entropy_estimator_test.main();
 
   // key derivators
   pbkdf2_test.main();

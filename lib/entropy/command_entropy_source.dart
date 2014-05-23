@@ -34,9 +34,6 @@ class CommandEntropySource implements EntropySource {
     }
   }
 
-  void seed( CipherParameters params ) {
-  }
-
   Future<Uint8List> getBytes(int count) {
     final completer = new Completer<Uint8List>();
     final bytes = new Uint8List(count);

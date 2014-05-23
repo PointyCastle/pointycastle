@@ -29,37 +29,45 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
 
   String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
 
-  AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV=true]) {
+  AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV = true]) {
     _delegate = new BlockCtrRandom(cipher);
   }
 
-  void seed(ParametersWithIV<KeyParameter> params) {
-    _autoReseedKeyLength = params.parameters.key.length;
-    _delegate.seed( params );
+  void seed(CipherParameters params) {
+    if (params is ParametersWithIV<KeyParameter>) {
+      _autoReseedKeyLength = params.parameters.key.length;
+      _delegate.seed(params);
+    } else if (params is KeyParameter) {
+      _autoReseedKeyLength = params.key.length;
+      _delegate.seed(params);
+    } else {
+      throw new ArgumentError(
+          "Only types ParametersWithIV<KeyParameter> or KeyParameter allowed for seeding");
+    }
   }
 
-  int nextUint8() => _autoReseedIfNeededAfter( () {
+  int nextUint8() => _autoReseedIfNeededAfter(() {
     return _delegate.nextUint8();
   });
 
-  int nextUint16() => _autoReseedIfNeededAfter( () {
+  int nextUint16() => _autoReseedIfNeededAfter(() {
     return _delegate.nextUint16();
   });
 
-  int nextUint32() => _autoReseedIfNeededAfter( () {
+  int nextUint32() => _autoReseedIfNeededAfter(() {
     return _delegate.nextUint32();
   });
 
-  BigInteger nextBigInteger( int bitLength ) => _autoReseedIfNeededAfter( () {
+  BigInteger nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
     return _delegate.nextBigInteger(bitLength);
   });
 
-  Uint8List nextBytes( int count ) => _autoReseedIfNeededAfter( () {
+  Uint8List nextBytes(int count) => _autoReseedIfNeededAfter(() {
     return _delegate.nextBytes(count);
   });
 
-  dynamic _autoReseedIfNeededAfter( dynamic closure ) {
-    if( _inAutoReseed ) {
+  dynamic _autoReseedIfNeededAfter(dynamic closure) {
+    if (_inAutoReseed) {
       return closure();
     } else {
       _inAutoReseed = true;
@@ -81,7 +89,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
       params = keyParam;
     }
 
-    _delegate.seed( params );
+    _delegate.seed(params);
   }
 
 }

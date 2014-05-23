@@ -2,20 +2,21 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.entropy.url_entropy_source;
+library cipher.entropy.ajax_entropy_source;
 
 import "dart:async";
 import "dart:typed_data";
-import "dart:io";
+import "dart:html";
 
 import "package:cipher/api.dart";
 
-class UrlEntropySource implements EntropySource {
+//TODO: registrar y probar
+class AjaxEntropySource implements EntropySource {
 
   final String _url;
   final String _sourceName;
 
-  UrlEntropySource(String url, {String sourceName})
+  AjaxEntropySource(String url, {String sourceName})
       : _url = url,
         _sourceName = (sourceName == null) ? "${url}" : sourceName;
 
@@ -25,19 +26,16 @@ class UrlEntropySource implements EntropySource {
     var completer = new Completer<Uint8List>();
 
     var url = _url.replaceAll("{count}", count.toString());
-    new HttpClient().getUrl(Uri.parse(url)).then((HttpClientRequest request) {
-      return request.close();
-    }).then((HttpClientResponse response) {
-      var data = new Uint8List(count);
-      var offset = 0;
-      response.listen((bytes) {
-        data.setRange(offset, offset + bytes.length, bytes);
-        offset += bytes.length;
-      }, onDone: () {
-        completer.complete(data);
-      }, onError: (error, stackTrace) {
-        completer.completeError(error, stackTrace);
-      }, cancelOnError: true);
+    HttpRequest.request(url).then((request) {
+      final response = request.response;
+
+      if (response is ByteBuffer) {
+        completer.complete(new Uint8List.view(response));
+      } else {
+        completer.completeError(new StateError(
+            "Unsupported data type returned from remote server: ${response.runtimeType}"));
+      }
+
     }).catchError((error, stackTrace) {
       completer.completeError(error, stackTrace);
     });

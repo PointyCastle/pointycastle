@@ -86,6 +86,29 @@ int rotr8(int x, int n) {
 //
 int clip16(int x) => (x & _MASK_16);
 
+/**
+ * Packs a 16 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
+ * [ByteData] if you will run it several times against the same buffer and want faster execution.
+ */
+void pack16(int x, dynamic out, int offset, Endianness endian) {
+  assert((x >= 0) && (x <= _MASK_16));
+  if (out is! ByteData) {
+    out = new ByteData.view(out.buffer);
+  }
+  (out as ByteData).setUint16(offset, x, endian);
+}
+
+/**
+ * Unpacks a 16 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+ * [ByteData] if you will run it several times against the same buffer and want faster execution.
+ */
+int unpack16(dynamic inp, int offset, Endianness endian) {
+  if (inp is! ByteData) {
+    inp = new ByteData.view(inp.buffer);
+  }
+  return (inp as ByteData).getUint16(offset, endian);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 32 bit operations
