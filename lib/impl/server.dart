@@ -26,8 +26,6 @@ import "package:cipher/entropy/url_entropy_source.dart";
 
 import "package:cipher/entropy_collector/source_entropy_collector.dart";
 
-part "../src/impl/server/default_randomness.dart";
-
 const _DEFAULT_ENTROPY_COLLECTORS = const ["random.org", "/dev/random", "CryptoAPI"];
 
 bool _initialized = false;
@@ -49,11 +47,11 @@ void initCipher({bool useInstantButUnsafeSecureRandom:
 }
 
 void _registerEntropySources() {
-  EntropySource.registry["random.org"] = new UrlEntropySource(
+  EntropySource.registry["random.org"] = (_) => new UrlEntropySource(
       "https://www.random.org/cgi-bin/randbyte?nbytes={count}&format=f", sourceName: "random.org");
 
   if (_devRandomAvailable()) {
-    EntropySource.registry["/dev/random"] = new FileEntropySource("/dev/random", sourceName:
+    EntropySource.registry["/dev/random"] = (_) => new FileEntropySource("/dev/random", sourceName:
         "/dev/random");
   }
 
@@ -125,4 +123,4 @@ EntropySource _commandEntropySourceFactory(String algorithmName) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _devRandomAvailable() => new File("/dev/random").existsSync();
-bool _cryptoAPIAvailable() => null; // TODO: _cryptoApiAvailable
+bool _cryptoAPIAvailable() => false; // TODO: _cryptoApiAvailable

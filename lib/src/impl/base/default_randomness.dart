@@ -2,7 +2,7 @@ part of cipher.impl.base;
 
 const _RESEED_PERIOD = const Duration(seconds: 5);
 
-final _defaultEntropySource = new FortunaEntropySource(() => new Digest("SHA-256"));
+final _defaultEntropySource = new FortunaEntropySource(() => new Digest("SHA-256"), sourceName: "");
 final _defaultSecureRandom = new AutoSeedBlockCtrRandom(new BlockCipher("AES"), false);
 
 bool _defaultRandomnessInitialized = false;
@@ -42,7 +42,7 @@ void _initDefaultSecureRandom(bool useInstantButUnsafeSecureRandom) {
     _makeDefaultSecureRandomAvailable();
   }
 
-  return _defaultEntropySource.getBytes(32).then((entropy) {
+  _defaultEntropySource.getBytes(32).then((entropy) {
     _defaultSecureRandom.seed(new KeyParameter(entropy));
     _scheduleDefaultSecureRandomReseedEvent(_RESEED_PERIOD);
 
@@ -78,7 +78,6 @@ void _makeDefaultSecureRandomAvailable() {
 void _scheduleDefaultSecureRandomReseedEvent(Duration period) {
   new Timer(period, () {
     _defaultEntropySource.getBytes(32).then((entropy) {
-      print("cipher: default SecureRandom reseed");
       _defaultSecureRandom.seed(new KeyParameter(entropy));
       _scheduleDefaultSecureRandomReseedEvent(period);
     });
