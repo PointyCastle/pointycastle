@@ -61,6 +61,9 @@ class ECDSASigner implements Signer {
       if( params is ParametersWithRandom ) {
         _random = params.random;
         pvparams = params.parameters;
+      } else if (_kMac != null ) {
+        _random = null;
+        pvparams = params;
       } else {
         _random = new SecureRandom();
         pvparams = params;
