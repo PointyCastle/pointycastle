@@ -10,20 +10,18 @@
  */
 library cipher.api;
 
-import "dart:async";
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
-import "package:cipher/api/registry.dart";
 
-part "./src/api/unkeyed.dart";
-part "./src/api/symmetric.dart";
+import "package:cipher/registry/registry.dart";
+export "package:cipher/registry/registry.dart";
+
 part "./src/api/asymmetric.dart";
+part "./src/api/parameters.dart";
 part "./src/api/random.dart";
-
-/// All cipher initialization parameters classes implement this.
-abstract class CipherParameters {
-}
+part "./src/api/symmetric.dart";
+part "./src/api/unkeyed.dart";
 
 
 

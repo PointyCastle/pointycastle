@@ -2,18 +2,20 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.test.api.registry_test;
+library cipher.test.impl_test;
 
-import "package:cipher/impl/base.dart";
+import "package:cipher/cipher.dart";
+
 import "package:unittest/unittest.dart";
 
-import "../test/registry_tests.dart";
+import './test/registry_tests.dart';
 
 void main() {
 
   initCipher();
 
-  group("registry:", () {
+  group("impl:", () {
+
     test("initCipher() can be called several times", () {
       initCipher();
       initCipher();
@@ -49,23 +51,6 @@ void main() {
 
     test("ECDomainParameters returns valid implementations", () {
       testECDomainParameters("prime192v1");
-    });
-
-    test("EntropySource returns valid implementations", () {
-      testEntropySource("");
-      testEntropySource("Fortuna");
-      testEntropySource("RIPEMD-256/Fortuna");
-      testEntropySource("SHA-256/Fortuna");
-    });
-
-    test("EntropyCollector returns valid implementations", () {
-      testEntropyCollector("Jitter");
-      testEntropyCollector("SHA-256/Fortuna/EntropyCollector");
-    });
-
-    test("EntropyEstimator returns valid implementations", () {
-      testEntropyEstimator("Mean");
-      testEntropyEstimator("Shannon");
     });
 
     test("KeyDerivator returns valid implementations", () {

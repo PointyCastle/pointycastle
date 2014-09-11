@@ -7,7 +7,7 @@ library cipher.benchmark.benchmark.stream_cipher_benchmark;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/server.dart";
+
 import "../benchmark/rate_benchmark.dart";
 
 typedef CipherParameters CipherParametersFactory();

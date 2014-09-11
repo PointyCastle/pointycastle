@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.params.key_derivators.pbkdf2_parameters;
+library cipher.key_derivators.api;
 
 import "dart:typed_data";
 
@@ -16,5 +16,18 @@ class Pbkdf2Parameters extends CipherParameters {
   final int desiredKeyLength;
 
   Pbkdf2Parameters(this.salt, this.iterationCount, this.desiredKeyLength);
+
+}
+
+/// [CipherParameters] for the scrypt password based key derivation function.
+class ScryptParameters implements CipherParameters {
+
+    final int N;
+    final int r;
+    final int p;
+    final int desiredKeyLength;
+    final Uint8List salt;
+
+    ScryptParameters( this.N, this.r, this.p, this.desiredKeyLength, this.salt );
 
 }

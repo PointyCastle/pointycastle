@@ -7,9 +7,10 @@ library cipher.asymmetric.rsa;
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
-import "package:cipher/api/rsa.dart";
-import "package:cipher/params/asymmetric_key_parameter.dart";
+
+import "package:cipher/api.dart";
 import "package:cipher/asymmetric/base_asymmetric_block_cipher.dart";
+import "package:cipher/asymmetric/api.dart";
 
 class RSAEngine extends BaseAsymmetricBlockCipher {
 

@@ -7,9 +7,8 @@ library cipher.key_generators.rsa_key_generator;
 import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/rsa.dart";
-import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/params/key_generators/rsa_key_generator_parameters.dart";
+import "package:cipher/asymmetric/api.dart";
+import "package:cipher/key_generators/api.dart";
 
 class RSAKeyGenerator implements KeyGenerator {
 

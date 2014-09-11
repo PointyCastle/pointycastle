@@ -7,7 +7,6 @@ library cipher.modes.cfb;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/block/base_block_cipher.dart";
 
 /// Implementation of Cipher Feedback Mode (CFB) on top of a [BlockCipher].

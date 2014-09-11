@@ -7,12 +7,10 @@ library cipher.test.modes.cbc_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/src/null_block_cipher.dart";
 
-/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle
 void main() {
 
   initCipher();

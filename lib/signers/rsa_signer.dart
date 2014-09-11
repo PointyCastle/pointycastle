@@ -7,9 +7,7 @@ library cipher.signers.rsa_signer;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/rsa.dart";
-import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/params/asymmetric_key_parameter.dart";
+import "package:cipher/asymmetric/api.dart";
 
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
 class RSASigner implements Signer {

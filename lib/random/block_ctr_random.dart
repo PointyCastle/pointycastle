@@ -9,7 +9,6 @@ import "dart:typed_data";
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
 import "package:cipher/random/secure_random_base.dart";
-import "package:cipher/params/parameters_with_iv.dart";
 
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random

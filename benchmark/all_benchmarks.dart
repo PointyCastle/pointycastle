@@ -4,7 +4,7 @@
 
 library cipher.benchmark.all_benchmarks;
 
-import "./api/ufixnum_benchmark.dart" as ufixnum_benchmark;
+import "./src/ufixnum_benchmark.dart" as ufixnum_benchmark;
 
 import "./block/aes_fast_benchmark.dart" as aes_fast_benchmark;
 

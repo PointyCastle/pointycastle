@@ -5,7 +5,6 @@
 library cipher.test.paddings.pkcs7_test;
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
 
 import "../test/padding_tests.dart";
 

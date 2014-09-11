@@ -7,7 +7,7 @@ library cipher.test.random.auto_seed_block_ctr_random_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
+
 import "package:unittest/unittest.dart";
 
 void main() {

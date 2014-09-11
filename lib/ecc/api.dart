@@ -2,13 +2,14 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.api.ecc;
+library cipher.ecc.api;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
+
 import "package:cipher/api.dart";
-import "package:cipher/api/registry.dart";
+import "package:cipher/registry/registry.dart";
 
 /// Standard ECC curve description
 abstract class ECDomainParameters {

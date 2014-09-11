@@ -5,14 +5,13 @@
 library cipher.test.paddings.rsa_signer_test;
 
 import 'package:bignum/bignum.dart';
+
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
 
 import "../test/signer_tests.dart";
 import "../test/src/helpers.dart";
 import "../test/src/null_secure_random.dart";
 
-/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle
 void main() {
 
   initCipher();

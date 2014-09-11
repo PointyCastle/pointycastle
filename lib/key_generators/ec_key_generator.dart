@@ -7,10 +7,10 @@ library cipher.key_generators.ec_key_generator;
 import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
-import "package:cipher/api/ecc.dart";
-import "package:cipher/params/parameters_with_random.dart";
-import "package:cipher/params/key_generators/ec_key_generator_parameters.dart";
+import "package:cipher/ecc/api.dart";
+import "package:cipher/key_generators/api.dart";
 
+/// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGenerator implements KeyGenerator {
 
   ECDomainParameters _params;
@@ -21,7 +21,7 @@ class ECKeyGenerator implements KeyGenerator {
   void init(CipherParameters params) {
     ECKeyGeneratorParameters ecparams;
 
-    if( params is ParametersWithRandom ) {
+    if (params is ParametersWithRandom) {
       _random = params.random;
       ecparams = params.parameters;
     } else {
@@ -39,14 +39,12 @@ class ECKeyGenerator implements KeyGenerator {
 
     do {
       d = _random.nextBigInteger(nBitLength);
-    } while( d==BigInteger.ZERO || (d>=n) );
+    } while (d == BigInteger.ZERO || (d >= n));
 
-    var Q = _params.G*d;
+    var Q = _params.G * d;
 
-    return new AsymmetricKeyPair(
-      new ECPublicKey(Q, _params),
-      new ECPrivateKey(d, _params)
-    );
+    return new AsymmetricKeyPair(new ECPublicKey(Q, _params), new ECPrivateKey(d, _params));
   }
 
 }
+

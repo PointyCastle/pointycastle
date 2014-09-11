@@ -7,14 +7,9 @@ library cipher.test.stream.salsa20_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
 
 import "../test/stream_cipher_tests.dart";
 
-/**
- * NOTE: the expected results for these tests are computed using the Java
- * version of Bouncy Castle
- */
 void main() {
 
   initCipher();

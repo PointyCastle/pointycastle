@@ -7,7 +7,6 @@ library cipher.paddings.padded_block_cipher;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/params/padded_block_cipher_parameters.dart";
 
 /// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {

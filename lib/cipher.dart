@@ -3,27 +3,11 @@
 // See the LICENSE file for more information.
 
 /**
- * This is the main entry point to the cipher library API. It includes libraries [cipher.api] (which comprises the whole API
- * specification) and [cipher.impl.parameters] (which defines [CipherParameters] to be used with provided implementations).
- * .
+ * This is the main entry point to the cipher library API. It includes libraries [cipher.api]
+ * (which comprises the whole API specification) and [cipher.impl] (which defines algorithm
+ * implementations and all [CipherParameters] to be used with them).
  */
 library cipher;
 
 export "package:cipher/api.dart";
-export "package:cipher/api/ecc.dart";
-export "package:cipher/api/rsa.dart";
-
-export 'package:cipher/params/asymmetric_key_parameter.dart';
-export 'package:cipher/params/key_parameter.dart';
-export 'package:cipher/params/padded_block_cipher_parameters.dart';
-export 'package:cipher/params/parameters_with_iv.dart';
-export 'package:cipher/params/parameters_with_random.dart';
-
-export 'package:cipher/params/entropy_collector/polling_entropy_collector_params.dart';
-
-export 'package:cipher/params/key_derivators/pbkdf2_parameters.dart';
-export 'package:cipher/params/key_derivators/scrypt_parameters.dart';
-
-export 'package:cipher/params/key_generators/ec_key_generator_parameters.dart';
-export 'package:cipher/params/key_generators/key_generator_parameters.dart';
-export "package:cipher/params/key_generators/rsa_key_generator_parameters.dart";
+export "package:cipher/impl.dart";

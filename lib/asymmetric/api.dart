@@ -2,7 +2,7 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-library cipher.api.rsa;
+library cipher.asymmetric.api;
 
 import "dart:typed_data";
 

@@ -6,9 +6,8 @@ library cipher.stream.salsa20;
 
 import "dart:typed_data";
 
+import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
-import "package:cipher/params/key_parameter.dart";
-import "package:cipher/params/parameters_with_iv.dart";
 import "package:cipher/stream/base_stream_cipher.dart";
 
 /// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005.

@@ -7,7 +7,7 @@ library cipher.ecc.ecc_base;
 import "dart:typed_data";
 
 import 'package:bignum/bignum.dart';
-import "package:cipher/api/ecc.dart";
+import "package:cipher/ecc/api.dart";
 
 /// Implementation of [ECDomainParameters]
 class ECDomainParametersImpl implements ECDomainParameters {

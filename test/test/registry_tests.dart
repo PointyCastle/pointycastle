@@ -5,6 +5,7 @@
 library cipher.test.test.registry_tests;
 
 import "package:cipher/cipher.dart";
+
 import "package:unittest/unittest.dart";
 import "package:unittest/matcher.dart";
 
@@ -30,24 +31,6 @@ void testECDomainParameters(String domainName) {
   var domain = new ECDomainParameters(domainName);
   expect(domain, new isInstanceOf<ECDomainParameters>("ECDomainParameters"));
   expect(domain.domainName, domainName);
-}
-
-void testEntropySource(String sourceName) {
-  var source = new EntropySource(sourceName);
-  expect(source, new isInstanceOf<EntropySource>("EntropySource"));
-  expect(source.sourceName, sourceName);
-}
-
-void testEntropyCollector(String algorithmName) {
-  var source = new EntropyCollector(algorithmName);
-  expect(source, new isInstanceOf<EntropyCollector>("EntropyCollector"));
-  expect(source.algorithmName, algorithmName);
-}
-
-void testEntropyEstimator(String algorithmName) {
-  var estimator = new EntropyEstimator(algorithmName);
-  expect(estimator, new isInstanceOf<EntropyEstimator>("EntropyEstimator"));
-  expect(estimator.algorithmName, algorithmName);
 }
 
 void testKeyDerivator(String algorithmName) {

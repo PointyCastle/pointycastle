@@ -11,8 +11,6 @@ import "package:bignum/bignum.dart";
 import "package:cipher/api.dart";
 import "package:cipher/block/aes_fast.dart";
 import "package:cipher/random/auto_seed_block_ctr_random.dart";
-import "package:cipher/params/parameters_with_iv.dart";
-import "package:cipher/params/key_parameter.dart";
 
 /// An implementation of [SecureRandom] as specified in the Fortuna algorithm.
 class FortunaRandom implements SecureRandom {

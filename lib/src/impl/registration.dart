@@ -2,111 +2,15 @@
 // Use of this source code is governed by a LGPL v3 license.
 // See the LICENSE file for more information.
 
-/**
- * This library contains all out-of-the-box implementations of the interfaces provided in the API
- * which are compatible with client and server sides.
- *
- * You can extend it with client side algorithms by including library [cipher.impl_client] in
- * addition to this one. You can also extend is with its server side counterpart by including
- * library [cipher.impl_server] in addition to this one
- *
- * You must call [initCipher] method before using this library to load all implementations into
- * cipher's API factories.
- */
-library cipher.impl.base;
-
-import "dart:async";
-import "dart:typed_data";
-
-import "package:bignum/bignum.dart";
-
-import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
-
-import "package:cipher/api.dart";
-import "package:cipher/api/ecc.dart";
-
-import "package:cipher/params/key_parameter.dart";
-
-import "package:cipher/asymmetric/rsa.dart";
-import "package:cipher/asymmetric/pkcs1.dart";
-
-import "package:cipher/block/aes_fast.dart";
-
-import "package:cipher/digests/md2.dart";
-import "package:cipher/digests/md4.dart";
-import "package:cipher/digests/md5.dart";
-import "package:cipher/digests/ripemd128.dart";
-import "package:cipher/digests/ripemd160.dart";
-import "package:cipher/digests/ripemd256.dart";
-import "package:cipher/digests/ripemd320.dart";
-import "package:cipher/digests/sha1.dart";
-import "package:cipher/digests/sha224.dart";
-import "package:cipher/digests/sha256.dart";
-import "package:cipher/digests/sha3.dart";
-import "package:cipher/digests/sha384.dart";
-import "package:cipher/digests/sha512.dart";
-import "package:cipher/digests/sha512t.dart";
-import "package:cipher/digests/tiger.dart";
-import "package:cipher/digests/whirlpool.dart";
-
-import "package:cipher/ecc/ecc_base.dart";
-import "package:cipher/ecc/ecc_fp.dart" as fp;
-
-import "package:cipher/entropy/fortuna_entropy_source.dart";
-
-import "package:cipher/entropy_collector/jitter_entropy_collector.dart";
-import "package:cipher/entropy_collector/source_entropy_collector.dart";
-
-import "package:cipher/entropy_estimator/mean_entropy_estimator.dart";
-import "package:cipher/entropy_estimator/shannon_entropy_estimator.dart";
-
-import "package:cipher/key_derivators/pbkdf2.dart";
-import "package:cipher/key_derivators/scrypt.dart";
-
-import "package:cipher/key_generators/ec_key_generator.dart";
-import "package:cipher/key_generators/rsa_key_generator.dart";
-
-import "package:cipher/macs/hmac.dart";
-
-import "package:cipher/modes/cbc.dart";
-import "package:cipher/modes/cfb.dart";
-import "package:cipher/modes/ecb.dart";
-import "package:cipher/modes/gctr.dart";
-import "package:cipher/modes/ofb.dart";
-import "package:cipher/modes/sic.dart";
-
-import "package:cipher/paddings/padded_block_cipher.dart";
-import "package:cipher/paddings/pkcs7.dart";
-
-import "package:cipher/random/auto_seed_block_ctr_random.dart";
-import "package:cipher/random/block_ctr_random.dart";
-import "package:cipher/random/fortuna_random.dart";
-
-import "package:cipher/signers/ecdsa_signer.dart";
-import "package:cipher/signers/rsa_signer.dart";
-
-import "package:cipher/stream/salsa20.dart";
-
-part "../src/impl/base/ecc_curves.dart";
-part "../src/impl/base/default_randomness.dart";
-
-const DEFAULT_USE_INSTANT_BUT_UNSAFE_SECURE_RANDOM = false;
-
-const _ENTROPY_COLLECTORS = const ["Jitter"];
+part of cipher.impl;
 
 bool _initialized = false;
 
 /**
  * This is the initializer method for this library. It must be called prior to use any of the
  * implementations.
- *
- * You can set [useInstantButUnsafeSecureRandom] if you want the default [SecureRandom] to be
- * available upon return of this method at the expense of maybe using it with a low entropy seed.
- * If you set [useInstantButUnsafeSecureRandom] you can use [waitForDefaultSecureRandom] method
- * to get a [Future] that gets completed as soon as the default [SecureRandom] is securely seeded.
  */
-void initCipher({bool useInstantButUnsafeSecureRandom:
-    DEFAULT_USE_INSTANT_BUT_UNSAFE_SECURE_RANDOM}) {
+void initCipher() {
 
   if (!_initialized) {
     _initialized = true;
@@ -115,9 +19,6 @@ void initCipher({bool useInstantButUnsafeSecureRandom:
     _registerBlockCiphers();
     _registerDigests();
     _registerEccStandardCurves();
-    _registerEntropySources();
-    _registerEntropyCollectors();
-    _registerEntropyEstimators();
     _registerKeyDerivators();
     _registerKeyGenerators();
     _registerMacs();
@@ -127,10 +28,6 @@ void initCipher({bool useInstantButUnsafeSecureRandom:
     _registerSecureRandoms();
     _registerSigners();
     _registerStreamCiphers();
-
-    _initDefaultRandomness(useInstantButUnsafeSecureRandom);
-
-    _startCollectorsForDefaultEntropySource();
   }
 }
 
@@ -164,22 +61,6 @@ void _registerDigests() {
 
 // See part ecc_curves.dart for _registerEccStandardCurves()
 
-void _registerEntropySources() {
-  EntropySource.registry["Fortuna"] = (_) => new FortunaEntropySource(() => new Digest("SHA-256"),
-      sourceName: "Fortuna");
-  EntropySource.registry.registerDynamicFactory(_fortunaEntropySourceFactory);
-}
-
-void _registerEntropyCollectors() {
-  EntropyCollector.registry["Jitter"] = (_) => new JitterEntropyCollector();
-  EntropyCollector.registry.registerDynamicFactory(_sourceEntropyCollectorFactory);
-}
-
-void _registerEntropyEstimators() {
-  EntropyEstimator.registry["Mean"] = (_) => new MeanEntropyEstimator();
-  EntropyEstimator.registry["Shannon"] = (_) => new ShannonEntropyEstimator();
-}
-
 void _registerKeyDerivators() {
   KeyDerivator.registry["scrypt"] = (_) => new Scrypt();
   KeyDerivator.registry.registerDynamicFactory(_pbkdf2KeyDerivatorFactory);
@@ -207,24 +88,50 @@ void _registerMacs() {
 }
 
 void _registerModesOfOperation() {
-  BlockCipher.registry.registerDynamicFactory((algorithmName) => _modeOfOperationFactory(
-      algorithmName, "CBC", (underlyingCipher) => new CBCBlockCipher(underlyingCipher)));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) =>
-      _variableSizeModeOfOperationFactory(algorithmName, "CFB", (underlyingCipher, blockSize) =>
-      new CFBBlockCipher(underlyingCipher, blockSize)));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) => _modeOfOperationFactory(
-      algorithmName, "CTR", (underlyingCipher) => new StreamCipherAsBlockCipher(
-      underlyingCipher.blockSize, new CTRStreamCipher(underlyingCipher))));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) => _modeOfOperationFactory(
-      algorithmName, "ECB", (underlyingCipher) => new ECBBlockCipher(underlyingCipher)));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) => _modeOfOperationFactory(
-      algorithmName, "GCTR", (underlyingCipher) => new GCTRBlockCipher(underlyingCipher)));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) =>
-      _variableSizeModeOfOperationFactory(algorithmName, "OFB", (underlyingCipher, blockSize) =>
-      new OFBBlockCipher(underlyingCipher, blockSize)));
-  BlockCipher.registry.registerDynamicFactory((algorithmName) => _modeOfOperationFactory(
-      algorithmName, "SIC", (underlyingCipher) => new StreamCipherAsBlockCipher(
-      underlyingCipher.blockSize, new SICStreamCipher(underlyingCipher))));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _modeOfOperationFactory(
+              algorithmName,
+              "CBC",
+              (underlyingCipher) => new CBCBlockCipher(underlyingCipher)));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _variableSizeModeOfOperationFactory(
+              algorithmName,
+              "CFB",
+              (underlyingCipher, blockSize) => new CFBBlockCipher(underlyingCipher, blockSize)));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _modeOfOperationFactory(
+              algorithmName,
+              "CTR",
+              (underlyingCipher) =>
+                  new StreamCipherAsBlockCipher(underlyingCipher.blockSize, new CTRStreamCipher(underlyingCipher))));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _modeOfOperationFactory(
+              algorithmName,
+              "ECB",
+              (underlyingCipher) => new ECBBlockCipher(underlyingCipher)));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _modeOfOperationFactory(
+              algorithmName,
+              "GCTR",
+              (underlyingCipher) => new GCTRBlockCipher(underlyingCipher)));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _variableSizeModeOfOperationFactory(
+              algorithmName,
+              "OFB",
+              (underlyingCipher, blockSize) => new OFBBlockCipher(underlyingCipher, blockSize)));
+  BlockCipher.registry.registerDynamicFactory(
+      (algorithmName) =>
+          _modeOfOperationFactory(
+              algorithmName,
+              "SIC",
+              (underlyingCipher) =>
+                  new StreamCipherAsBlockCipher(underlyingCipher.blockSize, new SICStreamCipher(underlyingCipher))));
 }
 
 void _registerPaddedBlockCiphers() {
@@ -246,21 +153,21 @@ void _registerSigners() {
   Signer.registry["MD2/RSA"] = (_) => new RSASigner(new Digest("MD2"), "06082a864886f70d0202");
   Signer.registry["MD4/RSA"] = (_) => new RSASigner(new Digest("MD4"), "06082a864886f70d0204");
   Signer.registry["MD5/RSA"] = (_) => new RSASigner(new Digest("MD5"), "06082a864886f70d0205");
-  Signer.registry["RIPEMD-128/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-128"),
-      "06052b24030202");
-  Signer.registry["RIPEMD-160/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-160"),
-      "06052b24030201");
-  Signer.registry["RIPEMD-256/RSA"] = (_) => new RSASigner(new Digest("RIPEMD-256"),
-      "06052b24030203");
+  Signer.registry["RIPEMD-128/RSA"] =
+      (_) => new RSASigner(new Digest("RIPEMD-128"), "06052b24030202");
+  Signer.registry["RIPEMD-160/RSA"] =
+      (_) => new RSASigner(new Digest("RIPEMD-160"), "06052b24030201");
+  Signer.registry["RIPEMD-256/RSA"] =
+      (_) => new RSASigner(new Digest("RIPEMD-256"), "06052b24030203");
   Signer.registry["SHA-1/RSA"] = (_) => new RSASigner(new Digest("SHA-1"), "06052b0e03021a");
-  Signer.registry["SHA-224/RSA"] = (_) => new RSASigner(new Digest("SHA-224"),
-      "0609608648016503040204");
-  Signer.registry["SHA-256/RSA"] = (_) => new RSASigner(new Digest("SHA-256"),
-      "0609608648016503040201");
-  Signer.registry["SHA-384/RSA"] = (_) => new RSASigner(new Digest("SHA-384"),
-      "0609608648016503040202");
-  Signer.registry["SHA-512/RSA"] = (_) => new RSASigner(new Digest("SHA-512"),
-      "0609608648016503040203");
+  Signer.registry["SHA-224/RSA"] =
+      (_) => new RSASigner(new Digest("SHA-224"), "0609608648016503040204");
+  Signer.registry["SHA-256/RSA"] =
+      (_) => new RSASigner(new Digest("SHA-256"), "0609608648016503040201");
+  Signer.registry["SHA-384/RSA"] =
+      (_) => new RSASigner(new Digest("SHA-384"), "0609608648016503040202");
+  Signer.registry["SHA-512/RSA"] =
+      (_) => new RSASigner(new Digest("SHA-512"), "0609608648016503040203");
 }
 
 void _registerStreamCiphers() {
@@ -271,21 +178,14 @@ void _registerStreamCiphers() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _startCollectorsForDefaultEntropySource() {
-  _ENTROPY_COLLECTORS.forEach((collectorName) => seedDefaultEntropySourceFromCollector(
-      new EntropyCollector(collectorName)));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 AsymmetricBlockCipher _pkcs1AsymmetricBlockCipherFactory(String algorithmName) {
   var sep = algorithmName.lastIndexOf("/");
 
   if (sep == -1) return null;
   if (algorithmName.substring(sep + 1) != "PKCS1") return null;
 
-  var underlyingCipher = _createOrNull(() => new AsymmetricBlockCipher(algorithmName.substring(0,
-      sep)));
+  var underlyingCipher =
+      _createOrNull(() => new AsymmetricBlockCipher(algorithmName.substring(0, sep)));
 
   if (underlyingCipher != null) {
     return new PKCS1Encoding(underlyingCipher);
@@ -311,40 +211,6 @@ Digest _sha3DigestFactory(String algorithmName) {
   var bitLength = int.parse(algorithmName.substring(6));
 
   return new SHA3Digest(bitLength);
-}
-
-EntropyCollector _sourceEntropyCollectorFactory(String algorithmName) {
-  var i = algorithmName.lastIndexOf("/");
-
-  if (i == -1) return null;
-  if (algorithmName.substring(i + 1) != "EntropyCollector") return null;
-
-  var entropySource = _createOrNull(() => new EntropySource(algorithmName.substring(0, i)));
-
-  if (entropySource == null) {
-    throw new UnsupportedError("No algorithm with that name registered: ${algorithmName}");
-  }
-
-  return new SourceEntropyCollector(entropySource);
-}
-
-EntropySource _fortunaEntropySourceFactory(String algorithmName) {
-  var i = algorithmName.lastIndexOf("/");
-
-  if (i == -1) return null;
-  if (algorithmName.substring(i + 1) != "Fortuna") return null;
-
-  var digestFactory = () {
-    var digest = _createOrNull(() => new Digest(algorithmName.substring(0, i)));
-
-    if (digest == null) {
-      throw new UnsupportedError("No algorithm with that name registered: ${algorithmName}");
-    }
-
-    return digest;
-  };
-
-  return new FortunaEntropySource(digestFactory);
 }
 
 KeyDerivator _pbkdf2KeyDerivatorFactory(String algorithmName) {
@@ -386,8 +252,8 @@ BlockCipher _variableSizeModeOfOperationFactory(String algorithmName, String mod
 
   var blockSizeInBits = int.parse(algorithmName.substring(sep + 1 + modeName.length + 1));
   if ((blockSizeInBits % 8) != 0) {
-    throw new ArgumentError("Bad ${modeName} block size: $blockSizeInBits (must be a multiple of 8)"
-        );
+    throw new ArgumentError(
+        "Bad ${modeName} block size: $blockSizeInBits (must be a multiple of 8)");
   }
 
   var underlyingCipher = _createOrNull(() => new BlockCipher(algorithmName.substring(0, sep)));
@@ -446,8 +312,8 @@ PaddedBlockCipher _paddedBlockCipherFactory(String algorithmName) {
 
   var padding = _createOrNull(() => new Padding(algorithmName.substring(lastSepIndex + 1)));
   if (padding != null) {
-    var underlyingCipher = _createOrNull(() => new BlockCipher(algorithmName.substring(0,
-        lastSepIndex)));
+    var underlyingCipher =
+        _createOrNull(() => new BlockCipher(algorithmName.substring(0, lastSepIndex)));
     if (underlyingCipher != null) {
       return new PaddedBlockCipherImpl(padding, underlyingCipher);
     }

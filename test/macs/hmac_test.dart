@@ -7,11 +7,9 @@ library cipher.test.hmacs.hmac_test;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
 
 import "../test/mac_tests.dart";
 
-/// NOTE: the expected results for these tests are computed using the Java version of Bouncy Castle.
 void main() {
 
   initCipher();

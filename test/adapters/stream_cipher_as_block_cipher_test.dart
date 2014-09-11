@@ -11,7 +11,6 @@ import '../test/block_cipher_tests.dart';
 import '../test/src/null_stream_cipher.dart';
 import '../test/src/helpers.dart';
 
-
 void main() {
 
   runBlockCipherTests( new StreamCipherAsBlockCipher(16,new NullStreamCipher()), null, [

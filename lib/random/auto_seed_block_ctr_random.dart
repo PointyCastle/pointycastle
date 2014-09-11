@@ -10,8 +10,6 @@ import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
 import "package:cipher/random/block_ctr_random.dart";
-import "package:cipher/params/parameters_with_iv.dart";
-import "package:cipher/params/key_parameter.dart";
 
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random

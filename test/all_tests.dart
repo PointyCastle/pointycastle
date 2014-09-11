@@ -4,10 +4,11 @@
 
 library cipher.test.all_tests;
 
-import "./adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_block_cipher_test;
+import "package:cipher/cipher.dart";
 
-import "./src/ufixnum_test.dart" as ufixnum_test;
-import "./api/registry_test.dart" as registry_test;
+import "./impl_test.dart" as impl_test;
+
+import "./adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_block_cipher_test;
 
 import "./asymmetric/rsa_test.dart" as rsa_test;
 import "./asymmetric/pkcs1_test.dart" as pkcs1_test;
@@ -30,14 +31,6 @@ import "./digests/sha512_test.dart" as sha512_test;
 import "./digests/sha512t_test.dart" as sha512t_test;
 import "./digests/tiger_test.dart" as tiger_test;
 import "./digests/whirlpool_test.dart" as whirlpool_test;
-
-import "./entropy/fortuna_entropy_source_test.dart" as fortuna_entropy_source_test;
-
-import "./entropy_collector/jitter_entropy_collector_test.dart" as jitter_entropy_collector_test;
-import "./entropy_collector/source_entropy_collector_test.dart" as source_entropy_collector_test;
-
-import "./entropy_estimator/mean_entropy_estimator_test.dart" as mean_entropy_estimator_test;
-import "./entropy_estimator/shannon_entropy_estimator_test.dart" as shannon_entropy_estimator_test;
 
 import "./key_derivators/pbkdf2_test.dart" as pbkdf2_test;
 import "./key_derivators/scrypt_test.dart" as scrypt_test;
@@ -64,20 +57,23 @@ import "./random/fortuna_random_test.dart" as fortuna_random_test;
 import "./signers/ecdsa_signer_test.dart" as ecdsa_signer_test;
 import "./signers/rsa_signer_test.dart" as rsa_signer_test;
 
+import "./src/ufixnum_test.dart" as ufixnum_test;
+
 import "./stream/salsa20_test.dart" as salsa20_test;
 
 void main() {
 
+  initCipher();
+
+  // impl
+  impl_test.main();
+
   // adapters
   stream_cipher_as_block_cipher_test.main();
 
-  // api
-  ufixnum_test.main();
-  registry_test.main();
-
   // asymmetric block ciphers
-  rsa_test.main();
   pkcs1_test.main();
+  rsa_test.main();
 
   // block ciphers
   aes_fast_test.main();
@@ -93,23 +89,12 @@ void main() {
   sha1_test.main();
   sha224_test.main();
   sha256_test.main();
-  sha3_test.main();
   sha384_test.main();
-  sha512_test.main();
+  sha3_test.main();
   sha512t_test.main();
+  sha512_test.main();
   tiger_test.main();
   whirlpool_test.main();
-
-  // entropy sources
-  fortuna_entropy_source_test.main();
-
-  // entropy collectors
-  jitter_entropy_collector_test.main();
-  source_entropy_collector_test.main();
-
-  // entropy estimators
-  mean_entropy_estimator_test.main();
-  shannon_entropy_estimator_test.main();
 
   // key derivators
   pbkdf2_test.main();
@@ -143,7 +128,9 @@ void main() {
   ecdsa_signer_test.main();
   rsa_signer_test.main();
 
+  // src
+  ufixnum_test.main();
+
   // stream ciphers
   salsa20_test.main();
-
 }

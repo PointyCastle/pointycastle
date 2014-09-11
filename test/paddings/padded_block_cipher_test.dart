@@ -5,7 +5,7 @@
 library cipher.test.padded_block_cipher_test;
 
 import "package:cipher/cipher.dart";
-import "package:cipher/impl/base.dart";
+
 import "package:unittest/unittest.dart";
 
 import "../test/src/null_block_cipher.dart";
