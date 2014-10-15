@@ -4,33 +4,7 @@
 
 part of cipher.impl;
 
-bool _initialized = false;
-
-/**
- * This is the initializer method for this library. It must be called prior to use any of the
- * implementations.
- */
-void initCipher() {
-
-  if (!_initialized) {
-    _initialized = true;
-
-    _registerAsymmetricBlockCiphers();
-    _registerBlockCiphers();
-    _registerDigests();
-    _registerEccStandardCurves();
-    _registerKeyDerivators();
-    _registerKeyGenerators();
-    _registerMacs();
-    _registerModesOfOperation();
-    _registerPaddedBlockCiphers();
-    _registerPaddings();
-    _registerSecureRandoms();
-    _registerSigners();
-    _registerStreamCiphers();
-  }
-}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void _registerAsymmetricBlockCiphers() {
   AsymmetricBlockCipher.registry.registerDynamicFactory(_pkcs1AsymmetricBlockCipherFactory);
   AsymmetricBlockCipher.registry["RSA"] = (_) => new RSAEngine();
@@ -177,7 +151,6 @@ void _registerStreamCiphers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 AsymmetricBlockCipher _pkcs1AsymmetricBlockCipherFactory(String algorithmName) {
   var sep = algorithmName.lastIndexOf("/");
 

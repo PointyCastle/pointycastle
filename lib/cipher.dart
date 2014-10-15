@@ -7,7 +7,7 @@
  * (which comprises the whole API specification) and [cipher.impl] (which defines algorithm
  * implementations and all [CipherParameters] to be used with them).
  */
-library cipher;
+library cipher.cipher;
 
 export "package:cipher/api.dart";
 export "package:cipher/impl.dart";
