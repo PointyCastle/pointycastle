@@ -4,3 +4,10 @@ pubspec.lock
 *.js
 *.deps
 *.map
+
+# idea
+.idea/
+*.iml
+
+# dartdoc
+doc/
