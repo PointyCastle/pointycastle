@@ -17,14 +17,35 @@ import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/registry/registry.dart";
-export "package:cipher/registry/registry.dart";
+import "registry/registry.dart";
+export "registry/registry.dart";
 
-part "./src/api/asymmetric.dart";
-part "./src/api/parameters.dart";
-part "./src/api/random.dart";
-part "./src/api/symmetric.dart";
-part "./src/api/unkeyed.dart";
+part "src/api/assymetric_block_cipher.dart";
+part "src/api/assymetric_key.dart";
+part "src/api/assymetric_key_pair.dart";
+part "src/api/assymetric_key_parameter.dart";
+part "src/api/block_cipher.dart";
+part "src/api/cipher_parameters.dart";
+part "src/api/digest.dart";
+part "src/api/key_derivator.dart";
+part "src/api/key_generator.dart";
+part "src/api/key_generator_parameters.dart";
+part "src/api/key_parameter.dart";
+part "src/api/mac.dart";
+part "src/api/padded_block_cipher.dart";
+part "src/api/padded_block_cipher_parameters.dart";
+part "src/api/padding.dart";
+part "src/api/parameters_with_iv.dart";
+part "src/api/parameters_with_random.dart";
+part "src/api/private_key.dart";
+part "src/api/private_key_parameter.dart";
+part "src/api/public_key.dart";
+part "src/api/public_key_parameter.dart";
+part "src/api/secure_random.dart";
+part "src/api/signature.dart";
+part "src/api/signer.dart";
+part "src/api/stream_cipher.dart";
+
 
 
 
