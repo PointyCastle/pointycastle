@@ -10,7 +10,7 @@ library cipher.test.src.null_block_cipher;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/block/base_block_cipher.dart";
+import "package:cipher/src/impl/base_block_cipher.dart";
 
 /**
  * An implementation of a null [BlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for

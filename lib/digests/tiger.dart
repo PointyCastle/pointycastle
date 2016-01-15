@@ -10,7 +10,7 @@ library cipher.digests.tiger;
 import "dart:typed_data";
 
 import "package:cipher/src/ufixnum.dart";
-import "package:cipher/digests/base_digest.dart";
+import "package:cipher/src/impl/base_digest.dart";
 
 /// Implementation of Tiger digest.
 class TigerDigest extends BaseDigest {

@@ -11,7 +11,7 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/key_derivators/api.dart";
-import "package:cipher/key_derivators/base_key_derivator.dart";
+import "package:cipher/src/impl/base_key_derivator.dart";
 
 /**
  * Generator for PBE derived keys and ivs as defined by PKCS 5 V2.0 Scheme 2. This generator uses a SHA-1 HMac as the
@@ -56,7 +56,6 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
 
     for( var i=1 ; i<=l ; i++ ) {
       // Increment the value in 'iBuf'
-      var pos = 3;
       for( var pos=3 ; ; pos-- ) {
         iBuf[pos]++;
         if( iBuf[pos]!=0 ) break;

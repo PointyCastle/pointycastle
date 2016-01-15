@@ -11,7 +11,7 @@ import "dart:typed_data";
 
 import "package:cipher/digests/sha256.dart";
 import "package:cipher/key_derivators/api.dart";
-import "package:cipher/key_derivators/base_key_derivator.dart";
+import "package:cipher/src/impl/base_key_derivator.dart";
 import "package:cipher/key_derivators/pbkdf2.dart";
 import "package:cipher/macs/hmac.dart";
 import "package:cipher/src/ufixnum.dart";

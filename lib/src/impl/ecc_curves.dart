@@ -7,6 +7,7 @@
 
 part of cipher.impl;
 
+//TODO originally in src/impl/
 void _registerEccStandardCurves() {
   _registerGOST34102001StandardCurves();
   _registerSECEccStandardCurves();

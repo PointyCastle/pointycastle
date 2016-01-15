@@ -12,7 +12,7 @@ import "dart:typed_data";
 import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
-import "package:cipher/asymmetric/base_asymmetric_block_cipher.dart";
+import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
 import "package:cipher/asymmetric/api.dart";
 
 class RSAEngine extends BaseAsymmetricBlockCipher {

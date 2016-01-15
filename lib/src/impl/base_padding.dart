@@ -5,20 +5,24 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.base_digest;
+library cipher.impl.base_padding;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 
-/// Base implementation of [Digest] which provides shared methods.
-abstract class BaseDigest implements Digest {
+/// Base implementation of [Padding] which provides shared methods.
+abstract class BasePadding implements Padding {
 
-  Uint8List process(Uint8List data) {
-    update(data, 0, data.length);
-    var out = new Uint8List(digestSize);
-    var len = doFinal(out, 0);
-    return out.sublist(0, len);
+  Uint8List process(bool pad, Uint8List data) {
+    if (pad) {
+      var out = new Uint8List.fromList(data);
+      var len = addPadding(out, 0);
+      return out;
+    } else {
+      var len = padCount(data);
+      return new Uint8List.fromList(data.sublist(0, len));
+    }
   }
 
 }

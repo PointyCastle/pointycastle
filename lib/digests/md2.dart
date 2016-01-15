@@ -9,7 +9,7 @@ library cipher.digests.md2;
 
 import "dart:typed_data";
 
-import "package:cipher/digests/base_digest.dart";
+import "package:cipher/src/impl/base_digest.dart";
 
 /// Implementation of MD2 as outlined in RFC1319 by B.Kaliski from RSA Laboratories April 1992
 class MD2Digest extends BaseDigest {

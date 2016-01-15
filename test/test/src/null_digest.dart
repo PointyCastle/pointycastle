@@ -10,7 +10,7 @@ library cipher.test.src.null_digest;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/digests/base_digest.dart";
+import "package:cipher/src/impl/base_digest.dart";
 
 /**
  * An implementation of a null [Digest], that is, a digest that returns an empty string. It can be

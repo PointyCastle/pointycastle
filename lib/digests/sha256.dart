@@ -11,7 +11,7 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
-import "package:cipher/digests/md4_family_digest.dart";
+import "package:cipher/src/impl/md4_family_digest.dart";
 
 /// Implementation of SHA-256 digest.
 class SHA256Digest extends MD4FamilyDigest implements Digest {

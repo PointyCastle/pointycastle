@@ -11,7 +11,7 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
-import "package:cipher/paddings/base_padding.dart";
+import "package:cipher/src/impl/base_padding.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding extends BasePadding {

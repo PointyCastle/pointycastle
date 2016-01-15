@@ -11,7 +11,7 @@ import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
-import "package:cipher/stream/base_stream_cipher.dart";
+import "package:cipher/src/impl/base_stream_cipher.dart";
 
 /**
  * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter

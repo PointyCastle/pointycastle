@@ -10,7 +10,7 @@ library cipher.macs.hmac;
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/macs/base_mac.dart";
+import "package:cipher/src/impl/base_mac.dart";
 
 /**
  * HMAC implementation based on RFC2104

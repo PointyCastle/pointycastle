@@ -8,7 +8,7 @@
 library cipher.test.src.fixed_secure_random;
 
 import "package:cipher/api.dart";
-import "package:cipher/random/secure_random_base.dart";
+import "package:cipher/src/impl/secure_random_base.dart";
 
 /// An implementation of [SecureRandom] that return fixed numbers.
 class FixedSecureRandom extends SecureRandomBase {
