@@ -1,12 +1,12 @@
 
 
-library cipher.ec_domain_parameters.secp128r2;
+library cipher.impl.ec_domain_parameters.secp128r2;
 
 import "package:bignum/bignum.dart";
 
 import "package:cipher/ecc/ecc_base.dart";
 import "package:cipher/src/registry/registry.dart";
-import "package:cipher/src/registry/ec_standard_curve_constructor.dart";
+import "package:cipher/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_secp128r2 extends ECDomainParametersImpl {
 

@@ -5,7 +5,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.block_cipher.modes.sic;
+library cipher.impl.block_cipher.modes.sic;
 
 import "package:cipher/api.dart";
 import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";

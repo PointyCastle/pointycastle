@@ -18,20 +18,13 @@ part "factory_config.dart";
 part "registrable.dart";
 
 
-
-/// Matches all cipher.<category>.<algo> libs
-/// except when <type> is src, api or test or <algo> is api.
-/// The match's groups are <category> and <algo> as group 1 and 2.
-
-
 typedef Registrable RegistrableConstructor();
 typedef RegistrableConstructor DynamicConstructorFactory(
     String registrableName, Match match);
 
-
-
-const String LIBRARY_REGEX =
-  r"^cipher\.((?!(?:src|api|test)\.)[^.]+)\.((?!api$).*)$";
+/// Matches all `cipher.impl.<category>.<algo>` libs.
+/// The match's groups are <category> and <algo> as group 1 and 2 respectively.
+const String LIBRARY_REGEX = r"^cipher\.impl\.([^.]+)\.(.*)$";
 
 FactoryRegistry registry = new FactoryRegistry();
 
