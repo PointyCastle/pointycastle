@@ -1,9 +1,6 @@
-// Copyright (c) 2013-present, Iván Zaera Avellón - izaera@gmail.com
-
-// This library is dually licensed under LGPL 3 and MPL 2.0. See file LICENSE for more information.
-
-// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-// the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2013-present, the authors of the Pointy Castle project
+// This library is dually licensed under LGPL 3 and MPL 2.0.
+// See file LICENSE for more information.
 
 library pointycastle.impl.digest.ripemd128;
 
@@ -227,16 +224,6 @@ class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
       crotl32(a + _f4(b, c, d) + x + 0x50a28be6, s);
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
