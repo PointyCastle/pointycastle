@@ -5,16 +5,16 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.secure_random.fortuna_random;
+library pointycastle.impl.secure_random.fortuna_random;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/api.dart";
-import "package:cipher/block/aes_fast.dart";
-import "package:cipher/random/auto_seed_block_ctr_random.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/block/aes_fast.dart";
+import "package:pointycastle/random/auto_seed_block_ctr_random.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /// An implementation of [SecureRandom] as specified in the Fortuna algorithm.
 class FortunaRandom implements SecureRandom {

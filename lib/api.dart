@@ -6,12 +6,13 @@
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
 /**
- * This is the API specification library for the cipher project.
+ * This is the API specification library for the Pointy Castle project.
  *
- * It declares all abstract types used by the cipher library. In addition, it implements the factories mechanism that allows
+ * It declares all abstract types used by the Pointy Castle library.
+ * In addition, it implements the factories mechanism that allows
  * users to instantiate algorithms by their standard name.
  */
-library cipher.api;
+library pointycastle.api;
 
 import "dart:typed_data";
 

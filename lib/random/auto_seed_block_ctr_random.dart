@@ -5,15 +5,15 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.secure_random.auto_seed_block_ctr_random;
+library pointycastle.impl.secure_random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/api.dart";
-import "package:cipher/random/block_ctr_random.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/random/block_ctr_random.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random

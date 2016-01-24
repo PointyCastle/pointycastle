@@ -5,11 +5,11 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.test.modes.cfb_test;
+library pointycastle.test.modes.cfb_test;
 
 import "dart:typed_data";
 
-import "package:cipher/cipher.dart";
+import "package:pointycastle/pointycastle.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/src/null_block_cipher.dart";

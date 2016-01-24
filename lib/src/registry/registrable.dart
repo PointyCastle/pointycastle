@@ -1,5 +1,5 @@
 
-part of cipher.src.registry;
+part of pointycastle.src.registry;
 
 
 // used as a superclass matcher for all registrable implementation classes

@@ -5,14 +5,14 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.padding.pkcs7;
+library pointycastle.impl.padding.pkcs7;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/ufixnum.dart";
-import "package:cipher/src/impl/base_padding.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/ufixnum.dart";
+import "package:pointycastle/src/impl/base_padding.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding extends BasePadding {

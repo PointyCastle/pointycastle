@@ -1,5 +1,5 @@
-cipher
-======
+Pointy Castle
+=============
 
 A Dart library for encryption and decryption. As of today, most of the classes 
 are ports of Bouncy Castle from Java to Dart. The porting is almost always 
@@ -8,7 +8,7 @@ data.
 
 To make sure nothing fails, tests and benchmarks for every algorithm are 
 provided. The expected results are taken from the Bouncy Castle Java version 
-and also from standards, and matched against the results got from cipher.
+and also from standards, and matched against the results got from Pointy Castle.
 
 As of the last release, the following algorithms are implemented:
 

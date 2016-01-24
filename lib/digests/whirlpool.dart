@@ -5,13 +5,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.digest.whirlpool;
+library pointycastle.impl.digest.whirlpool;
 
 import "dart:typed_data";
 
-import "package:cipher/src/ufixnum.dart";
-import "package:cipher/src/impl/base_digest.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/src/ufixnum.dart";
+import "package:pointycastle/src/impl/base_digest.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /// Implementation of Whirlpool digest.
 class WhirlpoolDigest extends BaseDigest {

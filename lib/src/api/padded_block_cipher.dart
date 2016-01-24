@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /**
  * All padded block ciphers conform to this interface.

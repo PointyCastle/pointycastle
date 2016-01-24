@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// All algorithms defined by cipher inherit from this class.
 abstract class Algorithm extends Registrable {

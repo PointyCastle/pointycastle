@@ -5,13 +5,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.asymmetric_block_cipher.pkcs1;
+library pointycastle.impl.asymmetric_block_cipher.pkcs1;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/registry/registry.dart";
-import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/impl/base_asymmetric_block_cipher.dart";
 
 class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 

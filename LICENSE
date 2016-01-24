@@ -1,5 +1,5 @@
 
-The cipher library is dually licensed under "GNU LESSER GENERAL PUBLIC LICENSE 3.0" and 
+The Pointy Castle library is dually licensed under "GNU LESSER GENERAL PUBLIC LICENSE 3.0" and
 "Mozilla Public License 2.0". 
 
 Initially the project was just released under LGPL 3.0 but due to the way dart2js works, it was 
@@ -9,8 +9,8 @@ implementation which is impossible due to dart2js not supporting dynamic linking
 
 With MPL 2.0 the library can be compiled with dart2js and mixed with closed source without violating
 the license. The good thing is that, even with that possibility, modifications to any source file
-belonging to cipher library must be made available under MPL 2.0 and contributed to the original 
-project so they will still remain free. 
+belonging to the Pointy Castle library must be made available under MPL 2.0 and contributed to the
+original project so they will still remain free.
 
 Following are the contents of both licenses.
 

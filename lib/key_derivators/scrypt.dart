@@ -5,17 +5,17 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.key_derivator.scrypt;
+library pointycastle.impl.key_derivator.scrypt;
 
 import "dart:typed_data";
 
-import "package:cipher/digests/sha256.dart";
-import "package:cipher/key_derivators/api.dart";
-import "package:cipher/src/impl/base_key_derivator.dart";
-import "package:cipher/key_derivators/pbkdf2.dart";
-import "package:cipher/macs/hmac.dart";
-import "package:cipher/src/ufixnum.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/digests/sha256.dart";
+import "package:pointycastle/key_derivators/api.dart";
+import "package:pointycastle/src/impl/base_key_derivator.dart";
+import "package:pointycastle/key_derivators/pbkdf2.dart";
+import "package:pointycastle/macs/hmac.dart";
+import "package:pointycastle/src/ufixnum.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /**
  * Implementation of SCrypt password based key derivation function. See the next link for info on

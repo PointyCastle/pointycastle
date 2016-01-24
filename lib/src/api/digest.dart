@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// The interface that a message digest conforms to.
 abstract class Digest extends Algorithm {

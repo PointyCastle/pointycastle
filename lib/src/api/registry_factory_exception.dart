@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// This kind of exception is thrown when a user tries to create an algorithm
 /// or domain parameters that were not correctly registered. This can be

@@ -5,11 +5,11 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.src.impl.base_asymmetric_block_cipher;
+library pointycastle.src.impl.base_asymmetric_block_cipher;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
+import "package:pointycastle/api.dart";
 
 /// Base implementation of [AsymmetricBlockCipher] which provides shared methods.
 abstract class BaseAsymmetricBlockCipher implements AsymmetricBlockCipher {

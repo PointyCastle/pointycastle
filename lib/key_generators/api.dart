@@ -5,12 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.api.key_generators;
+library pointycastle.api.key_generators;
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/api.dart";
-import "package:cipher/ecc/api.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/ecc/api.dart";
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGeneratorParameters extends KeyGeneratorParameters {

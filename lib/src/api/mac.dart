@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// The interface that a MAC (message authentication code) conforms to.
 abstract class Mac extends Algorithm {

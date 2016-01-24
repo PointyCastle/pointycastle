@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// [CipherParameters] consisting of just a key of arbitrary length.
 class KeyParameter extends CipherParameters {

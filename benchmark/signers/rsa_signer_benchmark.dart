@@ -5,11 +5,11 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.benchmark.signers.rsa_signer_benchmark;
+library pointycastle.benchmark.signers.rsa_signer_benchmark;
 
 import 'package:bignum/bignum.dart';
-import "package:cipher/cipher.dart";
-import "package:cipher/signers/rsa_signer.dart";
+import "package:pointycastle/pointycastle.dart";
+import "package:pointycastle/signers/rsa_signer.dart";
 
 import "../benchmark/signer_benchmark.dart";
 import "../../test/test/src/null_digest.dart";

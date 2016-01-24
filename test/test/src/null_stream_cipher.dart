@@ -5,12 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.stream_cipher.test.src.null_stream_cipher;
+library pointycastle.impl.stream_cipher.test.src.null_stream_cipher;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/impl/base_stream_cipher.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/impl/base_stream_cipher.dart";
 
 /**
  * An implementation of a null [StreamCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for

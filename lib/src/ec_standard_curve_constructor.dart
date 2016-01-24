@@ -1,11 +1,11 @@
 
 
-library cipher.src.registry.ec_standard_curve_constructor;
+library pointycastle.src.registry.ec_standard_curve_constructor;
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/ecc/ecc_base.dart";
-import "package:cipher/ecc/ecc_fp.dart" as fp;
+import "package:pointycastle/ecc/ecc_base.dart";
+import "package:pointycastle/ecc/ecc_fp.dart" as fp;
 
 ECDomainParametersImpl constructFpStandardCurve( String name, Function constructor,
   {BigInteger q, BigInteger a, BigInteger b, BigInteger g, BigInteger n,

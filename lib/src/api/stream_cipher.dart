@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// The interface stream ciphers conform to.
 abstract class StreamCipher extends Algorithm {

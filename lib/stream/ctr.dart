@@ -5,11 +5,11 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.stream_cipher.ctr;
+library pointycastle.impl.stream_cipher.ctr;
 
-import "package:cipher/api.dart";
-import "package:cipher/stream/sic.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/stream/sic.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /// Just an alias to be able to create SIC as CTR
 class CTRStreamCipher extends SICStreamCipher {

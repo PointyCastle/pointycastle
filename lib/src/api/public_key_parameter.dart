@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// A [CipherParameters] to hold an asymmetric public key
 class PublicKeyParameter<T extends PublicKey> extends AsymmetricKeyParameter<T> {

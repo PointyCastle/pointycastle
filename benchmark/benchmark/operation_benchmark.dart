@@ -5,7 +5,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.benchmark.benchmark.rate_benchmark;
+library pointycastle.benchmark.benchmark.rate_benchmark;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 

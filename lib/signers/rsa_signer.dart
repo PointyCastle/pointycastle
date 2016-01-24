@@ -5,13 +5,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.signer.rsa_signer;
+library pointycastle.impl.signer.rsa_signer;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/asymmetric/api.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/asymmetric/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
 class RSASigner implements Signer {

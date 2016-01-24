@@ -9,9 +9,9 @@ library cipher.impl.block_cipher.test.src.null_block_cipher;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/impl/base_block_cipher.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/impl/base_block_cipher.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /**
  * An implementation of a null [BlockCipher], that is, a cipher that does not encrypt, neither decrypt. It can be used for

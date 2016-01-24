@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// An interface for DSAs (digital signature algorithms)
 abstract class Signer extends Algorithm {

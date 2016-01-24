@@ -5,9 +5,9 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.test.digests.ripemd256_test;
+library pointycastle.test.digests.ripemd256_test;
 
-import "package:cipher/cipher.dart";
+import "package:pointycastle/pointycastle.dart";
 
 import "../test/digest_tests.dart";
 

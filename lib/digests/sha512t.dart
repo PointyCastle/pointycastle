@@ -5,14 +5,14 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.digest.sha512t;
+library pointycastle.impl.digest.sha512t;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/impl/long_sha2_family_digest.dart";
-import "package:cipher/src/registry/registry.dart";
-import "package:cipher/src/ufixnum.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/impl/long_sha2_family_digest.dart";
+import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/ufixnum.dart";
 
 /// Implementation of SHA-512/t digest (see FIPS 180-4).
 class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {

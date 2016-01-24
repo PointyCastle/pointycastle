@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// Block cipher engines are expected to conform to this interface.
 abstract class BlockCipher extends Algorithm {

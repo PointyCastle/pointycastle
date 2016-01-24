@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 /// A pair of public and private asymmetric keys.
 class AsymmetricKeyPair<B extends PublicKey, V extends PrivateKey> {

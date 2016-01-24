@@ -1,5 +1,5 @@
 
-part of cipher.src.registry;
+part of pointycastle.src.registry;
 
 
 abstract class FactoryConfig {

@@ -5,14 +5,14 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.key_derivator.pbkdf2;
+library pointycastle.impl.key_derivator.pbkdf2;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/key_derivators/api.dart";
-import "package:cipher/src/registry/registry.dart";
-import "package:cipher/src/impl/base_key_derivator.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/key_derivators/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/impl/base_key_derivator.dart";
 
 /**
  * Generator for PBE derived keys and ivs as defined by PKCS 5 V2.0 Scheme 2. This generator uses a SHA-1 HMac as the

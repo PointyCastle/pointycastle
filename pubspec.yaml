@@ -1,11 +1,11 @@
-name: cipher
+name: pointycastle
 version: 0.7.0
 author: Iván Zaera Avellón <izaera@gmail.com>
 description: A Dart library implementing cryptographic algorithms.
-homepage: http://izaera.github.io/cipher/
+homepage: http://pointycastle.github.io/
 environment:
   sdk: '>=0.8.10+6 <2.0.0'
-documentation: http://izaera.github.io/cipher/api/
+documentation: http://pointycastle.github.io/docs/
 dependencies:
   bignum: '>=0.0.5 <0.1.0'
   fixnum: '>=0.9.0 <0.10.0'

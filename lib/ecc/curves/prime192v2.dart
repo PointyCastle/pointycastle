@@ -1,12 +1,12 @@
 
 
-library cipher.impl.ec_domain_parameters.prime192v2;
+library pointycastle.impl.ec_domain_parameters.prime192v2;
 
 import "package:bignum/bignum.dart";
 
-import "package:cipher/ecc/ecc_base.dart";
-import "package:cipher/src/registry/registry.dart";
-import "package:cipher/src/ec_standard_curve_constructor.dart";
+import "package:pointycastle/ecc/ecc_base.dart";
+import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_prime192v2 extends ECDomainParametersImpl {
 

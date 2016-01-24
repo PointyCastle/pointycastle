@@ -5,12 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.block_chipher.test.src.null_digest;
+library pointycastle.impl.block_chipher.test.src.null_digest;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/impl/base_digest.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/impl/base_digest.dart";
 
 /**
  * An implementation of a null [Digest], that is, a digest that returns an empty string. It can be

@@ -1,5 +1,5 @@
 
-part of cipher.api;
+part of pointycastle.api;
 
 //TODO consider mixin
 /**

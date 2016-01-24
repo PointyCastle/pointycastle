@@ -5,12 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.impl.padded_block_cipher.padded_block_cipher_impl;
+library pointycastle.impl.padded_block_cipher.padded_block_cipher_impl;
 
 import "dart:typed_data";
 
-import "package:cipher/api.dart";
-import "package:cipher/src/registry/registry.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 
 /// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {

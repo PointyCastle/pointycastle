@@ -5,12 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.api.asymmetric;
+library pointycastle.api.asymmetric;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
-import "package:cipher/api.dart";
+import "package:pointycastle/api.dart";
 
 /// Base class for asymmetric keys in RSA
 abstract class RSAAsymmetricKey implements AsymmetricKey {

@@ -5,14 +5,14 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.src.registry;
+library pointycastle.src.registry;
 
 @GlobalQuantifyCapability(LIBRARY_REGEX, FactoryRegistry.reflector)
 import "package:reflectable/reflectable.dart";
 import "package:quiver_collection/collection.dart";
 import "package:quiver_pattern/regexp.dart";
 
-import "package:cipher/api.dart";
+import "package:pointycastle/api.dart";
 
 part "factory_config.dart";
 part "registrable.dart";

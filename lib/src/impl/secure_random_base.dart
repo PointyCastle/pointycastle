@@ -5,13 +5,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.src.impl.random.secure_random_base;
+library pointycastle.src.impl.random.secure_random_base;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
-import "package:cipher/api.dart";
-import "package:cipher/src/ufixnum.dart";
+import "package:pointycastle/api.dart";
+import "package:pointycastle/src/ufixnum.dart";
 
 /**
  * An utility base implementation of [SecureRandom] so that only [nextUint8] method needs to be

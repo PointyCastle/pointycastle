@@ -5,11 +5,11 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.test.key_generators.rsa_key_generator_test;
+library pointycastle.test.key_generators.rsa_key_generator_test;
 
 import 'package:bignum/bignum.dart';
 
-import 'package:cipher/cipher.dart';
+import 'package:pointycastle/pointycastle.dart';
 
 import "../test/src/fixed_secure_random.dart";
 import '../test/key_generators_tests.dart';

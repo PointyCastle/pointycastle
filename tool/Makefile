@@ -20,10 +20,10 @@ doc: depends
 	@echo "MAKING DOCUMENTATION"
 	@echo "********************************************************************************"
 
-	docgen  --start-page=cipher \
+	docgen  --start-page=pointycastle \
                 --package-root=../packages \
                 --compile \
-                ../lib/cipher.dart
+                ../lib/pointycastle.dart
 
 	-rm -rf ../out/doc
 	mkdir -p ../out
@@ -37,20 +37,20 @@ bundle-package: test
 	@echo "MAKING PACKAGE BUNDLE"
 	@echo "********************************************************************************"
 
-	-rm ../out/bundle/cipher.tar.gz
+	-rm ../out/bundle/pointycastle.tar.gz
 	mkdir -p ../out/bundle
 
-	tar -c -z -C .. --exclude packages -f ../out/bundle/cipher.tar.gz LICENSE README.md changelog.md pubspec.yaml benchmark/ lib/ licenses/ test/ tool/
+	tar -c -z -C .. --exclude packages -f ../out/bundle/pointycastle.tar.gz LICENSE README.md changelog.md pubspec.yaml benchmark/ lib/ licenses/ test/ tool/
 
 bundle-doc: doc
 	@echo "********************************************************************************"
 	@echo "MAKING DOC BUNDLE"
 	@echo "********************************************************************************"
 
-	-rm ../out/bundle/cipher-doc.tar.gz
+	-rm ../out/bundle/pointycastle-doc.tar.gz
 	mkdir -p ../out/bundle
 
-	tar -c -z -C../out/doc -f ../out/bundle/cipher-doc.tar.gz .
+	tar -c -z -C../out/doc -f ../out/bundle/pointycastle-doc.tar.gz .
 
 deploy: deploy-doc deploy-pub
 
