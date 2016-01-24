@@ -5,7 +5,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.signers.ecdsa_signer;
+library cipher.signer.ecdsa_signer;
 
 import "dart:typed_data";
 import "dart:math";
@@ -14,8 +14,21 @@ import 'package:bignum/bignum.dart';
 
 import "package:cipher/api.dart";
 import "package:cipher/ecc/api.dart";
+import "package:cipher/src/registry/registry.dart";
 
 class ECDSASigner implements Signer {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.regex(r"^(.+)/(DET-)?ECDSA$", (_, final Match match) {
+        final String  digestName = match.group(1);
+        final bool withMac = match.group(2).isNotEmpty;
+        return () {
+          Digest underlyingDigest = new Digest(digestName);
+          Mac mac = withMac ? new Mac("${digestName}/HMAC") : null;
+          return new ECDSASigner(underlyingDigest, mac);
+        };
+      });
 
   ECPublicKey _pbkey;
   ECPrivateKey _pvkey;
@@ -30,9 +43,9 @@ class ECDSASigner implements Signer {
    * If [_kMac] is not null, RFC 6979 is used for k calculation with the given [Mac]. Keep in mind that, to comply with
    * RFC 69679, [_kMac] must be HMAC with the same digest used to hash the message.
    */
-  ECDSASigner([this._digest=null, this._kMac=null]);
+  ECDSASigner([this._digest = null, this._kMac = null]);
 
-  String get algorithmName => "${_digest.algorithmName}/${(_kMac == null) ? "" : "DET-"}ECDSA";
+  String get algorithmName => "${_digest.algorithmName}/${_kMac == null ? "" : "DET-"}ECDSA";
 
   void reset() {
   }

@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// Asymmetric block cipher engines are expected to conform to this interface.
-abstract class AsymmetricBlockCipher {
-
-  /// The [Registry] for [AsymmetricBlockCipher] algorithms
-  static final registry = new Registry<AsymmetricBlockCipher>();
+abstract class AsymmetricBlockCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
-  factory AsymmetricBlockCipher( String algorithmName ) => registry.create(algorithmName);
-
-  /// Get this cipher's standard algorithm name.
-  String get algorithmName;
+  factory AsymmetricBlockCipher( String algorithmName ) =>
+      registry.create("asymmetric_block_cipher", algorithmName);
 
   /// Get this ciphers's maximum input block size.
   int get inputBlockSize;

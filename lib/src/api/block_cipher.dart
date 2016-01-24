@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// Block cipher engines are expected to conform to this interface.
-abstract class BlockCipher {
-
-  /// The [Registry] for [BlockCipher] algorithms
-  static final registry = new Registry<BlockCipher>();
+abstract class BlockCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
-  factory BlockCipher(String algorithmName) => registry.create(algorithmName);
-
-  /// Get this cipher's standard algorithm name.
-  String get algorithmName;
+  factory BlockCipher(String algorithmName) =>
+      registry.create("block_cipher", algorithmName);
 
   /// Get this ciphers's block size.
   int get blockSize;

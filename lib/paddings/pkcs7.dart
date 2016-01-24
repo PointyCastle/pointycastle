@@ -5,18 +5,21 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.paddings.pkcs7;
+library cipher.padding.pkcs7;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/base_padding.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding extends BasePadding {
 
-  String get algorithmName => "PKCS7";
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("PKCS5");
+
+  String get algorithmName => "PKCS5";
 
   void init( [CipherParameters params] ) {
       // nothing to do.

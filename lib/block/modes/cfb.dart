@@ -5,15 +5,24 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.modes.cfb;
+library cipher.block_cipher.modes.cfb;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_block_cipher.dart";
 
 /// Implementation of Cipher Feedback Mode (CFB) on top of a [BlockCipher].
 class CFBBlockCipher extends BaseBlockCipher {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.regex(r"^(.+)/CFB-([0-9]+)$", (_, final Match match) => () {
+        BlockCipher underlying = new BlockCipher(match.group(1));
+        int blockSize = int.parse(match.group(2));
+        return new CFBBlockCipher(underlying, blockSize);
+      });
 
   final int blockSize;
 

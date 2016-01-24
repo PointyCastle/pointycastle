@@ -5,17 +5,20 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.asymmetric.rsa;
+library cipher.asymmetric_block_cipher.rsa;
 
 import "dart:typed_data";
 
 import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
 import "package:cipher/asymmetric/api.dart";
+import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
+import "package:cipher/src/registry/registry.dart";
 
 class RSAEngine extends BaseAsymmetricBlockCipher {
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("RSA");
 
   bool _forEncryption;
   RSAAsymmetricKey _key;

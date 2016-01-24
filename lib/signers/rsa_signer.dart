@@ -5,15 +5,43 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.signers.rsa_signer;
+library cipher.signer.rsa_signer;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/asymmetric/api.dart";
+import "package:cipher/src/registry/registry.dart";
 
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
 class RSASigner implements Signer {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.suffix("/RSA", (String algorithmName, _) {
+        int sep = algorithmName.lastIndexOf("/");
+        final String digestName = algorithmName.substring(0, sep);
+        final String digestIdentifierHex = _DIGEST_IDENTIFIER_HEXES[digestName];
+        if (digestIdentifierHex == null) {
+          throw new RegistryFactoryException(
+            "RSA signing with digest $digestName is not supported");
+        }
+        return () => new RSASigner(new Digest(digestName), digestIdentifierHex);
+      });
+  
+  static final Map<String, String> _DIGEST_IDENTIFIER_HEXES = {
+    "MD2": "06082a864886f70d0202",
+    "MD4": "06082a864886f70d0204",
+    "MD5": "06082a864886f70d0205",
+    "RIPEMD-128": "06052b24030202",
+    "RIPEMD-160": "06052b24030201",
+    "RIPEMD-256": "06052b24030203",
+    "SHA-1": "06052b0e03021a",
+    "SHA-224": "0609608648016503040204",
+    "SHA-256": "0609608648016503040201",
+    "SHA-384": "0609608648016503040202",
+    "SHA-512": "0609608648016503040203"
+  };
 
   final AsymmetricBlockCipher _rsa = new AsymmetricBlockCipher("RSA/PKCS1");
   final Digest _digest;

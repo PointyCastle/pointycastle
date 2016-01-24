@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// The interface stream ciphers conform to.
-abstract class StreamCipher {
-
-  /// The [Registry] for [StreamCipher] algorithms
-  static final registry = new Registry<StreamCipher>();
+abstract class StreamCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
-  factory StreamCipher(String algorithmName) => registry.create(algorithmName);
-
-  /// Get this cipher's standard algorithm name.
-  String get algorithmName;
+  factory StreamCipher(String algorithmName) =>
+      registry.create("stream_cipher", algorithmName);
 
   /// Reset the cipher to its original state.
   void reset();

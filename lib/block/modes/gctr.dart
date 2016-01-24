@@ -5,16 +5,25 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.modes.gctr;
+library cipher.block_cipher.modes.gctr;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_block_cipher.dart";
 import "package:cipher/src/ufixnum.dart";
 
 /// Implementation of GOST 28147 OFB counter mode (GCTR) on top of a [BlockCipher].
 class GCTRBlockCipher extends BaseBlockCipher {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.suffix("/GCTR", (final String algorithmName, _) => () {
+        int sep = algorithmName.lastIndexOf("/");
+        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
+        return new GCTRBlockCipher(underlying);
+      });
 
   static const C1 = 16843012; //00000001000000010000000100000100
   static const C2 = 16843009; //00000001000000010000000100000001

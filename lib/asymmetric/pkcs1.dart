@@ -5,14 +5,24 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.asymmetric.pkcs1;
+library cipher.asymmetric_block_cipher.pkcs1;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
 
 class PKCS1Encoding extends BaseAsymmetricBlockCipher {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.suffix("/PKCS1", (final String algorithmName, _) => () {
+        int sep = algorithmName.lastIndexOf("/");
+        AsymmetricBlockCipher underlyingCipher =
+            new AsymmetricBlockCipher(algorithmName.substring(0, sep));
+        return new PKCS1Encoding(underlyingCipher);
+      });
 
   static const _HEADER_LENGTH = 10;
 

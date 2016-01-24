@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// The interface that a padding conforms to.
-abstract class Padding {
-
-  /// The [Registry] for [Padding] algorithms
-  static final registry = new Registry<Padding>();
+abstract class Padding extends Algorithm {
 
   /// Create the digest specified by the standard [algorithmName].
-  factory Padding( String algorithmName ) => registry.create(algorithmName);
-
-  /// Get this padding's standard algorithm name.
-  String get algorithmName;
+  factory Padding( String algorithmName ) =>
+      registry.create("padding", algorithmName);
 
   /// Initialise the padder. Normally, paddings don't need any init params.
   void init( [CipherParameters params] );

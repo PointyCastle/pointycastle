@@ -5,13 +5,14 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.block.aes_fast;
+library cipher.block_cipher.aes_fast;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/impl/base_block_cipher.dart";
 import "package:cipher/src/ufixnum.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /**
  * An implementation of the AES (Rijndael), from FIPS-197.
@@ -38,6 +39,8 @@ import "package:cipher/src/ufixnum.dart";
  * precomputation.
  */
 class AESFastEngine extends BaseBlockCipher {
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("AES");
 
   static const _BLOCK_SIZE = 16;
 

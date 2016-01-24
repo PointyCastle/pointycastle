@@ -5,11 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.macs.hmac;
+library cipher.mac.hmac;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_mac.dart";
 
 /**
@@ -18,6 +19,40 @@ import "package:cipher/src/impl/base_mac.dart";
  * H(K XOR opad, H(K XOR ipad, text))
  */
 class HMac extends BaseMac {
+
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.suffix("/HMAC", (String algorithmName, _) {
+        int sep = algorithmName.lastIndexOf("/");
+        final String digestName = algorithmName.substring(0, sep);
+        final int blockLength = _DIGEST_BLOCK_LENGTH[digestName];
+        if (blockLength == null) {
+          throw new RegistryFactoryException("Digest $digestName unknown for "
+            "HMAC construction.");
+        }
+        return () {
+          Digest digest = new Digest(digestName);
+          return new HMac(digest, blockLength);
+        };
+      });
+
+  //TODO make this more generic
+  static final Map<String, int> _DIGEST_BLOCK_LENGTH = {
+    "GOST3411": 32,
+    "MD2": 16,
+    "MD4": 64,
+    "MD5": 64,
+    "RIPEMD-128": 64,
+    "RIPEMD-160": 64,
+    "SHA-1": 64,
+    "SHA-224": 64,
+    "SHA-256": 64,
+    "SHA-384": 128,
+    "SHA-512": 128,
+    "Tiger": 64,
+    "Whirlpool": 64,
+  };
+
+  //TODO reindent
 
     static final _IPAD = 0x36;
     static final _OPAD = 0x5C;

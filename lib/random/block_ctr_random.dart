@@ -5,11 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.random.block_ctr_random;
+library cipher.secure_random.block_ctr_random;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/secure_random_base.dart";
 
@@ -18,6 +19,14 @@ import "package:cipher/src/impl/secure_random_base.dart";
  * values.
  */
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.regex(r"^(.*)/CTR/PRNG$", (_, final Match match) => () {
+        String blockCipherName = match.group(1);
+        BlockCipher blockCipher = new BlockCipher(blockCipherName);
+        return new BlockCtrRandom(blockCipher);
+      });
 
   final BlockCipher cipher;
 

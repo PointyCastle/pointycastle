@@ -5,12 +5,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.key_derivators.pbkdf2;
+library cipher.key_derivator.pbkdf2;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/key_derivators/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_key_derivator.dart";
 
 /**
@@ -21,6 +22,14 @@ import "package:cipher/src/impl/base_key_derivator.dart";
  *
  */
 class PBKDF2KeyDerivator extends BaseKeyDerivator {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.suffix("/PBKDF2", (final String algorithmName, _) => () {
+        int sep = algorithmName.lastIndexOf("/");
+        Mac mac = new Mac(algorithmName.substring(0, sep));
+        return new PBKDF2KeyDerivator(mac);
+      });
 
   Pbkdf2Parameters _params;
   Mac _mac;

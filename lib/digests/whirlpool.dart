@@ -5,15 +5,18 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.whirlpool;
+library cipher.digest.whirlpool;
 
 import "dart:typed_data";
 
 import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/base_digest.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// Implementation of Whirlpool digest.
 class WhirlpoolDigest extends BaseDigest {
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("Whirlpool");
 
   static const _DIGEST_LENGTH_BYTES = 512 ~/ 8;
   static const _BUFFER_SIZE = 64;

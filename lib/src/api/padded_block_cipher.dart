@@ -18,11 +18,9 @@ part of cipher.api;
  */
 abstract class PaddedBlockCipher implements BlockCipher {
 
-  /// The [Registry] for [PaddedBlockCipher] algorithms
-  static final registry = new Registry<PaddedBlockCipher>();
-
   /// Create the padded block cipher specified by the standard [algorithmName].
-  factory PaddedBlockCipher(String algorithmName) => registry.create(algorithmName);
+  factory PaddedBlockCipher(String algorithmName) =>
+      registry.create("padded_block_cipher", algorithmName);
 
   /// Get the underlying [Padding] used by this cipher.
   Padding get padding;

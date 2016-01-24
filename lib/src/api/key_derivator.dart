@@ -6,16 +6,11 @@ part of cipher.api;
  *
  * A [KeyDerivator] is normally used to convert some master data (like a password, for instance) to a symmetric key.
  */
-abstract class KeyDerivator {
-
-  /// The [Registry] for [KeyDerivator] algorithms
-  static final registry = new Registry<KeyDerivator>();
+abstract class KeyDerivator extends Algorithm {
 
   /// Create the key derivator specified by the standard [algorithmName].
-  factory KeyDerivator(String algorithmName) => registry.create(algorithmName);
-
-  /// Get this derivator's standard algorithm name.
-  String get algorithmName;
+  factory KeyDerivator(String algorithmName) =>
+      registry.create("key_derivator", algorithmName);
 
   /// Get this derivator key's output size.
   int get keySize;

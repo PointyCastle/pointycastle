@@ -5,16 +5,19 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.ripemd256;
+library cipher.digest.ripemd256;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/md4_family_digest.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// Implementation of RIPEMD-256 digest.
 class RIPEMD256Digest extends MD4FamilyDigest implements Digest {
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("RIPEMD-256");
 
   static const _DIGEST_LENGTH = 32;
 

@@ -5,7 +5,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.md4_family_digest;
+library cipher.src.impl.digests.md4_family_digest;
 
 import "dart:typed_data";
 

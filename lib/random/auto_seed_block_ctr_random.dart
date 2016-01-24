@@ -5,7 +5,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.random.auto_seed_block_ctr_random;
+library cipher.secure_random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
 
@@ -13,6 +13,7 @@ import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
 import "package:cipher/random/block_ctr_random.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
@@ -21,6 +22,14 @@ import "package:cipher/random/block_ctr_random.dart";
  * Practical Random Number Generation in Software (by John Viega).
  */
 class AutoSeedBlockCtrRandom implements SecureRandom {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.regex(r"^(.*)/CTR/AUTO-SEED-PRNG$", (_, final Match match) => () {
+        String blockCipherName = match.group(1);
+        BlockCipher blockCipher = new BlockCipher(blockCipherName);
+        return new AutoSeedBlockCtrRandom(blockCipher);
+      });
 
   BlockCtrRandom _delegate;
   final bool _reseedIV;

@@ -5,18 +5,15 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.modes.sic;
+library cipher.stream_cipher.sic;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/base_stream_cipher.dart";
+import "package:cipher/src/ufixnum.dart";
+import "package:cipher/src/registry/registry.dart";
 
-/**
- * NOTE: the implementation of SIC/CTR mode of operation as a [BlockCipher] is done using a [StreamCipherAsBlockCipher] adapter
- * (see file [package:cipher/adapters/stream_cipher_adapters.dart] for more info).
- */
 
 /**
  * Implementation of SIC mode of operation as a [StreamCipher]. This implementation uses the IV as the initial nonce value and
@@ -25,6 +22,14 @@ import "package:cipher/src/impl/base_stream_cipher.dart";
  * of the caller to make sure the counter does not overflow.
  */
 class SICStreamCipher extends BaseStreamCipher {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.suffix("/SIC", (String algorithmName, _) => () {
+        int sep = algorithmName.lastIndexOf("/");
+        String digestName = algorithmName.substring(0, sep);
+        return new SICStreamCipher(new BlockCipher(digestName));
+      });
 
   final BlockCipher underlyingCipher;
 
@@ -95,10 +100,4 @@ class SICStreamCipher extends BaseStreamCipher {
     }
   }
 
-}
-
-/// Just an alias to be able to create SIC as CTR
-class CTRStreamCipher extends SICStreamCipher {
-  CTRStreamCipher(BlockCipher underlyingCipher) : super(underlyingCipher);
-  String get algorithmName => "${underlyingCipher.algorithmName}/CTR";
 }

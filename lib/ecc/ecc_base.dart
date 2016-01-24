@@ -22,14 +22,14 @@ class ECDomainParametersImpl implements ECDomainParameters {
   final BigInteger n;
   BigInteger _h;
 
-  ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n, [this._h=null, this.seed=null] ) {
-    if( _h==null ) {
-    _h = BigInteger.ONE;
+  ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n,
+      [this._h = null, this.seed = null] ) {
+    if(_h == null) {
+      _h = BigInteger.ONE;
     }
   }
 
   BigInteger get h => _h;
-
 }
 
 

@@ -12,13 +12,10 @@ import "dart:typed_data";
 import "package:bignum/bignum.dart";
 
 import "package:cipher/api.dart";
-import "package:cipher/registry/registry.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// Standard ECC curve description
-abstract class ECDomainParameters {
-
-  /// The [Registry] for [ECDomainParameters] objects
-  static final registry = new Registry<ECDomainParameters>();
+abstract class ECDomainParameters extends Registrable {
 
   /// Get this domain's standard name.
   String get domainName;
@@ -29,7 +26,8 @@ abstract class ECDomainParameters {
   BigInteger get n;
 
   /// Create a curve description from its standard name
-  factory ECDomainParameters( String domainName ) => registry.create(domainName);
+  factory ECDomainParameters( String domainName ) =>
+      registry.create("ec_domain_parameters", domainName);
 
 }
 

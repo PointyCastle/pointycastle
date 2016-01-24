@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// The interface that a message digest conforms to.
-abstract class Digest {
-
-  /// The [Registry] for [Digest] algorithms
-  static final registry = new Registry<Digest>();
+abstract class Digest extends Algorithm {
 
   /// Create the digest specified by the standard [algorithmName].
-  factory Digest( String algorithmName ) => registry.create(algorithmName);
-
-  /// Get this digest's standard algorithm name.
-  String get algorithmName;
+  factory Digest( String algorithmName ) =>
+      registry.create("digest", algorithmName);
 
   /// Get this digest's output size.
   int get digestSize;

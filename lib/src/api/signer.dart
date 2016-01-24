@@ -2,16 +2,11 @@
 part of cipher.api;
 
 /// An interface for DSAs (digital signature algorithms)
-abstract class Signer {
-
-  /// The [Registry] for [Signer] algorithms
-  static final registry = new Registry<Signer>();
+abstract class Signer extends Algorithm {
 
   /// Create the signer specified by the standard [algorithmName].
-  factory Signer( String algorithmName ) => registry.create(algorithmName);
-
-  /// Get this signer's standard algorithm name.
-  String get algorithmName;
+  factory Signer( String algorithmName ) =>
+      registry.create("signer", algorithmName);
 
   /// Reset the signer to its original state.
   void reset();

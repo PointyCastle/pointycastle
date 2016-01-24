@@ -16,16 +16,11 @@ part of cipher.api;
  * a [SecureRandom] should be seen like a cryptographic PRNG. Thus, data from an [EntropySource]
  * should be seen as "more random" than that returned from a [SecureRandom].
  */
-abstract class SecureRandom {
-
-  /// The [Registry] for [SecureRandom] algorithms
-  static final registry = new Registry<SecureRandom>();
+abstract class SecureRandom extends Algorithm {
 
   /// Create the secure random specified by the standard [algorithmName].
-  factory SecureRandom([String algorithmName = ""]) => registry.create(algorithmName);
-
-  /// Get this secure random standard algorithm name.
-  String get algorithmName;
+  factory SecureRandom([String algorithmName = ""]) =>
+      registry.create("secure_random", algorithmName);
 
   /// Seed the RNG with some entropy (look at package cipher_entropy providing entropy sources).
   void seed(CipherParameters params);

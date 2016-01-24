@@ -5,16 +5,29 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.sha512t;
+library cipher.digest.sha512t;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
-import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/long_sha2_family_digest.dart";
+import "package:cipher/src/registry/registry.dart";
+import "package:cipher/src/ufixnum.dart";
 
 /// Implementation of SHA-512/t digest (see FIPS 180-4).
 class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
+  static final RegExp _NAME_REGEX = new RegExp(r"^SHA-512\/([0-9]+)$");
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig(_NAME_REGEX, (_, final Match match) => () {
+        int bitLength = int.parse(match.group(1));
+        if ((bitLength % 8) != 0) {
+          throw new RegistryFactoryException(
+            "Digest length for SHA-512/t is not a multiple of 8: ${bitLength}");
+        }
+        return new SHA512tDigest(bitLength ~/ 8);
+      });
 
   static final Register64 _H_MASK = new Register64(0xa5a5a5a5, 0xa5a5a5a5);
 

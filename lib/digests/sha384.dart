@@ -5,15 +5,18 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.sha384;
+library cipher.digest.sha384;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
 import "package:cipher/src/impl/long_sha2_family_digest.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// Implementation of SHA-384 digest.
 class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
+
+  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("SHA-384");
 
   static const _DIGEST_LENGTH = 48;
 

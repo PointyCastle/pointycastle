@@ -5,14 +5,23 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.paddings.padded_block_cipher;
+library cipher.padded_block_cipher.padded_block_cipher_impl;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 
 /// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
+
+  /// Intended for internal use.
+  static final DynamicFactoryConfig FACTORY =
+      new DynamicFactoryConfig.regex(r"^(.+)/([^/]+)$", (_, final Match match) => () {
+        Padding padding = new Padding(match.group(2));
+        BlockCipher underlyingCipher = new BlockCipher(match.group(1));
+        return new PaddedBlockCipherImpl(padding, underlyingCipher);
+      });
 
   final Padding padding;
   final BlockCipher cipher;

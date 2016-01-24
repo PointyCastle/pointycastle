@@ -5,15 +5,24 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.modes.cbc;
+library cipher.block_cipher.modes.cbc;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_block_cipher.dart";
 
 /// Implementation of Cipher-Block-Chaining (CBC) mode on top of a [BlockCipher].
 class CBCBlockCipher extends BaseBlockCipher {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.suffix("/CBC", (final String algorithmName, _) => () {
+        int sep = algorithmName.lastIndexOf("/");
+        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
+        return new CBCBlockCipher(underlying);
+      });
 
   final BlockCipher _underlyingCipher;
 

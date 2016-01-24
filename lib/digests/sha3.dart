@@ -5,15 +5,24 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.digests.sha3;
+library cipher.digest.sha3;
 
 import "dart:typed_data";
 
-import "package:cipher/src/ufixnum.dart";
 import "package:cipher/src/impl/base_digest.dart";
+import "package:cipher/src/registry/registry.dart";
+import "package:cipher/src/ufixnum.dart";
 
 /// Implementation of SHA-3 digest.
 class SHA3Digest extends BaseDigest {
+  static final RegExp _NAME_REGEX = new RegExp(r"^SHA-3\/([0-9]+)$");
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig(_NAME_REGEX, (_, final Match match) => () {
+        int bitLength = int.parse(match.group(1));
+        return new SHA3Digest(bitLength);
+      });
 
   static final _keccakRoundConstants = new Register64List.from([
     [0x00000000, 0x00000001], [0x00000000, 0x00008082], [0x80000000, 0x0000808a],
