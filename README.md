@@ -36,6 +36,7 @@ As of the last release, the following algorithms are implemented:
   * GCTR (GOST 28147 OFB counter mode)
   * OFB (Output FeedBack mode)
   * CTR (Counter mode)
+  * SIC
 
 
 **Paddings:**
@@ -70,7 +71,7 @@ As of the last release, the following algorithms are implemented:
   
 **Signatures:**
 
-  * ECDSA
+  * (DET-)ECDSA
   * RSA
   
   
@@ -96,5 +97,6 @@ As of the last release, the following algorithms are implemented:
 
   * Based on block cipher in CTR mode
   * Based on block cipher in CTR mode with auto reseed (for forward security)
+  * Based on Fortuna algorithm
   
   

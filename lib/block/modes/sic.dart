@@ -12,6 +12,9 @@ import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
 import "package:cipher/stream/sic.dart";
 import "package:cipher/src/registry/registry.dart";
 
+/**
+ * See [SICStreamCipher].
+ */
 class SICBlockCipher extends StreamCipherAsBlockCipher {
 
   /// Intended for internal use.
