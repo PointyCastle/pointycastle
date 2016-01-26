@@ -19,9 +19,9 @@ typedef Registrable RegistrableConstructor();
 typedef RegistrableConstructor DynamicConstructorFactory(
     String registrableName, Match match);
 
-/// Matches all `cipher.impl.<category>.<algo>` libs.
+/// Matches all `pointycastle.impl.<category>.<algo>` libs.
 /// The match's groups are <category> and <algo> as group 1 and 2 respectively.
-const String LIBRARY_REGEX = r"^cipher\.impl\.([^.]+)\.(.*)$";
+const String LIBRARY_REGEX = r"^pointycastle\.impl\.([^.]+)\.(.*)$";
 
 FactoryRegistry registry = new FactoryRegistry();
 
@@ -34,7 +34,7 @@ class FactoryRegistry {
 
   static const Reflectable reflector = const RegistryImplementationReflector();
   static final ClassMirror registrable =
-  reflector.findLibrary("cipher.src.registry").declarations["Registrable"];
+  reflector.findLibrary("pointycastle.src.registry").declarations["Registrable"];
 
   final Map<String, Map<String, RegistrableConstructor>> staticFactories;
   final Map<String, Set<DynamicFactoryConfig>> dynamicFactories;

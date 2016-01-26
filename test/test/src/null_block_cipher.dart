@@ -2,7 +2,7 @@
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
-library cipher.impl.block_cipher.test.src.null_block_cipher;
+library pointycastle.impl.block_cipher.test.src.null_block_cipher;
 
 import "dart:typed_data";
 
