@@ -24,7 +24,7 @@ import "package:cipher/src/registry/registry.dart";
 class SICStreamCipher extends BaseStreamCipher {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.suffix("/SIC", (String algorithmName, _) => () {
         int sep = algorithmName.lastIndexOf("/");
         String digestName = algorithmName.substring(0, sep);

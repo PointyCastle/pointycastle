@@ -21,7 +21,7 @@ import "package:cipher/src/impl/secure_random_base.dart";
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.regex(r"^(.*)/CTR/PRNG$", (_, final Match match) => () {
         String blockCipherName = match.group(1);
         BlockCipher blockCipher = new BlockCipher(blockCipherName);

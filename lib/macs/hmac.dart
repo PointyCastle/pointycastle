@@ -20,7 +20,7 @@ import "package:cipher/src/impl/base_mac.dart";
  */
 class HMac extends BaseMac {
 
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.suffix("/HMAC", (String algorithmName, _) {
         int sep = algorithmName.lastIndexOf("/");
         final String digestName = algorithmName.substring(0, sep);

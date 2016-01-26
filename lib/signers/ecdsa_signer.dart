@@ -19,7 +19,7 @@ import "package:cipher/src/registry/registry.dart";
 class ECDSASigner implements Signer {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.regex(r"^(.+)/(DET-)?ECDSA$", (_, final Match match) {
         final String  digestName = match.group(1);
         final bool withMac = match.group(2).isNotEmpty;

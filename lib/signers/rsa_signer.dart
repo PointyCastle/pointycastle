@@ -17,7 +17,7 @@ import "package:cipher/src/registry/registry.dart";
 class RSASigner implements Signer {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.suffix("/RSA", (String algorithmName, _) {
         int sep = algorithmName.lastIndexOf("/");
         final String digestName = algorithmName.substring(0, sep);

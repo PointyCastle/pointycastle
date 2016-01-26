@@ -24,7 +24,7 @@ import "package:cipher/src/registry/registry.dart";
 class AutoSeedBlockCtrRandom implements SecureRandom {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.regex(r"^(.*)/CTR/AUTO-SEED-PRNG$", (_, final Match match) => () {
         String blockCipherName = match.group(1);
         BlockCipher blockCipher = new BlockCipher(blockCipherName);

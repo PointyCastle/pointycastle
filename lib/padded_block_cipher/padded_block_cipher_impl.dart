@@ -16,7 +16,7 @@ import "package:cipher/src/registry/registry.dart";
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   /// Intended for internal use.
-  static final DynamicFactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.regex(r"^(.+)/([^/]+)$", (_, final Match match) => () {
         Padding padding = new Padding(match.group(2));
         BlockCipher underlyingCipher = new BlockCipher(match.group(1));
