@@ -16,7 +16,7 @@ import "../test/src/null_secure_random.dart";
 
 void main() {
 
-  initCipher();
+
 
   var eccDomain = new ECDomainParameters( "prime192v1" );
 

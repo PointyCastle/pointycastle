@@ -5,11 +5,12 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 // the MPL was not distributed with this file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-library cipher.test.src.null_asymmetric_block_cipher;
+library cipher.impl.asymmetric_block_cipher.test.null_asymmetric_block_cipher;
 
 import "dart:typed_data";
 
 import "package:cipher/api.dart";
+import "package:cipher/src/registry/registry.dart";
 import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
 
 /**
@@ -17,6 +18,12 @@ import "package:cipher/src/impl/base_asymmetric_block_cipher.dart";
  * for testing or benchmarking chaining algorithms.
  */
 class NullAsymmetricBlockCipher extends BaseAsymmetricBlockCipher {
+
+  /// Intended for internal use.
+  static final FactoryConfig FACTORY_CONFIG =
+      new DynamicFactoryConfig.regex(r"^Null$", (_, _2) => () {
+        return new NullAsymmetricBlockCipher(70, 70);
+      });
 
   final int inputBlockSize;
   final int outputBlockSize;

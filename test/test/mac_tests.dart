@@ -8,7 +8,7 @@
 library cipher.test.test.mac_tests;
 
 import "package:cipher/cipher.dart";
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import "./src/helpers.dart";
 

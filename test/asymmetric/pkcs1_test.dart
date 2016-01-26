@@ -15,9 +15,6 @@ import "../test/src/null_secure_random.dart";
 
 void main() {
 
-  initCipher();
-  AsymmetricBlockCipher.registry["Null"] = (_) => new NullAsymmetricBlockCipher(70,70);
-
   var pubpar = () => new ParametersWithRandom(new PublicKeyParameter(new NullPublicKey()), new NullSecureRandom());
   var privpar = () => new ParametersWithRandom(new PrivateKeyParameter(new NullPrivateKey()), new NullSecureRandom());
 

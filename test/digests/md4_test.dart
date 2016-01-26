@@ -13,7 +13,7 @@ import "../test/digest_tests.dart";
 
 void main() {
 
-  initCipher();
+
 
   runDigestTests( new Digest("MD4"), [
 

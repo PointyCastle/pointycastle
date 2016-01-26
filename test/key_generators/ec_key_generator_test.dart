@@ -16,7 +16,7 @@ import '../test/key_generators_tests.dart';
 
 void main() {
 
-  initCipher();
+
 
   var rnd = new NullSecureRandom();
 

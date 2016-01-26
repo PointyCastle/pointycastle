@@ -10,7 +10,7 @@ library cipher.test.test.stream_cipher_tests;
 import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import "./src/helpers.dart";
 

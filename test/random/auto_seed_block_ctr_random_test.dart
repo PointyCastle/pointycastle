@@ -11,11 +11,11 @@ import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
 
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 void main() {
 
-  initCipher();
+
 
   group( "AutoSeedBlockCtrRandom:", () {
 

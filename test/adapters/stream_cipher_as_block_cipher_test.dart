@@ -7,7 +7,7 @@
 
 library cipher.test.adapters.stream_cipher_as_block_cipher_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import "package:cipher/adapters/stream_cipher_as_block_cipher.dart";
 
 import '../test/block_cipher_tests.dart';

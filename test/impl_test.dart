@@ -9,20 +9,13 @@ library cipher.test.impl_test;
 
 import "package:cipher/cipher.dart";
 
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import './test/registry_tests.dart';
 
 void main() {
 
-  initCipher();
-
   group("impl:", () {
-
-    test("initCipher() can be called several times", () {
-      initCipher();
-      initCipher();
-    });
 
     test("AsymmetricBlockCipher returns valid implementations", () {
       testAsymmetricBlockCipher("RSA");

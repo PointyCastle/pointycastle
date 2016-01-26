@@ -8,7 +8,7 @@
 library cipher.test.test.asymmetric_block_cipher_tests;
 
 import "package:cipher/cipher.dart";
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import "./src/helpers.dart";
 

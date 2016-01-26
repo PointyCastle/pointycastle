@@ -14,7 +14,7 @@ import '../test/src/helpers.dart';
 
 void main() {
 
-  initCipher();
+
 
   var salt = createUint8ListFromString("salt");
   var pkcs = new KeyDerivator("SHA-1/HMAC/PBKDF2");

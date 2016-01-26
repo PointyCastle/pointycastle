@@ -9,14 +9,12 @@ library cipher.test.padded_block_cipher_test;
 
 import "package:cipher/cipher.dart";
 
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import "../test/src/null_block_cipher.dart";
 import "../test/src/helpers.dart";
 
 void main() {
-  initCipher();
-  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
   var params = new PaddedBlockCipherParameters(null, null);
   var pbc = new PaddedBlockCipher("Null/PKCS7");

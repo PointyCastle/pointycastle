@@ -17,7 +17,7 @@ import "../test/digest_tests.dart";
  */
 void main() {
 
-  initCipher();
+
 
   runDigestTests( new Digest("RIPEMD-160"), [
 

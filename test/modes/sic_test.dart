@@ -11,16 +11,13 @@ import "dart:typed_data";
 
 import "package:cipher/cipher.dart";
 
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 import "../test/block_cipher_tests.dart";
 import "../test/stream_cipher_tests.dart";
 import "../test/src/null_block_cipher.dart";
 
 void main() {
-
-  initCipher();
-  BlockCipher.registry["Null"] = (_) => new NullBlockCipher();
 
   final iv = new Uint8List.fromList( [0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF] );
   final params = new ParametersWithIV(null, iv);

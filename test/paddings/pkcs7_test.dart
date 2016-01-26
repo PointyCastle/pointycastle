@@ -13,7 +13,7 @@ import "../test/padding_tests.dart";
 
 void main() {
 
-  initCipher();
+
 
   runPaddingTest( new Padding("PKCS7"), null,
       "123456789", 16,

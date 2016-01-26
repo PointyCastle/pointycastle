@@ -20,7 +20,7 @@ import '../test/src/helpers.dart';
  */
 void main() {
 
-  initCipher();
+
 
   var scrypt = new KeyDerivator("scrypt");
 
