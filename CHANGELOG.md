@@ -1,3 +1,21 @@
+Changelog
+=========
+
+
+#### Version 0.10.0 (???)
+
+* First Pointy Castle release.
+
+* Reorganised file structure.
+
+* Completely new Registry implementation that dynamically loads imported implementations using reflection.
+  It is explained in [this commit](https://github.com/PointyCastle/pointycastle/commit/2da75e5a8d7bdbf95d08329add9f13b9070b75d4).
+
+* Migrated from unittest to test package.
+
+
+### cipher releases
+
 #### Version 0.8.0 (2014-??-??) (Dart SDK version ???)
 
 * **[bug 80]** PaddedBlockCipher doesn't add padding when data length is a multiple of the block 
