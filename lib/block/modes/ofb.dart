@@ -20,8 +20,12 @@ class OFBBlockCipher extends BaseBlockCipher {
   static final FactoryConfig FACTORY_CONFIG =
       new DynamicFactoryConfig.regex(r"^(.+)/OFB-([0-9]+)$", (_, final Match match) => () {
         BlockCipher underlying = new BlockCipher(match.group(1));
-        int blockSize = int.parse(match.group(2));
-        return new OFBBlockCipher(underlying, blockSize);
+        int blockSizeInBits = int.parse(match.group(2));
+        if ((blockSizeInBits % 8) != 0) {
+          throw new RegistryFactoryException.invalid(
+            "Bad OFB block size: $blockSizeInBits (must be a multiple of 8)");
+        }
+        return new OFBBlockCipher(underlying, blockSizeInBits ~/ 8);
       });
 
   final int blockSize;

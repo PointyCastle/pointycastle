@@ -24,7 +24,7 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
   SHA256Digest() :
     super(Endianness.BIG_ENDIAN, 8, 64);
 
-  final algorithmName = "SAHA-256";
+  final algorithmName = "SHA-256";
   final digestSize = _DIGEST_LENGTH;
 
   void resetState() {

@@ -69,20 +69,19 @@ class FactoryRegistry {
   RegistrableConstructor createConstructor(String category, String registrableName) {
     // Init lazy
     _checkInit();
-    // First check if category is known
-    if (!staticFactories.containsKey(category)
-      && !dynamicFactories.containsKey(category)) {
-      throw new RegistryFactoryException.category(category);
-    }
     // Check if this is a static algorithm
-    if (staticFactories[category].containsKey(registrableName)) {
+    if(staticFactories.containsKey(category) &&
+        staticFactories[category].containsKey(registrableName)) {
       return staticFactories[category][registrableName];
     }
     // Find dynamic factory
-    for(DynamicFactoryConfig factory in dynamicFactories[category]) {
-      RegistrableConstructor constructor = factory.tryFactory(registrableName);
-      if (constructor != null) {
-        return constructor;
+    if (dynamicFactories.containsKey(category)) {
+      for(DynamicFactoryConfig factory in dynamicFactories[category]) {
+        RegistrableConstructor constructor = factory.tryFactory(
+          registrableName);
+        if(constructor != null) {
+          return constructor;
+        }
       }
     }
     // No factory found
@@ -105,6 +104,12 @@ class FactoryRegistry {
         // go over all Algorithm classes in library
         lm.declarations.values.where(_isRegistrableDeclaration).forEach((decl) {
           ClassMirror mirror = decl as ClassMirror;
+          if (!mirror.staticMembers.containsKey(FIELD)) {
+            // no dynamic factory found
+//            print("No dynamic factory found for implementation "
+//              "${mirror.qualifiedName}");
+            return;
+          }
           FactoryConfig config = mirror.invokeGetter(FIELD);
           // check if dynamic or static factory
           if (config is StaticFactoryConfig) {
