@@ -13,3 +13,6 @@ pubspec.lock
 doc/
 
 .pub/
+.packages
+
+.settings/
