@@ -29,7 +29,6 @@ class SignerBenchmark extends RateBenchmark {
     _data = new Uint8List(dataLength);
 
   void setup() {
-    initCipher();
     _signer = new Signer(_signerName);
     _signer.init(_forSigning, _cipherParametersFactory());
   }

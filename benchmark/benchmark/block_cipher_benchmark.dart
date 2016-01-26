@@ -29,7 +29,6 @@ class BlockCipherBenchmark extends RateBenchmark {
     _forEncryption = forEncryption;
 
   void setup() {
-    initCipher();
     _blockCipher = new BlockCipher(_blockCipherName);
     _blockCipher.init(_forEncryption, _cipherParametersFactory());
     _data = new Uint8List(_blockCipher.blockSize);

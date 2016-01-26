@@ -24,7 +24,6 @@ class DigestBenchmark extends RateBenchmark {
     _data = new Uint8List(dataLength);
 
   void setup() {
-    initCipher();
     _digest = new Digest(_digestName);
   }
 

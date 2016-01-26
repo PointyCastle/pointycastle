@@ -30,7 +30,6 @@ class StreamCipherBenchmark extends RateBenchmark {
     _data = new Uint8List(dataLength);
 
   void setup() {
-    initCipher();
     _streamCipher = new StreamCipher(_streamCipherName);
     _streamCipher.init(_forEncryption, _cipherParametersFactory());
   }
