@@ -10,10 +10,11 @@ import "package:cipher/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_brainpoolp160t1 extends ECDomainParametersImpl {
 
-  static final FactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
   new StaticFactoryConfig("brainpoolp160t1");
 
   factory ECCurve_brainpoolp160t1() => constructFpStandardCurve("brainpoolp160t1",
+    ECCurve_brainpoolp160t1._make,
     q: new BigInteger("e95e4a5f737059dc60dfc7ad95b3d8139515620f", 16),
     a: new BigInteger("e95e4a5f737059dc60dfc7ad95b3d8139515620c", 16),
     b: new BigInteger("7a556b6dae535b7b51ed2c4d7daa7a0b5c55f380", 16),
@@ -22,5 +23,11 @@ class ECCurve_brainpoolp160t1 extends ECDomainParametersImpl {
     h: new BigInteger("1", 16),
     seed: null
   );
+
+  static ECCurve_brainpoolp160t1 _make(domainName, curve, G, n, _h, seed) =>
+    new ECCurve_brainpoolp160t1._super(domainName, curve, G, n, _h, seed);
+
+  ECCurve_brainpoolp160t1._super(domainName, curve, G, n, _h, seed)
+    : super(domainName, curve, G, n, _h, seed);
 
 }

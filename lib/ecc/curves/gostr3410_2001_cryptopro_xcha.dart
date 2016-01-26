@@ -10,10 +10,11 @@ import "package:cipher/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_gostr3410_2001_cryptopro_xcha extends ECDomainParametersImpl {
 
-  static final FactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
   new StaticFactoryConfig("GostR3410-2001-CryptoPro-XchA");
 
   factory ECCurve_gostr3410_2001_cryptopro_xcha() => constructFpStandardCurve("GostR3410-2001-CryptoPro-XchA",
+    ECCurve_gostr3410_2001_cryptopro_xcha._make,
     q: new BigInteger("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd97", 16),
     a: new BigInteger("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd94", 16),
     b: new BigInteger("a6", 16),
@@ -22,5 +23,11 @@ class ECCurve_gostr3410_2001_cryptopro_xcha extends ECDomainParametersImpl {
     h: new BigInteger("1", 16),
     seed: null
   );
+
+  static ECCurve_gostr3410_2001_cryptopro_xcha _make(domainName, curve, G, n, _h, seed) =>
+    new ECCurve_gostr3410_2001_cryptopro_xcha._super(domainName, curve, G, n, _h, seed);
+
+  ECCurve_gostr3410_2001_cryptopro_xcha._super(domainName, curve, G, n, _h, seed)
+    : super(domainName, curve, G, n, _h, seed);
 
 }

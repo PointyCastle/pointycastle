@@ -10,10 +10,11 @@ import "package:cipher/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_gostr3410_2001_cryptopro_b extends ECDomainParametersImpl {
 
-  static final FactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
   new StaticFactoryConfig("GostR3410-2001-CryptoPro-B");
 
   factory ECCurve_gostr3410_2001_cryptopro_b() => constructFpStandardCurve("GostR3410-2001-CryptoPro-B",
+    ECCurve_gostr3410_2001_cryptopro_b._make,
     q: new BigInteger("8000000000000000000000000000000000000000000000000000000000000c99", 16),
     a: new BigInteger("8000000000000000000000000000000000000000000000000000000000000c96", 16),
     b: new BigInteger("3e1af419a269a5f866a7d3c25c3df80ae979259373ff2b182f49d4ce7e1bbc8b", 16),
@@ -22,5 +23,11 @@ class ECCurve_gostr3410_2001_cryptopro_b extends ECDomainParametersImpl {
     h: new BigInteger("1", 16),
     seed: null
   );
+
+  static ECCurve_gostr3410_2001_cryptopro_b _make(domainName, curve, G, n, _h, seed) =>
+    new ECCurve_gostr3410_2001_cryptopro_b._super(domainName, curve, G, n, _h, seed);
+
+  ECCurve_gostr3410_2001_cryptopro_b._super(domainName, curve, G, n, _h, seed)
+    : super(domainName, curve, G, n, _h, seed);
 
 }

@@ -10,10 +10,11 @@ import "package:cipher/src/ec_standard_curve_constructor.dart";
 
 class ECCurve_secp256k1 extends ECDomainParametersImpl {
 
-  static final FactoryConfig FACTORY =
+  static final FactoryConfig FACTORY_CONFIG =
   new StaticFactoryConfig("secp256k1");
 
   factory ECCurve_secp256k1() => constructFpStandardCurve("secp256k1",
+    ECCurve_secp256k1._make,
     q: new BigInteger("fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f", 16),
     a: new BigInteger("0", 16),
     b: new BigInteger("7", 16),
@@ -22,5 +23,11 @@ class ECCurve_secp256k1 extends ECDomainParametersImpl {
     h: new BigInteger("1", 16),
     seed: null
   );
+
+  static ECCurve_secp256k1 _make(domainName, curve, G, n, _h, seed) =>
+    new ECCurve_secp256k1._super(domainName, curve, G, n, _h, seed);
+
+  ECCurve_secp256k1._super(domainName, curve, G, n, _h, seed)
+    : super(domainName, curve, G, n, _h, seed);
 
 }
