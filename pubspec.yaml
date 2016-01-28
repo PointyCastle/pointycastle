@@ -22,56 +22,8 @@ dev_dependencies:
 transformers:
 - reflectable:
     entry_points:
-      - test/adapters/stream_cipher_as_block_cipher_test.dart
-      - test/asymmetric/pkcs1_test.dart
-      - test/asymmetric/rsa_test.dart
-      - test/block/aes_fast_test.dart
-      - test/digests/md2_test.dart
-      - test/digests/md4_test.dart
-      - test/digests/md5_test.dart
-      - test/digests/ripemd128_test.dart
-      - test/digests/ripemd160_test.dart
-      - test/digests/ripemd256_test.dart
-      - test/digests/ripemd320_test.dart
-      - test/digests/sha1_test.dart
-      - test/digests/sha3_test.dart
-      - test/digests/sha224_test.dart
-      - test/digests/sha256_test.dart
-      - test/digests/sha384_test.dart
-      - test/digests/sha512_test.dart
-      - test/digests/sha512t_test.dart
-      - test/digests/tiger_test.dart
-      - test/digests/whirlpool_test.dart
-      - test/key_derivators/pbkdf2_test.dart
-      - test/key_derivators/scrypt_test.dart
-      - test/key_generators/ec_key_generator_test.dart
-      - test/key_generators/rsa_key_generator_test.dart
-      - test/macs/hmac_test.dart
-      - test/modes/cbc_test.dart
-      - test/modes/cfb_test.dart
-      - test/modes/ecb_test.dart
-      - test/modes/gctr_test.dart
-      - test/modes/ofb_test.dart
-      - test/modes/sic_test.dart
-      - test/paddings/padded_block_cipher_test.dart
-      - test/paddings/pkcs7_test.dart
-      - test/random/auto_seed_block_ctr_random_test.dart
-      - test/random/block_ctr_random_test.dart
-      - test/random/fortuna_random_test.dart
-      - test/signers/ecdsa_signer_test.dart
-      - test/signers/rsa_signer_test.dart
-      - test/src/ufixnum_test.dart
-      - test/stream/salsa20_test.dart
-      - test/test/asymmetric_block_cipher_tests.dart
-      - test/test/block_cipher_tests.dart
-      - test/test/digest_tests.dart
-      - test/test/key_derivators_tests.dart
-      - test/test/key_generators_tests.dart
-      - test/test/mac_tests.dart
-      - test/test/padding_tests.dart
-      - test/test/registry_tests.dart
-      - test/test/signer_tests.dart
-      - test/test/stream_cipher_tests.dart
-      - test/impl_test.dart
+      - test/all_tests_web.dart
 - test/pub_serve:
-    $include: test/**_test.dart
+    $include:
+      - test/all_tests_web{.*,}.dart
+      - test/**_test{.*,}.dart
