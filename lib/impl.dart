@@ -12,7 +12,7 @@ library pointycastle.impl;
 // cipher implementations
 import "package:pointycastle/adapters/stream_cipher_as_block_cipher.dart";
 
-// asymetric
+// asymmetric
 export "package:pointycastle/asymmetric/api.dart";
 import "package:pointycastle/asymmetric/pkcs1.dart";
 import "package:pointycastle/asymmetric/rsa.dart";

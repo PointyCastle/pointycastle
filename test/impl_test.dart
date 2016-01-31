@@ -4,8 +4,6 @@
 
 library pointycastle.test.impl_test;
 
-import "package:pointycastle/pointycastle.dart";
-
 import "package:test/test.dart";
 
 import './test/registry_tests.dart';

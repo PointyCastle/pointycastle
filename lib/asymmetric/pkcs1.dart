@@ -14,10 +14,9 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/PKCS1", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
+      new DynamicFactoryConfig.suffix("/PKCS1", (_, final Match match) => () {
         AsymmetricBlockCipher underlyingCipher =
-            new AsymmetricBlockCipher(algorithmName.substring(0, sep));
+            new AsymmetricBlockCipher(match.group(1));
         return new PKCS1Encoding(underlyingCipher);
       });
 

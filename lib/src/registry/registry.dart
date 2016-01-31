@@ -4,7 +4,6 @@
 
 library pointycastle.src.registry;
 
-@GlobalQuantifyCapability(LIBRARY_REGEX, FactoryRegistry.reflector)
 import "package:reflectable/reflectable.dart";
 import "package:quiver_collection/collection.dart";
 import "package:quiver_pattern/regexp.dart";
@@ -19,9 +18,10 @@ typedef Registrable RegistrableConstructor();
 typedef RegistrableConstructor DynamicConstructorFactory(
     String registrableName, Match match);
 
-/// Matches all `pointycastle.impl.<category>.<algo>` libs.
-/// The match's groups are <category> and <algo> as group 1 and 2 respectively.
-const String LIBRARY_REGEX = r"^pointycastle\.impl\.([^.]+)\.(.*)$";
+/// Matches all `pointycastle.impl.<category>.<algo>.<className>` libs.
+/// The match's groups are <category>, <algo> and <className> as
+/// groups 1, 2 and 3 respectively.
+const String IMPL_CLASS_REGEX = r"^pointycastle\.impl\.([^.]+)\.(.*)\.([^.]+)$";
 
 FactoryRegistry registry = new FactoryRegistry();
 
@@ -33,8 +33,8 @@ class FactoryRegistry {
   static const int CONSTRUCTOR_CACHE_SIZE = 25;
 
   static const Reflectable reflector = const RegistryImplementationReflector();
-  static final ClassMirror registrable =
-  reflector.findLibrary("pointycastle.src.registry").declarations["Registrable"];
+  static final ClassMirror registrable = reflector.annotatedClasses.firstWhere(
+      (cm) => cm.qualifiedName == "pointycastle.src.registry.Registrable");
 
   final Map<String, Map<String, RegistrableConstructor>> staticFactories;
   final Map<String, Set<DynamicFactoryConfig>> dynamicFactories;
@@ -43,7 +43,7 @@ class FactoryRegistry {
   new LruMap<String, RegistrableConstructor>(maximumSize: CONSTRUCTOR_CACHE_SIZE);
 
   FactoryRegistry()
-    : staticFactories = new Map<String, Map<String, RegistrableConstructor>>(),
+    : staticFactories  = new Map<String, Map<String, RegistrableConstructor>>(),
       dynamicFactories = new Map<String, Set<DynamicFactoryConfig>>();
 
   Registrable create(String category, String registrableName) {
@@ -55,28 +55,28 @@ class FactoryRegistry {
   }
 
   RegistrableConstructor getConstructor(String category, String registrableName) {
-    RegistrableConstructor factory = constructorCache["$category.$registrableName"];
-    if (factory == null) {
-      factory = createConstructor(category, registrableName);
-      constructorCache["$category.$registrableName"] = factory;
+    RegistrableConstructor constructor = constructorCache["$category.$registrableName"];
+    if (constructor == null) {
+      constructor = createConstructor(category, registrableName);
+      constructorCache["$category.$registrableName"] = constructor;
     }
-    return factory;
+    return constructor;
   }
 
   RegistrableConstructor createConstructor(String category, String registrableName) {
     // Init lazy
     _checkInit();
-    // Check if this is a static algorithm
-    if(staticFactories.containsKey(category) &&
+    // Look for a static factory
+    if (staticFactories.containsKey(category) &&
         staticFactories[category].containsKey(registrableName)) {
       return staticFactories[category][registrableName];
     }
-    // Find dynamic factory
+    // Look for a dynamic factory
     if (dynamicFactories.containsKey(category)) {
-      for(DynamicFactoryConfig factory in dynamicFactories[category]) {
+      for (DynamicFactoryConfig factory in dynamicFactories[category]) {
         RegistrableConstructor constructor = factory.tryFactory(
           registrableName);
-        if(constructor != null) {
+        if (constructor != null) {
           return constructor;
         }
       }
@@ -93,41 +93,31 @@ class FactoryRegistry {
   }
 
   void initialize() {
-    RegExp regex = new RegExp(LIBRARY_REGEX);
-    reflector.libraries.values.forEach((LibraryMirror lm) {
-      Match matchName = regex.firstMatch(lm.qualifiedName);
-      if (matchName != null) {
-        String category = matchName.group(1);
-        // go over all Algorithm classes in library
-        lm.declarations.values.where(_isRegistrableDeclaration).forEach((decl) {
-          ClassMirror mirror = decl as ClassMirror;
-          if (!mirror.staticMembers.containsKey(FIELD)) {
-            // no dynamic factory found
-//            print("No dynamic factory found for implementation "
-//              "${mirror.qualifiedName}");
-            return;
-          }
-          FactoryConfig config = mirror.invokeGetter(FIELD);
-          // check if dynamic or static factory
-          if (config is StaticFactoryConfig) {
-            // static factory
-            _addStaticFactoryConfig(category, config, mirror);
-          } else if (config is DynamicFactoryConfig) {
-            // dynamic factory
-            _addDynamicFactoryConfig(category, config);
-          }
-        });
+    RegExp regex = new RegExp(IMPL_CLASS_REGEX);
+    for(ClassMirror mirror in reflector.annotatedClasses) {
+      Match matchName = regex.firstMatch(mirror.qualifiedName);
+      if (matchName == null || !mirror.isSubtypeOf(registrable)) {
+        // not interesting
+        continue;
       }
-    });
+      String category = matchName.group(1);
+      if (!mirror.staticMembers.containsKey(FIELD)) {
+        // no factory config found
+//        print("No factory config found for implementation "
+//          "${mirror.qualifiedName}");
+        continue;
+      }
+      FactoryConfig config = mirror.invokeGetter(FIELD);
+      // check if dynamic or static factory
+      if (config is StaticFactoryConfig) {
+        // static factory
+        _addStaticFactoryConfig(category, config, mirror);
+      } else if (config is DynamicFactoryConfig) {
+        // dynamic factory
+        _addDynamicFactoryConfig(category, config);
+      }
+    }
     initialized = true;
-  }
-
-  bool _isRegistrableDeclaration(DeclarationMirror declaration) {
-    if (declaration.isPrivate)
-      return false;
-    if (declaration is! ClassMirror)
-      return false;
-    return (declaration as ClassMirror).isSubtypeOf(registrable);
   }
 
   void _addStaticFactoryConfig(String category, StaticFactoryConfig config, ClassMirror mirror) {
@@ -147,8 +137,13 @@ class FactoryRegistry {
 
 class RegistryImplementationReflector extends Reflectable {
   const RegistryImplementationReflector()
-    : super(libraryCapability, staticInvokeCapability, declarationsCapability,
-    newInstanceCapability, typeRelationsCapability);
+    : super(
+      declarationsCapability,
+      newInstanceCapability,
+      staticInvokeCapability,
+      subtypeQuantifyCapability,
+      typeRelationsCapability
+    );
 }
 
 RegistrableConstructor _createStaticFactory(ClassMirror classMirror) =>

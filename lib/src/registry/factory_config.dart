@@ -23,11 +23,15 @@ class DynamicFactoryConfig extends FactoryConfig {
   DynamicFactoryConfig.regex(String regexString, DynamicConstructorFactory factory)
     : this(new RegExp(regexString), factory);
 
+  /// A dynamic registry that matches by prefix.
+  /// The part after the prefix will be in `match.group(1)`.
   DynamicFactoryConfig.prefix(String prefix, DynamicConstructorFactory factory)
-    : this.regex("^${escapeRegExp(prefix)}.+\$", factory);
+    : this.regex("^${escapeRegExp(prefix)}(.+)\$", factory);
 
+  /// A dynamic registry that matches by suffix.
+  /// The part before the suffix will be in `match.group(1)`.
   DynamicFactoryConfig.suffix(String suffix, DynamicConstructorFactory factory)
-    : this.regex("^.+${escapeRegExp(suffix)}\$", factory);
+    : this.regex("^(.+)${escapeRegExp(suffix)}\$", factory);
 
   /// Invokes the factory when it matches. Else returns null.
   RegistrableConstructor tryFactory(String algorithmName) {
