@@ -14,11 +14,12 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(r"^(.+)/([^/]+)$", (_, final Match match) => () {
-        Padding padding = new Padding(match.group(2));
-        BlockCipher underlyingCipher = new BlockCipher(match.group(1));
-        return new PaddedBlockCipherImpl(padding, underlyingCipher);
-      });
+      new DynamicFactoryConfig.regex(PaddedBlockCipher, r"^(.+)/([^/]+)$",
+        (_, final Match match) => () {
+          Padding padding = new Padding(match.group(2));
+          BlockCipher underlyingCipher = new BlockCipher(match.group(1));
+          return new PaddedBlockCipherImpl(padding, underlyingCipher);
+        });
 
   final Padding padding;
   final BlockCipher cipher;

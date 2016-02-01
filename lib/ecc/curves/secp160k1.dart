@@ -8,6 +8,7 @@ library pointycastle.impl.ec_domain_parameters.secp160k1;
 
 import "package:bignum/bignum.dart";
 
+import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ec_standard_curve_constructor.dart";
@@ -15,7 +16,7 @@ import "package:pointycastle/src/ec_standard_curve_constructor.dart";
 class ECCurve_secp160k1 extends ECDomainParametersImpl {
 
   static final FactoryConfig FACTORY_CONFIG =
-  new StaticFactoryConfig("secp160k1");
+  new StaticFactoryConfig(ECDomainParameters, "secp160k1");
 
   factory ECCurve_secp160k1() => constructFpStandardCurve("secp160k1",
     ECCurve_secp160k1._make,

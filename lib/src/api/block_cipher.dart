@@ -10,7 +10,7 @@ abstract class BlockCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
   factory BlockCipher(String algorithmName) =>
-      registry.create("block_cipher", algorithmName);
+      registry.create(BlockCipher, algorithmName);
 
   /// Get this ciphers's block size.
   int get blockSize;

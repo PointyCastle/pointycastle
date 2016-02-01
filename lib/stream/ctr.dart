@@ -13,11 +13,11 @@ class CTRStreamCipher extends SICStreamCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/CTR", (String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        String digestName = algorithmName.substring(0, sep);
-        return new CTRStreamCipher(new BlockCipher(digestName));
-      });
+      new DynamicFactoryConfig.suffix(StreamCipher, "/CTR",
+        (_, final Match match) => () {
+          String digestName = match.group(1);
+          return new CTRStreamCipher(new BlockCipher(digestName));
+        });
 
   CTRStreamCipher(BlockCipher underlyingCipher) : super(underlyingCipher);
   String get algorithmName => "${underlyingCipher.algorithmName}/CTR";

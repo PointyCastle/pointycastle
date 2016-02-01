@@ -8,6 +8,7 @@ library pointycastle.impl.ec_domain_parameters.brainpoolp224t1;
 
 import "package:bignum/bignum.dart";
 
+import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ec_standard_curve_constructor.dart";
@@ -15,7 +16,7 @@ import "package:pointycastle/src/ec_standard_curve_constructor.dart";
 class ECCurve_brainpoolp224t1 extends ECDomainParametersImpl {
 
   static final FactoryConfig FACTORY_CONFIG =
-  new StaticFactoryConfig("brainpoolp224t1");
+  new StaticFactoryConfig(ECDomainParameters, "brainpoolp224t1");
 
   factory ECCurve_brainpoolp224t1() => constructFpStandardCurve("brainpoolp224t1",
     ECCurve_brainpoolp224t1._make,

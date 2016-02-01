@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005.
 class Salsa20Engine extends BaseStreamCipher {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("Salsa20");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(StreamCipher, "Salsa20");
 
   static const _STATE_SIZE = 16;
 

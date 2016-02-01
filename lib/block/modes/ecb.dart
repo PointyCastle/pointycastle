@@ -15,11 +15,11 @@ class ECBBlockCipher extends BaseBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/ECB", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
-        return new ECBBlockCipher(underlying);
-      });
+      new DynamicFactoryConfig.suffix(BlockCipher, "/ECB",
+        (_, final Match match) => () {
+          BlockCipher underlying = new BlockCipher(match.group(1));
+          return new ECBBlockCipher(underlying);
+        });
 
   final BlockCipher _underlyingCipher;
 

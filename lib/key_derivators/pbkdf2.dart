@@ -22,11 +22,11 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/PBKDF2", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        Mac mac = new Mac(algorithmName.substring(0, sep));
-        return new PBKDF2KeyDerivator(mac);
-      });
+      new DynamicFactoryConfig.suffix(KeyDerivator, "/PBKDF2",
+        (_, final Match match) => () {
+          Mac mac = new Mac(match.group(1));
+          return new PBKDF2KeyDerivator(mac);
+        });
 
   Pbkdf2Parameters _params;
   Mac _mac;

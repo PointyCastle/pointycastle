@@ -6,14 +6,16 @@ library pointycastle.impl.digest.whirlpool;
 
 import "dart:typed_data";
 
+import "package:pointycastle/api.dart";
 import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
 /// Implementation of Whirlpool digest.
-class WhirlpoolDigest extends BaseDigest {
+class WhirlpoolDigest extends BaseDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("Whirlpool");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "Whirlpool");
 
   static const _DIGEST_LENGTH_BYTES = 512 ~/ 8;
   static const _BUFFER_SIZE = 64;

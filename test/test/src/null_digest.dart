@@ -7,6 +7,7 @@ library pointycastle.impl.block_chipher.test.src.null_digest;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/base_digest.dart";
 
 /**
@@ -14,6 +15,9 @@ import "package:pointycastle/src/impl/base_digest.dart";
  * used for testing or benchmarking chaining algorithms.
  */
 class NullDigest extends BaseDigest {
+
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "Null");
 
   final int digestSize;
 

@@ -17,10 +17,11 @@ import "package:pointycastle/src/registry/registry.dart";
 class NullBlockCipher extends BaseBlockCipher {
 
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(r"^Null(?:-([0-9]+))?$", (_, Match match) {
-        final int blockSize = match.group(1) == null ? 16 : int.parse(match.group(1));
-        return () => new NullBlockCipher(blockSize);
-      });
+      new DynamicFactoryConfig.regex(BlockCipher, r"^Null(?:-([0-9]+))?$",
+        (_, Match match) {
+          final int blockSize = match.group(1) == null ? 16 : int.parse(match.group(1));
+          return () => new NullBlockCipher(blockSize);
+        });
 
   final int blockSize;
 

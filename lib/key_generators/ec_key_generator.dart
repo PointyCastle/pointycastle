@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGenerator implements KeyGenerator {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("EC");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(KeyGenerator, "EC");
 
   ECDomainParameters _params;
   SecureRandom _random;

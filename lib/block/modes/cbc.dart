@@ -14,11 +14,11 @@ class CBCBlockCipher extends BaseBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/CBC", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
-        return new CBCBlockCipher(underlying);
-      });
+      new DynamicFactoryConfig.suffix(BlockCipher, "/CBC",
+        (_, final Match match) => () {
+          BlockCipher underlying = new BlockCipher(match.group(1));
+          return new CBCBlockCipher(underlying);
+        });
 
   final BlockCipher _underlyingCipher;
 

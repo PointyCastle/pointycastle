@@ -8,6 +8,7 @@ library pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_c;
 
 import "package:bignum/bignum.dart";
 
+import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ec_standard_curve_constructor.dart";
@@ -15,7 +16,7 @@ import "package:pointycastle/src/ec_standard_curve_constructor.dart";
 class ECCurve_gostr3410_2001_cryptopro_c extends ECDomainParametersImpl {
 
   static final FactoryConfig FACTORY_CONFIG =
-  new StaticFactoryConfig("GostR3410-2001-CryptoPro-C");
+  new StaticFactoryConfig(ECDomainParameters, "GostR3410-2001-CryptoPro-C");
 
   factory ECCurve_gostr3410_2001_cryptopro_c() => constructFpStandardCurve("GostR3410-2001-CryptoPro-C",
     ECCurve_gostr3410_2001_cryptopro_c._make,

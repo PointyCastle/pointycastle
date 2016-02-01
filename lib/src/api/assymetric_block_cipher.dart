@@ -10,7 +10,7 @@ abstract class AsymmetricBlockCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
   factory AsymmetricBlockCipher( String algorithmName ) =>
-      registry.create("asymmetric_block_cipher", algorithmName);
+      registry.create(AsymmetricBlockCipher, algorithmName);
 
   /// Get this ciphers's maximum input block size.
   int get inputBlockSize;

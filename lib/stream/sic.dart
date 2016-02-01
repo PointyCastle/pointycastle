@@ -22,11 +22,11 @@ class SICStreamCipher extends BaseStreamCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/SIC", (String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        String digestName = algorithmName.substring(0, sep);
-        return new SICStreamCipher(new BlockCipher(digestName));
-      });
+      new DynamicFactoryConfig.suffix(StreamCipher, "/SIC",
+        (_, final Match match) => () {
+          String digestName = match.group(1);
+          return new SICStreamCipher(new BlockCipher(digestName));
+        });
 
   final BlockCipher underlyingCipher;
 

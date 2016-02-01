@@ -16,7 +16,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// An implementation of [SecureRandom] as specified in the Fortuna algorithm.
 class FortunaRandom implements SecureRandom {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("Fortuna");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(SecureRandom, "Fortuna");
 
   AESFastEngine _aes;
   AutoSeedBlockCtrRandom _prng;

@@ -15,7 +15,8 @@ import "package:pointycastle/src/registry/registry.dart";
 
 class RSAEngine extends BaseAsymmetricBlockCipher {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("RSA");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(AsymmetricBlockCipher, "RSA");
 
   bool _forEncryption;
   RSAAsymmetricKey _key;

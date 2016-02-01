@@ -14,9 +14,10 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of MD4 digest
 class MD4Digest extends MD4FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("MD4");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "MD4");
 
-    static const _DIGEST_LENGTH = 16;
+  static const _DIGEST_LENGTH = 16;
 
   MD4Digest() :
     super(Endianness.LITTLE_ENDIAN, 4, 16);

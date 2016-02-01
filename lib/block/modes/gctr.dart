@@ -16,11 +16,11 @@ class GCTRBlockCipher extends BaseBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/GCTR", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
-        return new GCTRBlockCipher(underlying);
-      });
+      new DynamicFactoryConfig.suffix(BlockCipher, "/GCTR",
+        (_, final Match match) => () {
+          BlockCipher underlying = new BlockCipher(match.group(1));
+          return new GCTRBlockCipher(underlying);
+        });
 
   static const C1 = 16843012; //00000001000000010000000100000100
   static const C2 = 16843009; //00000001000000010000000100000001

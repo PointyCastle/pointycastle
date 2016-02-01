@@ -6,17 +6,18 @@ library pointycastle.impl.digest.sha3;
 
 import "dart:typed_data";
 
+import "package:pointycastle/api.dart";
 import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ufixnum.dart";
 
 /// Implementation of SHA-3 digest.
-class SHA3Digest extends BaseDigest {
+class SHA3Digest extends BaseDigest implements Digest {
   static final RegExp _NAME_REGEX = new RegExp(r"^SHA-3\/([0-9]+)$");
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig(_NAME_REGEX, (_, final Match match) => () {
+      new DynamicFactoryConfig(Digest, _NAME_REGEX, (_, final Match match) => () {
         int bitLength = int.parse(match.group(1));
         return new SHA3Digest(bitLength);
       });

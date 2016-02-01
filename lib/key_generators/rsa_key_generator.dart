@@ -13,7 +13,8 @@ import "package:pointycastle/src/registry/registry.dart";
 
 class RSAKeyGenerator implements KeyGenerator {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("RSA");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(KeyGenerator, "RSA");
 
   SecureRandom _random;
   RSAKeyGeneratorParameters _params;

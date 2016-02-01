@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of RIPEMD-128 digest
 class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("RIPEMD-128");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "RIPEMD-128");
 
   static const _DIGEST_LENGTH = 16;
 

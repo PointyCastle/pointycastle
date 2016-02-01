@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of SHA-256 digest.
 class SHA256Digest extends MD4FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("SHA-256");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "SHA-256");
 
   static const _DIGEST_LENGTH = 32;
 

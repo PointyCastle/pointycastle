@@ -5,11 +5,15 @@
 library pointycastle.impl.secure_random.test.src.null_secure_random;
 
 import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/secure_random_base.dart";
 
 /// An implementation of [SecureRandom] that return numbers in growing sequence.
 class NullSecureRandom extends SecureRandomBase {
+
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(SecureRandom, "Null");
 
   var _nextValue=0;
 

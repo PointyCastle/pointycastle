@@ -10,7 +10,7 @@ abstract class Padding extends Algorithm {
 
   /// Create the digest specified by the standard [algorithmName].
   factory Padding( String algorithmName ) =>
-      registry.create("padding", algorithmName);
+      registry.create(Padding, algorithmName);
 
   /// Initialise the padder. Normally, paddings don't need any init params.
   void init( [CipherParameters params] );

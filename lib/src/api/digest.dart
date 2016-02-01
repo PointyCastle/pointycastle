@@ -10,7 +10,7 @@ abstract class Digest extends Algorithm {
 
   /// Create the digest specified by the standard [algorithmName].
   factory Digest( String algorithmName ) =>
-      registry.create("digest", algorithmName);
+      registry.create(Digest, algorithmName);
 
   /// Get this digest's output size.
   int get digestSize;

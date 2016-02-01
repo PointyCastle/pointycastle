@@ -15,16 +15,18 @@ class RSASigner implements Signer {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/RSA", (String algorithmName, _) {
-        int sep = algorithmName.lastIndexOf("/");
-        final String digestName = algorithmName.substring(0, sep);
-        final String digestIdentifierHex = _DIGEST_IDENTIFIER_HEXES[digestName];
-        if (digestIdentifierHex == null) {
-          throw new RegistryFactoryException(
-            "RSA signing with digest $digestName is not supported");
-        }
-        return () => new RSASigner(new Digest(digestName), digestIdentifierHex);
-      });
+      new DynamicFactoryConfig.suffix(Signer, "/RSA",
+        (_, Match match) {
+          final String digestName = match.group(1);
+          final String digestIdentifierHex =
+              _DIGEST_IDENTIFIER_HEXES[digestName];
+          if (digestIdentifierHex == null) {
+            throw new RegistryFactoryException(
+              "RSA signing with digest $digestName is not supported");
+          }
+          return () =>
+              new RSASigner(new Digest(digestName), digestIdentifierHex);
+        });
   
   static final Map<String, String> _DIGEST_IDENTIFIER_HEXES = {
     "MD2": "06082a864886f70d0202",

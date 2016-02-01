@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// A [Padding] that adds PKCS7/PKCS5 padding to a block.
 class PKCS7Padding extends BasePadding {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("PKCS7");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Padding, "PKCS7");
 
   String get algorithmName => "PKCS7";
 

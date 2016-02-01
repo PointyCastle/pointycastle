@@ -25,7 +25,14 @@ const String IMPL_CLASS_REGEX = r"^pointycastle\.impl\.([^.]+)\.(.*)\.([^.]+)$";
 
 FactoryRegistry registry = new FactoryRegistry();
 
-
+/// How the factory search algorithm works right now is as follows:
+/// - The [Registrable] class has a reflector annotation with a
+///   [subtypeQuantifyCapability] capability, so all subclasses of [Registrable]
+///   will be included in the reflected set of classes.
+/// - The algorithms goes over all these classes and makes two tests:
+///   - Check the qualified name using [IMPL_CLASS_REGEX] so that only classes
+///     in a library `pointycastle.impl.<category>.*` get matched.
+///   - Check for the presence of a static `FACTORY_CONFIG` variable.
 class FactoryRegistry {
 
   static const String FIELD = "FACTORY_CONFIG";
@@ -36,44 +43,44 @@ class FactoryRegistry {
   static final ClassMirror registrable = reflector.annotatedClasses.firstWhere(
       (cm) => cm.qualifiedName == "pointycastle.src.registry.Registrable");
 
-  final Map<String, Map<String, RegistrableConstructor>> staticFactories;
-  final Map<String, Set<DynamicFactoryConfig>> dynamicFactories;
+  final Map<Type, Map<String, RegistrableConstructor>> staticFactories;
+  final Map<Type, Set<DynamicFactoryConfig>> dynamicFactories;
 
   final LruMap<String, RegistrableConstructor> constructorCache =
   new LruMap<String, RegistrableConstructor>(maximumSize: CONSTRUCTOR_CACHE_SIZE);
 
   FactoryRegistry()
-    : staticFactories  = new Map<String, Map<String, RegistrableConstructor>>(),
-      dynamicFactories = new Map<String, Set<DynamicFactoryConfig>>();
+    : staticFactories  = new Map<Type, Map<String, RegistrableConstructor>>(),
+      dynamicFactories = new Map<Type, Set<DynamicFactoryConfig>>();
 
-  Registrable create(String category, String registrableName) {
-    RegistrableConstructor factory = getConstructor(category, registrableName);
+  Registrable create(Type type, String registrableName) {
+    RegistrableConstructor factory = getConstructor(type, registrableName);
     Registrable result = factory();
     //TODO interesting test:
 //    assert(result is! Algorithm || result.algorithmName == algorithmName);
     return result;
   }
 
-  RegistrableConstructor getConstructor(String category, String registrableName) {
-    RegistrableConstructor constructor = constructorCache["$category.$registrableName"];
+  RegistrableConstructor getConstructor(Type type, String registrableName) {
+    RegistrableConstructor constructor = constructorCache["$type.$registrableName"];
     if (constructor == null) {
-      constructor = createConstructor(category, registrableName);
-      constructorCache["$category.$registrableName"] = constructor;
+      constructor = createConstructor(type, registrableName);
+      constructorCache["$type.$registrableName"] = constructor;
     }
     return constructor;
   }
 
-  RegistrableConstructor createConstructor(String category, String registrableName) {
+  RegistrableConstructor createConstructor(Type type, String registrableName) {
     // Init lazy
     _checkInit();
     // Look for a static factory
-    if (staticFactories.containsKey(category) &&
-        staticFactories[category].containsKey(registrableName)) {
-      return staticFactories[category][registrableName];
+    if (staticFactories.containsKey(type) &&
+        staticFactories[type].containsKey(registrableName)) {
+      return staticFactories[type][registrableName];
     }
     // Look for a dynamic factory
-    if (dynamicFactories.containsKey(category)) {
-      for (DynamicFactoryConfig factory in dynamicFactories[category]) {
+    if (dynamicFactories.containsKey(type)) {
+      for (DynamicFactoryConfig factory in dynamicFactories[type]) {
         RegistrableConstructor constructor = factory.tryFactory(
           registrableName);
         if (constructor != null) {
@@ -82,7 +89,7 @@ class FactoryRegistry {
       }
     }
     // No factory found
-    throw new RegistryFactoryException.unknown(registrableName, category);
+    throw new RegistryFactoryException.unknown(registrableName, type);
   }
 
   bool initialized = false;
@@ -93,41 +100,32 @@ class FactoryRegistry {
   }
 
   void initialize() {
-    RegExp regex = new RegExp(IMPL_CLASS_REGEX);
     for(ClassMirror mirror in reflector.annotatedClasses) {
-      Match matchName = regex.firstMatch(mirror.qualifiedName);
-      if (matchName == null || !mirror.isSubtypeOf(registrable)) {
-        // not interesting
-        continue;
-      }
-      String category = matchName.group(1);
       if (!mirror.staticMembers.containsKey(FIELD)) {
-        // no factory config found
-//        print("No factory config found for implementation "
-//          "${mirror.qualifiedName}");
+        // no factory found
         continue;
       }
       FactoryConfig config = mirror.invokeGetter(FIELD);
       // check if dynamic or static factory
       if (config is StaticFactoryConfig) {
         // static factory
-        _addStaticFactoryConfig(category, config, mirror);
+        _addStaticFactoryConfig(config, mirror);
       } else if (config is DynamicFactoryConfig) {
         // dynamic factory
-        _addDynamicFactoryConfig(category, config);
+        _addDynamicFactoryConfig(config);
       }
     }
     initialized = true;
   }
 
-  void _addStaticFactoryConfig(String category, StaticFactoryConfig config, ClassMirror mirror) {
-    Map factories = staticFactories.putIfAbsent(category,
+  void _addStaticFactoryConfig(StaticFactoryConfig config, ClassMirror mirror) {
+    Map factories = staticFactories.putIfAbsent(config.type,
         () => new Map<String, RegistrableConstructor>());
     factories[config.algorithmName] = _createStaticFactory(mirror);
   }
 
-  void _addDynamicFactoryConfig(String category, DynamicFactoryConfig config) {
-    Set factories = dynamicFactories.putIfAbsent(category,
+  void _addDynamicFactoryConfig(DynamicFactoryConfig config) {
+    Set factories = dynamicFactories.putIfAbsent(config.type,
       () => new Set<DynamicFactoryConfig>());
     factories.add(config);
   }
@@ -141,8 +139,7 @@ class RegistryImplementationReflector extends Reflectable {
       declarationsCapability,
       newInstanceCapability,
       staticInvokeCapability,
-      subtypeQuantifyCapability,
-      typeRelationsCapability
+      subtypeQuantifyCapability
     );
 }
 

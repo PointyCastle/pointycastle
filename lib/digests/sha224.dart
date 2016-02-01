@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of SHA-224 digest.
 class SHA224Digest extends MD4FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("SHA-224");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "SHA-224");
 
   static const _DIGEST_LENGTH = 28;
 

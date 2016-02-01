@@ -16,11 +16,12 @@ class SICBlockCipher extends StreamCipherAsBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/SIC", (final String algorithmName, _) => () {
-        int sep = algorithmName.lastIndexOf("/");
-        BlockCipher underlying = new BlockCipher(algorithmName.substring(0, sep));
-        return new SICBlockCipher(underlying.blockSize, new SICStreamCipher(underlying));
-      });
+      new DynamicFactoryConfig.suffix(BlockCipher, "/SIC",
+        (_, final Match match) => () {
+          BlockCipher underlying = new BlockCipher(match.group(1));
+          return new SICBlockCipher(underlying.blockSize,
+              new SICStreamCipher(underlying));
+        });
 
   SICBlockCipher(int blockSize, StreamCipher underlyingCipher)
     : super(blockSize, underlyingCipher);

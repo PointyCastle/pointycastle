@@ -8,6 +8,7 @@ library pointycastle.impl.ec_domain_parameters.prime192v1;
 
 import "package:bignum/bignum.dart";
 
+import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/ec_standard_curve_constructor.dart";
@@ -15,7 +16,7 @@ import "package:pointycastle/src/ec_standard_curve_constructor.dart";
 class ECCurve_prime192v1 extends ECDomainParametersImpl {
 
   static final FactoryConfig FACTORY_CONFIG =
-  new StaticFactoryConfig("prime192v1");
+  new StaticFactoryConfig(ECDomainParameters, "prime192v1");
 
   factory ECCurve_prime192v1() => constructFpStandardCurve("prime192v1",
     ECCurve_prime192v1._make,

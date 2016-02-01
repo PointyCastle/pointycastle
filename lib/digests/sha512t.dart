@@ -17,7 +17,7 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig(_NAME_REGEX, (_, final Match match) => () {
+      new DynamicFactoryConfig(Digest, _NAME_REGEX, (_, final Match match) => () {
         int bitLength = int.parse(match.group(1));
         if ((bitLength % 8) != 0) {
           throw new RegistryFactoryException(

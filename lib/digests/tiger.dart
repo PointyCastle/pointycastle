@@ -6,14 +6,16 @@ library pointycastle.impl.digest.tiger;
 
 import "dart:typed_data";
 
+import "package:pointycastle/api.dart";
 import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
 /// Implementation of Tiger digest.
-class TigerDigest extends BaseDigest {
+class TigerDigest extends BaseDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("Tiger");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "Tiger");
 
   static const _DIGEST_LENGTH = 24;
   static final _KEY_MASK_0 = new Register64(0xA5A5A5A5, 0xA5A5A5A5);

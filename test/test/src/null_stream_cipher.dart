@@ -7,6 +7,7 @@ library pointycastle.impl.stream_cipher.test.src.null_stream_cipher;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/base_stream_cipher.dart";
 
 /**
@@ -14,6 +15,9 @@ import "package:pointycastle/src/impl/base_stream_cipher.dart";
  * testing or benchmarking chaining algorithms.
  */
 class NullStreamCipher extends BaseStreamCipher {
+
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(StreamCipher, "Null");
 
   String get algorithmName => "Null";
 

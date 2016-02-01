@@ -14,7 +14,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of MD5 digest
 class MD5Digest extends MD4FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("MD5");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "MD5");
 
   static const _DIGEST_LENGTH = 16;
 

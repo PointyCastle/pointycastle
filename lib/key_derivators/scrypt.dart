@@ -6,6 +6,7 @@ library pointycastle.impl.key_derivator.scrypt;
 
 import "dart:typed_data";
 
+import "package:pointycastle/api.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/key_derivators/api.dart";
 import "package:pointycastle/src/impl/base_key_derivator.dart";
@@ -26,7 +27,8 @@ import "package:pointycastle/src/registry/registry.dart";
  */
 class Scrypt extends BaseKeyDerivator {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("scrypt");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(KeyDerivator, "scrypt");
 
   static final int _MAX_VALUE = 0x7fffffff;
 

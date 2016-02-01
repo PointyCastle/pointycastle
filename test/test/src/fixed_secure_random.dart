@@ -2,13 +2,17 @@
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
-library pointycastle.test.src.fixed_secure_random;
+library pointycastle.impl.secure_random.test.src.fixed_secure_random;
 
 import "package:pointycastle/api.dart";
+import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/secure_random_base.dart";
 
 /// An implementation of [SecureRandom] that return fixed numbers.
 class FixedSecureRandom extends SecureRandomBase {
+
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(SecureRandom, "Fixed");
 
   var _next = 0;
   var _values = [

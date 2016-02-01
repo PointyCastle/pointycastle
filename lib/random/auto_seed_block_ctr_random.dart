@@ -22,11 +22,12 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(r"^(.*)/CTR/AUTO-SEED-PRNG$", (_, final Match match) => () {
-        String blockCipherName = match.group(1);
-        BlockCipher blockCipher = new BlockCipher(blockCipherName);
-        return new AutoSeedBlockCtrRandom(blockCipher);
-      });
+      new DynamicFactoryConfig.regex(SecureRandom, r"^(.*)/CTR/AUTO-SEED-PRNG$",
+        (_, final Match match) => () {
+          String blockCipherName = match.group(1);
+          BlockCipher blockCipher = new BlockCipher(blockCipherName);
+          return new AutoSeedBlockCtrRandom(blockCipher);
+        });
 
   BlockCtrRandom _delegate;
   final bool _reseedIV;

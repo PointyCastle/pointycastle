@@ -17,7 +17,7 @@ abstract class SecureRandom extends Algorithm {
 
   /// Create the secure random specified by the standard [algorithmName].
   factory SecureRandom([String algorithmName = ""]) =>
-      registry.create("secure_random", algorithmName);
+      registry.create(SecureRandom, algorithmName);
 
   /// Seed the RNG with some entropy (look at package cipher_entropy providing entropy sources).
   void seed(CipherParameters params);

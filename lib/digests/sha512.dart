@@ -13,7 +13,8 @@ import "package:pointycastle/src/registry/registry.dart";
 /// Implementation of SHA-512 digest.
 class SHA512Digest extends LongSHA2FamilyDigest implements Digest {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("SHA-512");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(Digest, "SHA-512");
 
   static const _DIGEST_LENGTH = 64;
 

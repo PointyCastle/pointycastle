@@ -15,19 +15,16 @@ class RegistryFactoryException implements Exception {
 
   RegistryFactoryException(this.message);
 
-  RegistryFactoryException.unknown(String algorithm, [String category]) : this(
+  RegistryFactoryException.unknown(String algorithm, [Type type]) : this(
     "No algorithm registered" +
-      (category != null ? " in category $category" : "") +
+      (type != null ? " of type $type" : "") +
       " with name: $algorithm"
   );
 
-  RegistryFactoryException.invalid(String algorithm, [String category]) : this(
+  RegistryFactoryException.invalid(String algorithm, [Type type]) : this(
     "Algorithm name $algorithm is invalid" +
-      (category != null ? " in category $category" : "")
+      (type != null ? " of type $type" : "")
   );
-
-  RegistryFactoryException.category(String category)
-      : this("No algorithms of category $category registered.");
 
   @override
   String toString() => "RegistryFactoryException: $message";

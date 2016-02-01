@@ -14,11 +14,12 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix("/PKCS1", (_, final Match match) => () {
-        AsymmetricBlockCipher underlyingCipher =
-            new AsymmetricBlockCipher(match.group(1));
-        return new PKCS1Encoding(underlyingCipher);
-      });
+      new DynamicFactoryConfig.suffix(AsymmetricBlockCipher, "/PKCS1",
+        (_, final Match match) => () {
+          AsymmetricBlockCipher underlyingCipher =
+              new AsymmetricBlockCipher(match.group(1));
+          return new PKCS1Encoding(underlyingCipher);
+        });
 
   static const _HEADER_LENGTH = 10;
 

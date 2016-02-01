@@ -37,7 +37,8 @@ import "package:pointycastle/src/registry/registry.dart";
  */
 class AESFastEngine extends BaseBlockCipher {
 
-  static final FactoryConfig FACTORY_CONFIG = new StaticFactoryConfig("AES");
+  static final FactoryConfig FACTORY_CONFIG =
+      new StaticFactoryConfig(BlockCipher, "AES");
 
   static const _BLOCK_SIZE = 16;
 

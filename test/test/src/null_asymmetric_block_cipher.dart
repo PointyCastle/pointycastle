@@ -18,9 +18,10 @@ class NullAsymmetricBlockCipher extends BaseAsymmetricBlockCipher {
 
   /// Intended for internal use.
   static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(r"^Null$", (_, _2) => () {
-        return new NullAsymmetricBlockCipher(70, 70);
-      });
+      new DynamicFactoryConfig.regex(AsymmetricBlockCipher, r"^Null$",
+        (_, _2) => () {
+          return new NullAsymmetricBlockCipher(70, 70);
+        });
 
   final int inputBlockSize;
   final int outputBlockSize;

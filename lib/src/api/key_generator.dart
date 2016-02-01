@@ -14,7 +14,7 @@ abstract class KeyGenerator extends Algorithm {
 
   /// Create the key generator specified by the standard [algorithmName].
   factory KeyGenerator( String algorithmName ) =>
-      registry.create("key_generator", algorithmName);
+      registry.create(KeyGenerator, algorithmName);
 
   /**
    * Init the generator with its initialization [params]. The type of [CipherParameters] depends on the algorithm being used
