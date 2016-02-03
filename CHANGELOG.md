@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-#### Version 0.10.0 (???)
+#### Version 0.10.0 (2016-02-04) (Dart SDK version 0.14.0)
 
 * First Pointy Castle release.
 

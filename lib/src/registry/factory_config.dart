@@ -1,9 +1,15 @@
-
 // Copyright (c) 2013-present, the authors of the Pointy Castle project
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
-part of pointycastle.src.registry;
+library pointycastle.src.registry.factory_config;
+
+import "package:quiver_pattern/regexp.dart";
+
+
+typedef /*Registrable*/ RegistrableConstructor();
+typedef RegistrableConstructor DynamicConstructorFactory(
+  String registrableName, Match match);
 
 
 abstract class FactoryConfig {

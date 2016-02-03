@@ -85,14 +85,8 @@ As of the last release, the following algorithms are implemented:
 
   * ECDSA
   * RSA
-  
-  
-**Entropy sources (true RNGs):**
 
-  * URL based (can be used, for example, with random.org)
-  * File based (can be used, for example, with /dev/random)
-  
-  
+
 **Secure PRNGs:**
 
   * Based on block cipher in CTR mode

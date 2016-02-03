@@ -6,33 +6,24 @@ library pointycastle.src.registry;
 
 import "package:reflectable/reflectable.dart";
 import "package:quiver_collection/collection.dart";
-import "package:quiver_pattern/regexp.dart";
 
 import "package:pointycastle/api.dart";
 
-part "factory_config.dart";
+import "factory_config.dart";
+export "factory_config.dart";
+
 part "registrable.dart";
 
 
-typedef Registrable RegistrableConstructor();
-typedef RegistrableConstructor DynamicConstructorFactory(
-    String registrableName, Match match);
 
-/// Matches all `pointycastle.impl.<category>.<algo>.<className>` libs.
-/// The match's groups are <category>, <algo> and <className> as
-/// groups 1, 2 and 3 respectively.
-const String IMPL_CLASS_REGEX = r"^pointycastle\.impl\.([^.]+)\.(.*)\.([^.]+)$";
-
-FactoryRegistry registry = new FactoryRegistry();
+final FactoryRegistry registry = new FactoryRegistry();
 
 /// How the factory search algorithm works right now is as follows:
 /// - The [Registrable] class has a reflector annotation with a
 ///   [subtypeQuantifyCapability] capability, so all subclasses of [Registrable]
 ///   will be included in the reflected set of classes.
-/// - The algorithms goes over all these classes and makes two tests:
-///   - Check the qualified name using [IMPL_CLASS_REGEX] so that only classes
-///     in a library `pointycastle.impl.<category>.*` get matched.
-///   - Check for the presence of a static `FACTORY_CONFIG` variable.
+/// - The algorithms goes over all these classes and checks for the presence of
+///   a static `FACTORY_CONFIG` variable.
 class FactoryRegistry {
 
   static const String FIELD = "FACTORY_CONFIG";
@@ -54,10 +45,8 @@ class FactoryRegistry {
       dynamicFactories = new Map<Type, Set<DynamicFactoryConfig>>();
 
   Registrable create(Type type, String registrableName) {
-    RegistrableConstructor factory = getConstructor(type, registrableName);
-    Registrable result = factory();
-    //TODO interesting test:
-//    assert(result is! Algorithm || result.algorithmName == algorithmName);
+    RegistrableConstructor constructor = getConstructor(type, registrableName);
+    Registrable result = constructor();
     return result;
   }
 
