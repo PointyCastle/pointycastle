@@ -218,11 +218,6 @@ class Register64 {
   bool operator <=(Register64 y) => ((this < y) || (this == y));
   bool operator > (Register64 y) => ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));
   bool operator >=(Register64 y) => ((this > y) || (this == y));
-  Register64 operator +(Register64 y) {
-    Register64 newreg = new Register64(this._hi32, this._lo32);
-    newreg.sum(y);
-    return newreg;
-  }
 
   void set(dynamic hiOrLo32OrY, [int lo32=null]) {
     if (lo32 == null) {
@@ -456,8 +451,6 @@ class Register64List {
   int get length => _list.length;
 
   Register64 operator [](int index) => _list[index];
-
-  operator []=(int indx, Register64 val) => _list[indx] = val;
 
   void fillRange(int start, int end, dynamic hiOrLo32OrY, [int lo32=null]) {
     for (var i = start; i < end; i++) {
