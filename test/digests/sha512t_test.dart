@@ -10,8 +10,6 @@ import "../test/digest_tests.dart";
 
 void main() {
 
-
-
   runDigestTests( new Digest("SHA-512/224"), [
 
     "",
@@ -25,8 +23,6 @@ void main() {
 
   ]);
 
-
-
   runDigestTests( new Digest("SHA-512/256"), [
 
     "",
@@ -39,7 +35,6 @@ void main() {
     "3928e184fb8690f840da3988121d31be65cb9d3ef83ee6146feac861e19b563a",
 
   ]);
-
 
   runDigestTests( new Digest("SHA-512/488"), [
 
