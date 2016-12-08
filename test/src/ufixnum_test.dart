@@ -10,14 +10,6 @@ import "package:test/test.dart";
 import "package:pointycastle/src/ufixnum.dart";
 
 void main() {
-  _test8();
-  _test16();
-  _test32();
-  _testRegister64();
-  _testRegister64List();
-}
-
-void _test8() {
 
   group( "int8:", () {
 
@@ -77,10 +69,6 @@ void _test8() {
 
   });
 
-}
-
-void _test16() {
-
   group( "int16:", () {
 
     test( "clip16()", () {
@@ -113,11 +101,21 @@ void _test16() {
       expect(unpack16(inp, 0, Endianness.LITTLE_ENDIAN), 0x1020);
     });
 
+    test( "pack16(Uint8List.view)", () {
+      var out = new Uint8List(6);
+      out = new Uint8List.view(out.buffer, 2, 2);
+      pack16(0x1020, out, 0, Endianness.BIG_ENDIAN);
+      expect(out[0], 0x10);
+      expect(out[1], 0x20);
+    });
+
+    test( "unpack16(Uint8List.view)", () {
+      var inp = new Uint8List.fromList([0, 0, 0x20, 0x10, 0, 0]);
+      inp = new Uint8List.view(inp.buffer, 2, 2);
+      expect(unpack16(inp, 0, Endianness.LITTLE_ENDIAN), 0x1020);
+    });
+
   });
-
-}
-
-void _test32() {
 
   group( "int32:", () {
 
@@ -204,11 +202,23 @@ void _test32() {
       expect(unpack32(inp, 0, Endianness.LITTLE_ENDIAN), 0x10203040);
     });
 
+    test( "pack32(Uint8List.view)", () {
+      var out = new Uint8List(8);
+      out = new Uint8List.view(out.buffer, 2, 4);
+      pack32(0x10203040, out, 0, Endianness.BIG_ENDIAN);
+      expect(out[0], 0x10);
+      expect(out[1], 0x20);
+      expect(out[2], 0x30);
+      expect(out[3], 0x40);
+    });
+
+    test( "unpack32(Uint8List.view)", () {
+      var inp = new Uint8List.fromList([0, 0, 0x40, 0x30, 0x20, 0x10, 0, 0]);
+      inp = new Uint8List.view(inp.buffer, 2, 4);
+      expect(unpack32(inp, 0, Endianness.LITTLE_ENDIAN), 0x10203040);
+    });
+
   });
-
-}
-
-void _testRegister64() {
 
   group( "Register64:", () {
 
@@ -603,15 +613,32 @@ void _testRegister64() {
          new Register64()..unpack(inp, 0, Endianness.LITTLE_ENDIAN), new Register64(0x10203040, 0x50607080));
     });
 
+    test( "pack(Uint8List.view)", () {
+      var out = new Uint8List(68);
+      out = new Uint8List.view(out.buffer, 2, 64);
+      new Register64(0x10203040, 0x50607080).pack(out, 0, Endianness.BIG_ENDIAN);
+      expect(out[0], 0x10);
+      expect(out[1], 0x20);
+      expect(out[2], 0x30);
+      expect(out[3], 0x40);
+      expect(out[4], 0x50);
+      expect(out[5], 0x60);
+      expect(out[6], 0x70);
+      expect(out[7], 0x80);
+    });
+
+    test( "unpack(LITTLE_ENDIAN)", () {
+      var inp = new Uint8List.fromList([0, 0, 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0, 0]);
+      inp = new Uint8List.view(inp.buffer, 2, 8);
+      expect(
+          new Register64()..unpack(inp, 0, Endianness.LITTLE_ENDIAN), new Register64(0x10203040, 0x50607080));
+    });
+
     test( "toString()", () {
       expect(new Register64(0x00203040, 0x00050505).toString(), "0020304000050505");
     });
 
   });
-
-}
-
-void _testRegister64List() {
 
   group( "Register64List:", () {
 

@@ -93,7 +93,7 @@ int clip16(int x) => (x & _MASK_16);
 void pack16(int x, dynamic out, int offset, Endianness endian) {
   assert((x >= 0) && (x <= _MASK_16));
   if (out is! ByteData) {
-    out = new ByteData.view(out.buffer);
+    out = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
   }
   (out as ByteData).setUint16(offset, x, endian);
 }
@@ -104,7 +104,7 @@ void pack16(int x, dynamic out, int offset, Endianness endian) {
  */
 int unpack16(dynamic inp, int offset, Endianness endian) {
   if (inp is! ByteData) {
-    inp = new ByteData.view(inp.buffer);
+    inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
   }
   return (inp as ByteData).getUint16(offset, endian);
 }
@@ -179,7 +179,7 @@ int rotr32(int x, int n) {
 void pack32(int x, dynamic out, int offset, Endianness endian) {
   assert((x >= 0) && (x <= _MASK_32));
   if (out is! ByteData) {
-    out = new ByteData.view(out.buffer);
+    out = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
   }
   (out as ByteData).setUint32(offset, x, endian);
 }
@@ -190,7 +190,7 @@ void pack32(int x, dynamic out, int offset, Endianness endian) {
  */
 int unpack32(dynamic inp, int offset, Endianness endian) {
   if (inp is! ByteData) {
-    inp = new ByteData.view(inp.buffer);
+    inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
   }
   return (inp as ByteData).getUint32(offset, endian);
 }
