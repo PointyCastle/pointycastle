@@ -71,7 +71,8 @@ class AESFastEngine extends BaseBlockCipher {
     _workingKey = new List.generate( _ROUNDS+1, (int i) => new List<int>(4) ); // 4 words in a block
 
     // Copy the key into the round key array.
-    var keyView = new ByteData.view(params.key.buffer);
+    var keyView = new ByteData.view(params.key.buffer,
+        params.key.offsetInBytes, params.key.length);
     for( var i=0, t=0 ; i<key.lengthInBytes ; i+=4, t++ ) {
       var value = unpack32(keyView, i, Endianness.LITTLE_ENDIAN);
       _workingKey[t>>2][t&3] = value;
@@ -114,8 +115,8 @@ class AESFastEngine extends BaseBlockCipher {
         throw new ArgumentError("Output buffer too short");
     }
 
-    var inpView = new ByteData.view(inp.buffer);
-    var outView = new ByteData.view(out.buffer);
+    var inpView = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
+    var outView = new ByteData.view(out.buffer, out.offsetInBytes, inp.length);
     if (_forEncryption) {
         _unpackBlock(inpView,inpOff);
         _encryptBlock(_workingKey);

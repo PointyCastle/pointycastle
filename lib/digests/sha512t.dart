@@ -72,7 +72,7 @@ class SHA512tDigest extends LongSHA2FamilyDigest implements Digest {
 
     var tmp = new Uint8List(64);
 
-    var view = new ByteData.view(tmp.buffer);
+    var view = new ByteData.view(tmp.buffer, tmp.offsetInBytes, tmp.length);
     H1.pack(view,  0, Endianness.BIG_ENDIAN);
     H2.pack(view,  8, Endianness.BIG_ENDIAN);
     H3.pack(view, 16, Endianness.BIG_ENDIAN);
