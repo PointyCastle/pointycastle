@@ -13,20 +13,6 @@ import '../test/src/helpers.dart';
 
 void main() {
 
-  runBlockCipherTests( new StreamCipherAsBlockCipher(16,new NullStreamCipher()), null, [
-
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
-    formatBytesAsHexString( createUint8ListFromString (
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........"
-    )),
-
-    "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
-    formatBytesAsHexString( createUint8ListFromString (
-      "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ..."
-    )),
-
-  ]);
-
   var cbc = new StreamCipherAsBlockCipher(16,new NullStreamCipher());
   group( "StreamCipherAsBlockCipher:", () {
 
