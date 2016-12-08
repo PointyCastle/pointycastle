@@ -1,5 +1,5 @@
 name: pointycastle
-version: 0.10.0+3
+version: 0.10.0+5
 author: The Pointy Castle team
 description: A Dart library implementing cryptographic algorithms
 homepage: https://github.com/PointyCastle/pointycastle
