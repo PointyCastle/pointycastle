@@ -116,7 +116,7 @@ class AESFastEngine extends BaseBlockCipher {
     }
 
     var inpView = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
-    var outView = new ByteData.view(out.buffer, out.offsetInBytes, inp.length);
+    var outView = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
     if (_forEncryption) {
         _unpackBlock(inpView,inpOff);
         _encryptBlock(_workingKey);
