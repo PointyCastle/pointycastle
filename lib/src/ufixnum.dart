@@ -254,6 +254,13 @@ class Register64 {
     }
   }
 
+  void sumReg(Register64 y) {
+    int slo32 = (_lo32 + y._lo32);
+    _lo32 = (slo32 & _MASK_32);
+    int carry = ((slo32 != _lo32) ? 1 : 0);
+    _hi32 = ((_hi32 + y._hi32 + carry) & _MASK_32);
+  }
+
   void sub(dynamic y) {
     // TODO: optimize sub() ???
     sum(new Register64(y)..neg());
@@ -400,7 +407,7 @@ class Register64 {
   }
 
   /**
-   * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
+   * Unpacks a 64 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
    * [ByteData] if you will run it several times against the same buffer and want faster execution.
    */
   void unpack(dynamic inp, int offset, Endianness endian) {
@@ -458,9 +465,10 @@ class Register64List {
     }
   }
 
-  void setRange(int start, int end, Register64List list) {
-    for (var i = start; i < end; i++) {
-      _list[i].set(list[i]);
+  void setRange(int start, int end, Register64List list, [int skipCount = 0]) {
+    var length = end - start;
+    for (var i = 0; i < length; i++) {
+      _list[start + i].set(list[skipCount + i]);
     }
   }
 

@@ -46,6 +46,7 @@ As of the last release, the following algorithms are implemented:
 
 **Digests:**
 
+  * Blake2b
   * MD2
   * MD4
   * MD5

@@ -29,6 +29,7 @@ import "package:pointycastle/block/modes/ofb.dart";
 import "package:pointycastle/block/modes/sic.dart";
 
 // digests
+import "package:pointycastle/digests/blake2b.dart";
 import "package:pointycastle/digests/md2.dart";
 import "package:pointycastle/digests/md4.dart";
 import "package:pointycastle/digests/md5.dart";
