@@ -4,6 +4,7 @@ import "asymmetric/pkcs1_test.dart" as pkcs1_test;
 import "asymmetric/oaep_test.dart" as oaep_test;
 import "asymmetric/rsa_test.dart" as rsa_test;
 import "block/aes_fast_test.dart" as aes_fast_test;
+import "digests/blake2b_test.dart" as blake2b_test;
 import "digests/md2_test.dart" as md2_test;
 import "digests/md4_test.dart" as md4_test;
 import "digests/md5_test.dart" as md5_test;
@@ -49,6 +50,7 @@ void main() {
   oaep_test.main();
   rsa_test.main();
   aes_fast_test.main();
+  blake2b_test.main();
   md2_test.main();
   md4_test.main();
   md5_test.main();

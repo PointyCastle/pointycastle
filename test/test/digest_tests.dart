@@ -4,6 +4,8 @@
 
 library pointycastle.test.test.digest_tests;
 
+import 'dart:typed_data';
+
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";
 

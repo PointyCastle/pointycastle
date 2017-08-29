@@ -21,6 +21,7 @@ void main() {
     });
 
     test("Digest returns valid implementations", () {
+      testDigest("Blake2b");
       testDigest("MD2");
       testDigest("MD4");
       testDigest("MD5");
