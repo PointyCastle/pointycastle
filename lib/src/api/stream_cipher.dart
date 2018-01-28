@@ -10,7 +10,7 @@ abstract class StreamCipher extends Algorithm {
 
   /// Create the cipher specified by the standard [algorithmName].
   factory StreamCipher(String algorithmName) =>
-      registry.create(StreamCipher, algorithmName);
+      registry.create(StreamCipher, algorithmName) as StreamCipher;
 
   /// Reset the cipher to its original state.
   void reset();

@@ -14,7 +14,7 @@ abstract class KeyDerivator extends Algorithm {
 
   /// Create the key derivator specified by the standard [algorithmName].
   factory KeyDerivator(String algorithmName) =>
-      registry.create(KeyDerivator, algorithmName);
+      registry.create(KeyDerivator, algorithmName) as KeyDerivator;
 
   /// Get this derivator key's output size.
   int get keySize;

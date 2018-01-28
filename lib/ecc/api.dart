@@ -24,7 +24,7 @@ abstract class ECDomainParameters extends Registrable {
 
   /// Create a curve description from its standard name
   factory ECDomainParameters( String domainName ) =>
-      registry.create(ECDomainParameters, domainName);
+      registry.create(ECDomainParameters, domainName) as ECDomainParameters;
 
 }
 

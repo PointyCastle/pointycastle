@@ -10,7 +10,7 @@ abstract class Signer extends Algorithm {
 
   /// Create the signer specified by the standard [algorithmName].
   factory Signer( String algorithmName ) =>
-      registry.create(Signer, algorithmName);
+      registry.create(Signer, algorithmName) as Signer;
 
   /// Reset the signer to its original state.
   void reset();

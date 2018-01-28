@@ -9,7 +9,8 @@ part of pointycastle.api;
 abstract class Mac extends Algorithm {
 
   /// Create the MAC specified by the standard [algorithmName].
-  factory Mac(String algorithmName) => registry.create(Mac, algorithmName);
+  factory Mac(String algorithmName) =>
+      registry.create(Mac, algorithmName) as Mac;
 
   /// Get this MAC's output size.
   int get macSize;

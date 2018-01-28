@@ -1,5 +1,5 @@
 name: pointycastle
-version: 0.10.0+5
+version: 0.11.0
 author: The Pointy Castle team
 description: A Dart library implementing cryptographic algorithms
 homepage: https://github.com/PointyCastle/pointycastle
@@ -15,7 +15,7 @@ dependencies:
 
 dev_dependencies:
   benchmark_harness: ">=1.0.4 <2.0.0"
-  browser: ">=0.9.0 <0.10.0"
+  browser: ">=0.10.0 <0.11.0"
   matcher: ">=0.12.0 <0.13.0"
   test: ">=0.12.7 <0.13.0"
 

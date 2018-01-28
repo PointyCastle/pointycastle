@@ -24,7 +24,7 @@ abstract class PaddedBlockCipher implements BlockCipher {
 
   /// Create the padded block cipher specified by the standard [algorithmName].
   factory PaddedBlockCipher(String algorithmName) =>
-      registry.create(PaddedBlockCipher, algorithmName);
+      registry.create(PaddedBlockCipher, algorithmName) as PaddedBlockCipher;
 
   /// Get the underlying [Padding] used by this cipher.
   Padding get padding;
