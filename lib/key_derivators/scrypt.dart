@@ -42,7 +42,7 @@ class Scrypt extends BaseKeyDerivator {
     _params = null;
   }
 
-  void init(ScryptParameters params) {
+  void init(covariant ScryptParameters params) {
     _params = params;
   }
 

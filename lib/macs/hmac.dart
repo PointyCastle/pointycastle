@@ -79,7 +79,7 @@ class HMac extends BaseMac {
       _digest.update(_inputPad, 0, _inputPad.length);
     }
 
-    void init(KeyParameter params) {
+    void init(covariant KeyParameter params) {
       _digest.reset();
 
       var key = params.key;

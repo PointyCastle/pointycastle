@@ -58,7 +58,7 @@ class AESFastEngine extends BaseBlockCipher {
     _workingKey = null;
   }
 
-  void init( bool forEncryption, KeyParameter params ) {
+  void init( bool forEncryption, covariant KeyParameter params ) {
     var key = params.key;
 
     int KC = (key.lengthInBytes / 4).floor();  // key length in words

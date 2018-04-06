@@ -126,7 +126,7 @@ class ECDSASigner implements Signer {
     return new ECSignature(r,s);
   }
 
-  bool verifySignature(Uint8List message, ECSignature signature) {
+  bool verifySignature(Uint8List message, covariant ECSignature signature) {
     message = _hashMessageIfNeeded(message);
 
     var n = _pbkey.parameters.n;
