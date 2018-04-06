@@ -20,7 +20,7 @@ class SHA256Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 32;
 
   SHA256Digest() :
-    super(Endianness.BIG_ENDIAN, 8, 64);
+    super(Endian.big, 8, 64);
 
   final algorithmName = "SHA-256";
   final digestSize = _DIGEST_LENGTH;

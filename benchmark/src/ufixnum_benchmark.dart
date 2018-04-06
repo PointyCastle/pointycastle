@@ -43,18 +43,18 @@ void _benchmarkUnpack() {
   var view = new ByteData.view(bytes.buffer);
   var r64 = new Register64();
   new OperationBenchmark("unpack | ByteData           ", () {
-    view.getUint32(0, Endianness.LITTLE_ENDIAN);
+    view.getUint32(0, Endian.little);
   }).report();
   new OperationBenchmark("unpack | unpack32(ByteData) ", () {
-    unpack32(view, 0, Endianness.LITTLE_ENDIAN);
+    unpack32(view, 0, Endian.little);
   }).report();
   new OperationBenchmark("unpack | unpack32(Uint8List)", () {
-    unpack32(bytes, 0, Endianness.LITTLE_ENDIAN);
+    unpack32(bytes, 0, Endian.little);
   }).report();
   new OperationBenchmark("unpack | unpack64(ByteData) ", () {
-    r64.unpack(view, 0, Endianness.LITTLE_ENDIAN);
+    r64.unpack(view, 0, Endian.little);
   }).report();
   new OperationBenchmark("unpack | unpack64(Uint8List)", () {
-    r64.unpack(bytes, 0, Endianness.LITTLE_ENDIAN);
+    r64.unpack(bytes, 0, Endian.little);
   }).report();
 }

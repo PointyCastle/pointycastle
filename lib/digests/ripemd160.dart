@@ -20,7 +20,7 @@ class RIPEMD160Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 20;
 
   RIPEMD160Digest() :
-    super(Endianness.LITTLE_ENDIAN, 5, 16);
+    super(Endian.little, 5, 16);
 
   final algorithmName = "RIPEMD-160";
   final digestSize = _DIGEST_LENGTH;

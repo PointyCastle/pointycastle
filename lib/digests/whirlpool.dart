@@ -81,7 +81,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
     _finish();
 
     for (int i = 0; i < 8; i++) {
-      _hash[i].pack(out, outOff + (i * 8), Endianness.BIG_ENDIAN);
+      _hash[i].pack(out, outOff + (i * 8), Endian.big);
     }
 
     reset();
@@ -91,7 +91,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
 
   void _processFilledBuffer(Uint8List inp, int inpOff) {
     for (int i = 0; i < _state.length; i++) {
-      _block[i].unpack(_buffer, i * 8, Endianness.BIG_ENDIAN);
+      _block[i].unpack(_buffer, i * 8, Endian.big);
     }
 
     _processBlock();
@@ -196,7 +196,7 @@ class WhirlpoolDigest extends BaseDigest implements Digest {
   Uint8List _copyBitLength() {
     final rv = new Uint8List(_bitCount.length*8);
     for (var i = 0; i < _bitCount.length; i++) {
-      _bitCount[i].pack(rv, i*8, Endianness.BIG_ENDIAN);
+      _bitCount[i].pack(rv, i*8, Endian.big);
     }
     return rv;
   }

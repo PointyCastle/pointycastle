@@ -17,7 +17,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final _wordBuffer = new Uint8List(4);
   int _wordBufferOffset;
 
-  final Endianness _endian;
+  final Endian _endian;
   final _packedStateSize;
 
   final state;
@@ -164,12 +164,12 @@ abstract class MD4FamilyDigest extends BaseDigest {
     }
 
     switch (_endian) {
-      case Endianness.LITTLE_ENDIAN:
+      case Endian.little:
         buffer[14] = bitLength.lo32;
         buffer[15] = bitLength.hi32;
         break;
 
-      case Endianness.BIG_ENDIAN:
+      case Endian.big:
         buffer[14]   = bitLength.hi32;
         buffer[15] = bitLength.lo32;
         break;

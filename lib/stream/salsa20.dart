@@ -106,10 +106,10 @@ class Salsa20Engine extends BaseStreamCipher {
     Uint8List constants;
 
     // Key
-    _state[1] = unpack32(_workingKey,  0, Endianness.LITTLE_ENDIAN);
-    _state[2] = unpack32(_workingKey,  4, Endianness.LITTLE_ENDIAN);
-    _state[3] = unpack32(_workingKey,  8, Endianness.LITTLE_ENDIAN);
-    _state[4] = unpack32(_workingKey, 12, Endianness.LITTLE_ENDIAN);
+    _state[1] = unpack32(_workingKey,  0, Endian.little);
+    _state[2] = unpack32(_workingKey,  4, Endian.little);
+    _state[3] = unpack32(_workingKey,  8, Endian.little);
+    _state[4] = unpack32(_workingKey, 12, Endian.little);
 
     if( _workingKey.length == 32 ) {
       constants = _sigma;
@@ -118,18 +118,18 @@ class Salsa20Engine extends BaseStreamCipher {
       constants = _tau;
     }
 
-    _state[11] = unpack32(_workingKey, offset     , Endianness.LITTLE_ENDIAN);
-    _state[12] = unpack32(_workingKey, offset +  4, Endianness.LITTLE_ENDIAN);
-    _state[13] = unpack32(_workingKey, offset +  8, Endianness.LITTLE_ENDIAN);
-    _state[14] = unpack32(_workingKey, offset + 12, Endianness.LITTLE_ENDIAN);
-    _state[0 ] = unpack32(constants,  0, Endianness.LITTLE_ENDIAN);
-    _state[5 ] = unpack32(constants,  4, Endianness.LITTLE_ENDIAN);
-    _state[10] = unpack32(constants,  8, Endianness.LITTLE_ENDIAN);
-    _state[15] = unpack32(constants, 12, Endianness.LITTLE_ENDIAN);
+    _state[11] = unpack32(_workingKey, offset     , Endian.little);
+    _state[12] = unpack32(_workingKey, offset +  4, Endian.little);
+    _state[13] = unpack32(_workingKey, offset +  8, Endian.little);
+    _state[14] = unpack32(_workingKey, offset + 12, Endian.little);
+    _state[0 ] = unpack32(constants,  0, Endian.little);
+    _state[5 ] = unpack32(constants,  4, Endian.little);
+    _state[10] = unpack32(constants,  8, Endian.little);
+    _state[15] = unpack32(constants, 12, Endian.little);
 
     // IV
-    _state[6] = unpack32(_workingIV, 0, Endianness.LITTLE_ENDIAN);
-    _state[7] = unpack32(_workingIV, 4, Endianness.LITTLE_ENDIAN);
+    _state[6] = unpack32(_workingIV, 0, Endian.little);
+    _state[7] = unpack32(_workingIV, 4, Endian.little);
     _state[8] = _state[9] = 0;
 
     _initialised = true;
@@ -139,7 +139,7 @@ class Salsa20Engine extends BaseStreamCipher {
     _salsa20Core(20, _state, _buffer);
     var outOff = 0;
     for(var x in _buffer) {
-      pack32(x, output, outOff, Endianness.LITTLE_ENDIAN);
+      pack32(x, output, outOff, Endian.little);
       outOff += 4;
     }
   }

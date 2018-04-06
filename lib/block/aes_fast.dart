@@ -74,7 +74,7 @@ class AESFastEngine extends BaseBlockCipher {
     var keyView = new ByteData.view(params.key.buffer,
         params.key.offsetInBytes, params.key.length);
     for( var i=0, t=0 ; i<key.lengthInBytes ; i+=4, t++ ) {
-      var value = unpack32(keyView, i, Endianness.LITTLE_ENDIAN);
+      var value = unpack32(keyView, i, Endian.little);
       _workingKey[t>>2][t&3] = value;
     }
 
@@ -200,17 +200,17 @@ class AESFastEngine extends BaseBlockCipher {
   }
 
   void _unpackBlock( ByteData view, int off ) {
-    _C0 = unpack32(view, off, Endianness.LITTLE_ENDIAN);
-    _C1 = unpack32(view, off + 4, Endianness.LITTLE_ENDIAN);
-    _C2 = unpack32(view, off + 8, Endianness.LITTLE_ENDIAN);
-    _C3 = unpack32(view, off + 12, Endianness.LITTLE_ENDIAN);
+    _C0 = unpack32(view, off, Endian.little);
+    _C1 = unpack32(view, off + 4, Endian.little);
+    _C2 = unpack32(view, off + 8, Endian.little);
+    _C3 = unpack32(view, off + 12, Endian.little);
   }
 
   void _packBlock( ByteData view, int off ) {
-    pack32(_C0, view, off,      Endianness.LITTLE_ENDIAN);
-    pack32(_C1, view, off +  4, Endianness.LITTLE_ENDIAN);
-    pack32(_C2, view, off +  8, Endianness.LITTLE_ENDIAN);
-    pack32(_C3, view, off + 12, Endianness.LITTLE_ENDIAN);
+    pack32(_C0, view, off,      Endian.little);
+    pack32(_C1, view, off +  4, Endian.little);
+    pack32(_C2, view, off +  8, Endian.little);
+    pack32(_C3, view, off + 12, Endian.little);
   }
 
 }

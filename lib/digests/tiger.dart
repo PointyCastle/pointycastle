@@ -57,9 +57,9 @@ class TigerDigest extends BaseDigest implements Digest {
   int doFinal(Uint8List out, int outOff) {
     _finish();
 
-    _a.pack(out, outOff,    Endianness.LITTLE_ENDIAN);
-    _b.pack(out, outOff+8,  Endianness.LITTLE_ENDIAN);
-    _c.pack(out, outOff+16, Endianness.LITTLE_ENDIAN);
+    _a.pack(out, outOff,    Endian.little);
+    _b.pack(out, outOff+8,  Endian.little);
+    _c.pack(out, outOff+16, Endian.little);
 
     reset();
 
@@ -105,7 +105,7 @@ class TigerDigest extends BaseDigest implements Digest {
   }
 
   void _processWord(Uint8List b, int off) {
-    _buffer[_bufferOffset++].unpack(b, off, Endianness.LITTLE_ENDIAN);
+    _buffer[_bufferOffset++].unpack(b, off, Endian.little);
 
     if (_bufferOffset == _buffer.length) {
         _processBlock();
@@ -205,7 +205,7 @@ class TigerDigest extends BaseDigest implements Digest {
     final c = new Uint8List(8);
 
     _c.xor(x);
-    _c.pack(c, 0, Endianness.LITTLE_ENDIAN);
+    _c.pack(c, 0, Endian.little);
     _a.sub(r..set(_t1[c[0]])..xor(_t2[c[2]])..xor(_t3[c[4]])..xor(_t4[c[6]]));
     _b.sum(r..set(_t4[c[1]])..xor(_t3[c[3]])..xor(_t2[c[5]])..xor(_t1[c[7]]));
     _b.mul(mul);
@@ -216,7 +216,7 @@ class TigerDigest extends BaseDigest implements Digest {
     final a = new Uint8List(8);
 
     _a.xor(x);
-    _a.pack(a, 0, Endianness.LITTLE_ENDIAN);
+    _a.pack(a, 0, Endian.little);
     _b.sub(r..set(_t1[a[0]])..xor(_t2[a[2]])..xor(_t3[a[4]])..xor(_t4[a[6]]));
     _c.sum(r..set(_t4[a[1]])..xor(_t3[a[3]])..xor(_t2[a[5]])..xor(_t1[a[7]]));
     _c.mul(mul);
@@ -227,7 +227,7 @@ class TigerDigest extends BaseDigest implements Digest {
     final b = new Uint8List(8);
 
     _b.xor(x);
-    _b.pack(b, 0, Endianness.LITTLE_ENDIAN);
+    _b.pack(b, 0, Endian.little);
     _c.sub(r..set(_t1[b[0]])..xor(_t2[b[2]])..xor(_t3[b[4]])..xor(_t4[b[6]]));
     _a.sum(r..set(_t4[b[1]])..xor(_t3[b[3]])..xor(_t2[b[5]])..xor(_t1[b[7]]));
     _a.mul(mul);

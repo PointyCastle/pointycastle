@@ -139,11 +139,11 @@ class GCTRBlockCipher extends BaseBlockCipher {
   }
 
   int _bytesToint( Uint8List inp, int inpOff ) {
-    return unpack32(inp, inpOff, Endianness.LITTLE_ENDIAN);
+    return unpack32(inp, inpOff, Endian.little);
   }
 
   void _intTobytes(int num, Uint8List out, int outOff ) {
-    pack32(num, out, outOff, Endianness.LITTLE_ENDIAN);
+    pack32(num, out, outOff, Endian.little);
   }
 
 }

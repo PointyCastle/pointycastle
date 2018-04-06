@@ -42,12 +42,12 @@ class SHA384Digest extends LongSHA2FamilyDigest implements Digest {
     finish();
 
     var view = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
-    H1.pack(view, outOff     , Endianness.BIG_ENDIAN);
-    H2.pack(view, outOff +  8, Endianness.BIG_ENDIAN);
-    H3.pack(view, outOff + 16, Endianness.BIG_ENDIAN);
-    H4.pack(view, outOff + 24, Endianness.BIG_ENDIAN);
-    H5.pack(view, outOff + 32, Endianness.BIG_ENDIAN);
-    H6.pack(view, outOff + 40, Endianness.BIG_ENDIAN);
+    H1.pack(view, outOff     , Endian.big);
+    H2.pack(view, outOff +  8, Endian.big);
+    H3.pack(view, outOff + 16, Endian.big);
+    H4.pack(view, outOff + 24, Endian.big);
+    H5.pack(view, outOff + 32, Endian.big);
+    H6.pack(view, outOff + 40, Endian.big);
 
     reset();
 

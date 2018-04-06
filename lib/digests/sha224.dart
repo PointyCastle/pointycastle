@@ -20,7 +20,7 @@ class SHA224Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 28;
 
   SHA224Digest() :
-    super(Endianness.BIG_ENDIAN, 8, 64, 7);
+    super(Endian.big, 8, 64, 7);
 
   final algorithmName = "SHA-224";
   final digestSize = _DIGEST_LENGTH;

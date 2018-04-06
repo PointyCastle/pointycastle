@@ -20,7 +20,7 @@ class RIPEMD128Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 16;
 
   RIPEMD128Digest() :
-    super(Endianness.LITTLE_ENDIAN, 4, 16);
+    super(Endian.little, 4, 16);
 
   final algorithmName = "RIPEMD-128";
   final digestSize = _DIGEST_LENGTH;

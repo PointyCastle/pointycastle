@@ -90,7 +90,7 @@ int clip16(int x) => (x & _MASK_16);
  * Packs a 16 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
  * [ByteData] if you will run it several times against the same buffer and want faster execution.
  */
-void pack16(int x, dynamic out, int offset, Endianness endian) {
+void pack16(int x, dynamic out, int offset, Endian endian) {
   assert((x >= 0) && (x <= _MASK_16));
   if (out is! ByteData) {
     out = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
@@ -102,7 +102,7 @@ void pack16(int x, dynamic out, int offset, Endianness endian) {
  * Unpacks a 16 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
  * [ByteData] if you will run it several times against the same buffer and want faster execution.
  */
-int unpack16(dynamic inp, int offset, Endianness endian) {
+int unpack16(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
     inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
   }
@@ -176,7 +176,7 @@ int rotr32(int x, int n) {
  * Packs a 32 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
  * [ByteData] if you will run it several times against the same buffer and want faster execution.
  */
-void pack32(int x, dynamic out, int offset, Endianness endian) {
+void pack32(int x, dynamic out, int offset, Endian endian) {
   assert((x >= 0) && (x <= _MASK_32));
   if (out is! ByteData) {
     out = new ByteData.view(out.buffer, out.offsetInBytes, out.length);
@@ -188,7 +188,7 @@ void pack32(int x, dynamic out, int offset, Endianness endian) {
  * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
  * [ByteData] if you will run it several times against the same buffer and want faster execution.
  */
-int unpack32(dynamic inp, int offset, Endianness endian) {
+int unpack32(dynamic inp, int offset, Endian endian) {
   if (inp is! ByteData) {
     inp = new ByteData.view(inp.buffer, inp.offsetInBytes, inp.length);
   }
@@ -382,14 +382,14 @@ class Register64 {
    * Packs a 64 bit integer into a byte buffer. The [out] parameter can be an [Uint8List] or a
    * [ByteData] if you will run it several times against the same buffer and want faster execution.
    */
-  void pack(dynamic out, int offset, Endianness endian) {
+  void pack(dynamic out, int offset, Endian endian) {
     switch (endian) {
-      case Endianness.BIG_ENDIAN:
+      case Endian.big:
         pack32(hi32, out, offset    , endian);
         pack32(lo32, out, offset + 4, endian);
         break;
 
-      case Endianness.LITTLE_ENDIAN:
+      case Endian.little:
         pack32(hi32, out, offset + 4, endian);
         pack32(lo32, out, offset    , endian);
         break;
@@ -403,14 +403,14 @@ class Register64 {
    * Unpacks a 32 bit integer from a byte buffer. The [inp] parameter can be an [Uint8List] or a
    * [ByteData] if you will run it several times against the same buffer and want faster execution.
    */
-  void unpack(dynamic inp, int offset, Endianness endian) {
+  void unpack(dynamic inp, int offset, Endian endian) {
     switch (endian) {
-      case Endianness.BIG_ENDIAN:
+      case Endian.big:
         _hi32 = unpack32(inp, offset  , endian);
         _lo32 = unpack32(inp, offset+4, endian);
         break;
 
-      case Endianness.LITTLE_ENDIAN:
+      case Endian.little:
         _hi32 = unpack32(inp, offset+4, endian);
         _lo32 = unpack32(inp, offset  , endian);
         break;

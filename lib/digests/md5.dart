@@ -20,7 +20,7 @@ class MD5Digest extends MD4FamilyDigest implements Digest {
   static const _DIGEST_LENGTH = 16;
 
   MD5Digest() :
-    super(Endianness.LITTLE_ENDIAN, 4, 16);
+    super(Endian.little, 4, 16);
 
   final algorithmName = "MD5";
   final digestSize = _DIGEST_LENGTH;
