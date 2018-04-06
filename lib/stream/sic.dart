@@ -50,7 +50,7 @@ class SICStreamCipher extends BaseStreamCipher {
     _consumed = _counterOut.length;
   }
 
-  void init(bool forEncryption, ParametersWithIV params) {
+  void init(bool forEncryption, covariant ParametersWithIV params) {
     _iv.setAll( 0, params.iv );
     reset();
     underlyingCipher.init( true, params.parameters );

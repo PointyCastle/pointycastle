@@ -349,7 +349,7 @@ class _WNafPreCompInfo implements PreCompInfo {
  * Function implementing the WNAF (Window Non-Adjacent Form) multiplication algorithm. Multiplies [p]] by an integer [k] using
  * the Window NAF method.
  */
-ECPoint _WNafMultiplier(ECPoint p, BigInteger k, PreCompInfo preCompInfo) {
+ecc.ECPointBase _WNafMultiplier(ecc.ECPointBase p, BigInteger k, PreCompInfo preCompInfo) {
 
   // Ignore empty PreCompInfo or PreCompInfo of incorrect type
   _WNafPreCompInfo wnafPreCompInfo = preCompInfo;

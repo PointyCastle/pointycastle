@@ -45,7 +45,7 @@ class PBKDF2KeyDerivator extends BaseKeyDerivator {
     _state.fillRange(0, _state.length, 0);
   }
 
-  void init( Pbkdf2Parameters params ) {
+  void init( covariant Pbkdf2Parameters params ) {
     _params = params;
   }
 

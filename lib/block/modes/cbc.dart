@@ -44,7 +44,7 @@ class CBCBlockCipher extends BaseBlockCipher {
     _underlyingCipher.reset();
   }
 
-  void init(bool forEncryption, ParametersWithIV params) {
+  void init(bool forEncryption, covariant ParametersWithIV params) {
     if( params.iv.length != blockSize ) {
       throw new ArgumentError("Initialization vector must be the same length as block size");
     }

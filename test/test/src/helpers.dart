@@ -89,7 +89,7 @@ class _IsAllZeros extends Matcher {
 
   const _IsAllZeros();
 
-  bool matches( Iterable<int> item, Map matchState ) {
+  bool matches( covariant Iterable<int> item, Map matchState ) {
     for( var i in item ) {
       if( i!=0 ) return false;
     }

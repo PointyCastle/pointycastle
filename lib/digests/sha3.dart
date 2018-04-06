@@ -204,7 +204,7 @@ class SHA3Digest extends BaseDigest implements Digest {
 
   void _padAndSwitchToSqueezingPhase() {
     if (_bitsInQueue + 1 == _rate) {
-      _dataQueue[_bitsInQueue / 8] |= 1 << (_bitsInQueue % 8);
+      _dataQueue[_bitsInQueue ~/ 8] |= 1 << (_bitsInQueue % 8);
       _absorbQueue();
       _clearDataQueueSection(0, _rate ~/ 8);
     } else {

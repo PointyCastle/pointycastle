@@ -29,7 +29,7 @@ class FortunaRandom implements SecureRandom {
     _prng = new AutoSeedBlockCtrRandom(_aes, false);
   }
 
-  void seed(KeyParameter param) {
+  void seed(covariant KeyParameter param) {
     if (param.key.length != 32) {
       throw new ArgumentError("Fortuna PRNG can only be used with 256 bits keys");
     }

@@ -16,3 +16,5 @@ doc/
 .packages
 
 .settings/
+.dart_tool/
+

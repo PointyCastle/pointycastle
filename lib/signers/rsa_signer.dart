@@ -98,7 +98,7 @@ class RSASigner implements Signer {
     return new RSASignature(out.sublist(0, len));
   }
 
-  bool verifySignature(Uint8List message, RSASignature signature) {
+  bool verifySignature(Uint8List message, covariant RSASignature signature) {
     if (_forSigning) {
       throw new StateError("Signer was not initialised for signature verification");
     }

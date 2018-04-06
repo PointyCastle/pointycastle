@@ -41,7 +41,7 @@ class Salsa20Engine extends BaseStreamCipher {
     }
   }
 
-  void init( bool forEncryption, ParametersWithIV<KeyParameter> params ) {
+  void init( bool forEncryption, covariant ParametersWithIV<KeyParameter> params ) {
     var uparams = params.parameters;
     var iv = params.iv;
     if( iv == null || iv.length != 8 ) {

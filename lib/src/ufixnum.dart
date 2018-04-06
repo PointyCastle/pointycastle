@@ -213,7 +213,7 @@ class Register64 {
   int get lo32 => _lo32;
   int get hi32 => _hi32;
 
-  bool operator ==(Register64 y) => ((_hi32 == y._hi32) && (_lo32 == y._lo32));
+  bool operator ==(Object y) => y is Register64 ? (((_hi32 == y._hi32) && (_lo32 == y._lo32))) : false;
   bool operator < (Register64 y) => ((_hi32 < y._hi32) || ((_hi32 == y._hi32) && (_lo32 < y._lo32)));
   bool operator <=(Register64 y) => ((this < y) || (this == y));
   bool operator > (Register64 y) => ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));

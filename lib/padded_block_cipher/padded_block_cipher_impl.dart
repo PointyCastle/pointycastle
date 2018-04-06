@@ -37,7 +37,7 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
     cipher.reset();
   }
 
-  void init(bool forEncryption, PaddedBlockCipherParameters params) {
+  void init(bool forEncryption, covariant PaddedBlockCipherParameters params) {
     _encrypting = forEncryption;
     cipher.init(forEncryption, params.underlyingCipherParameters);
     padding.init(params.paddingCipherParameters);
