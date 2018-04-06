@@ -23,10 +23,10 @@ class SignerBenchmark extends RateBenchmark {
 
   SignerBenchmark(String signerName, bool forSigning, this._cipherParametersFactory,
       [int dataLength = 1024*1024]) :
-    super("Signer | $signerName - ${forSigning ? 'sign' : 'verify' }"),
     _signerName = signerName,
     _forSigning = forSigning,
-    _data = new Uint8List(dataLength);
+    _data = new Uint8List(dataLength),
+    super("Signer | $signerName - ${forSigning ? 'sign' : 'verify' }");
 
   void setup() {
     _signer = new Signer(_signerName);

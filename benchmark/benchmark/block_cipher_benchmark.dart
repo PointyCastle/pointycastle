@@ -23,10 +23,10 @@ class BlockCipherBenchmark extends RateBenchmark {
 
   BlockCipherBenchmark(String blockCipherName, String blockCipherVariant, bool forEncryption,
       this._cipherParametersFactory) :
-    super("BlockCipher | $blockCipherName - $blockCipherVariant - "
-        "${forEncryption ? 'encrypt' : 'decrypt' }"),
     _blockCipherName = blockCipherName,
-    _forEncryption = forEncryption;
+    _forEncryption = forEncryption,
+    super("BlockCipher | $blockCipherName - $blockCipherVariant - "
+      "${forEncryption ? 'encrypt' : 'decrypt' }");
 
   void setup() {
     _blockCipher = new BlockCipher(_blockCipherName);

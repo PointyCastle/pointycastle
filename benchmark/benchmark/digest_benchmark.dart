@@ -19,9 +19,9 @@ class DigestBenchmark extends RateBenchmark {
   Digest _digest;
 
   DigestBenchmark(String digestName,[int dataLength = 1024*1024]) :
-    super("Digest | $digestName"),
     _digestName = digestName,
-    _data = new Uint8List(dataLength);
+    _data = new Uint8List(dataLength),
+    super("Digest | $digestName");
 
   void setup() {
     _digest = new Digest(_digestName);
