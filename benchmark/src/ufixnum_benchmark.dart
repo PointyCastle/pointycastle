@@ -6,7 +6,6 @@ library pointycastle.benchmark.api.ufixnum_benchmark;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
 import "package:pointycastle/src/ufixnum.dart";
 import "../benchmark/operation_benchmark.dart";
 
@@ -26,8 +25,8 @@ void _benchmarkSum() {
   final dy  = 0x08080808.toDouble();
   final rx64 = new Register64(0xFF00FF00, 0xFF00FF00);
   final ry64 = new Register64(0x80808080, 0x80808080);
-  final bix = new BigInteger("FF00FF00", 16);
-  final biy = new BigInteger("08080808", 16);
+  final bix = BigInt.parse("FF00FF00", radix: 16);
+  final biy = BigInt.parse("08080808", radix: 16);
 
   new OperationBenchmark("sum | smi   ", () => x32 + y32      ).report();
   new OperationBenchmark("sum | double", () => dx + dy        ).report();

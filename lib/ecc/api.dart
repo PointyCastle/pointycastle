@@ -6,8 +6,6 @@ library pointycastle.api.ecc;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/api.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
@@ -20,7 +18,7 @@ abstract class ECDomainParameters extends Registrable {
   ECCurve get curve;
   List<int> get seed;
   ECPoint get G;
-  BigInteger get n;
+  BigInt get n;
 
   /// Create a curve description from its standard name
   factory ECDomainParameters( String domainName ) =>
@@ -31,7 +29,7 @@ abstract class ECDomainParameters extends Registrable {
 /// Type for coordinates of an [ECPoint]
 abstract class ECFieldElement {
 
-  BigInteger toBigInteger();
+  BigInt toBigInteger();
   String get fieldName;
   int get fieldSize;
 
@@ -71,7 +69,7 @@ abstract class ECPoint {
   ECPoint twice();
 
   /// Multiply this point by the given number [k].
-  ECPoint operator *(BigInteger k);
+  ECPoint operator *(BigInt k);
 
 }
 
@@ -85,12 +83,12 @@ abstract class ECCurve {
   ECPoint get infinity;
 
   /// Create an [ECFieldElement] on this curve from its big integer value.
-  ECFieldElement fromBigInteger( BigInteger x );
+  ECFieldElement fromBigInteger( BigInt x );
 
   /// Create an [ECPoint] on its curve from its coordinates
-  ECPoint createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
+  ECPoint createPoint( BigInt x, BigInt y, [bool withCompression=false] );
 
-  ECPoint decompressPoint( int yTilde, BigInteger X1 );
+  ECPoint decompressPoint( int yTilde, BigInt X1 );
 
   /**
    * Decode a point on this curve from its ASN.1 encoding. The different encodings are taken account of, including point
@@ -115,7 +113,7 @@ abstract class ECAsymmetricKey implements AsymmetricKey {
 class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
 
   /// ECC's d private parameter
-  final BigInteger d;
+  final BigInt d;
 
   /// Create an ECC private key for the given d and domain parameters.
   ECPrivateKey(this.d, ECDomainParameters parameters) : super(parameters);
@@ -156,8 +154,8 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
 /// A [Signature] created with ECC.
 class ECSignature implements Signature {
 
-  final BigInteger r;
-  final BigInteger s;
+  final BigInt r;
+  final BigInt s;
 
   ECSignature( this.r, this.s );
 

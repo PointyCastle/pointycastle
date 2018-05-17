@@ -6,8 +6,6 @@ library pointycastle.impl.secure_random.auto_seed_block_ctr_random;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/api.dart";
 import "package:pointycastle/random/block_ctr_random.dart";
 import "package:pointycastle/src/registry/registry.dart";
@@ -66,7 +64,7 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
     return _delegate.nextUint32();
   });
 
-  BigInteger nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
+  BigInt nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
     return _delegate.nextBigInteger(bitLength);
   });
 

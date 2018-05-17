@@ -4,8 +4,6 @@
 
 library pointycastle.api.key_generators;
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/api.dart";
 import "package:pointycastle/ecc/api.dart";
 
@@ -15,7 +13,7 @@ class ECKeyGeneratorParameters extends KeyGeneratorParameters {
   ECDomainParameters _domainParameters;
 
   ECKeyGeneratorParameters(ECDomainParameters domainParameters)
-      : super(domainParameters.n.bitLength()) {
+      : super(domainParameters.n.bitLength) {
     _domainParameters = domainParameters;
   }
 
@@ -26,7 +24,7 @@ class ECKeyGeneratorParameters extends KeyGeneratorParameters {
 /// Abstract [CipherParameters] to init an RSA key generator.
 class RSAKeyGeneratorParameters extends KeyGeneratorParameters {
 
-  final BigInteger publicExponent;
+  final BigInt publicExponent;
   final int certainty;
 
   RSAKeyGeneratorParameters(this.publicExponent, int bitStrength, this.certainty)

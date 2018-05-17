@@ -6,8 +6,6 @@ library pointycastle.impl.secure_random.fortuna_random;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/api.dart";
 import "package:pointycastle/block/aes_fast.dart";
 import "package:pointycastle/random/auto_seed_block_ctr_random.dart";
@@ -45,7 +43,7 @@ class FortunaRandom implements SecureRandom {
 
   int nextUint32() => _prng.nextUint32();
 
-  BigInteger nextBigInteger(int bitLength) => _prng.nextBigInteger(bitLength);
+  BigInt nextBigInteger(int bitLength) => _prng.nextBigInteger(bitLength);
 
   Uint8List nextBytes(int count) {
     if (count > 1048576) {

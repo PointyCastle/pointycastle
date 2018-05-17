@@ -4,8 +4,6 @@
 
 library pointycastle.test.key_generators.ec_key_generator_test;
 
-import 'package:bignum/bignum.dart';
-
 import 'package:pointycastle/pointycastle.dart';
 
 import "../test/src/null_secure_random.dart";
@@ -51,10 +49,10 @@ void main() {
 AsymmetricKeyPair _keyPair( ECDomainParameters domainParams, String Qx, String Qy, String d )
   => new AsymmetricKeyPair(
       new ECPublicKey( domainParams.curve.createPoint(
-          new BigInteger(Qx),
-          new BigInteger(Qy)
+          BigInt.parse(Qx),
+          BigInt.parse(Qy)
       ), domainParams ),
       new ECPrivateKey(
-          new BigInteger(d),
+          BigInt.parse(d),
       domainParams)
   );
