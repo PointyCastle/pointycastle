@@ -8,7 +8,6 @@ environment:
 #documentation: http://pointycastle.github.io/docs/
 dependencies:
   bignum: ">=0.1.0 <0.2.0"
-  fixnum: ">=0.10.2 <0.11.0"
   reflectable: ">=1.0.1 <2.0.0"
 
 dev_dependencies:
