@@ -4,7 +4,6 @@
 library pointycastle.src.registry.impl.reflectable;
 
 import "package:reflectable/reflectable.dart";
-import "package:quiver_collection/collection.dart";
 
 import "package:pointycastle/api.dart";
 
@@ -48,8 +47,8 @@ class _ReflectableFactoryRegistryImpl implements FactoryRegistry {
   final Map<Type, Map<String, RegistrableConstructor>> staticFactories;
   final Map<Type, Set<DynamicFactoryConfig>> dynamicFactories;
 
-  final LruMap<String, RegistrableConstructor> constructorCache =
-  new LruMap<String, RegistrableConstructor>(maximumSize: CONSTRUCTOR_CACHE_SIZE);
+  final Map<String, RegistrableConstructor> constructorCache =
+  new Map<String, RegistrableConstructor>();
 
   _ReflectableFactoryRegistryImpl()
       : staticFactories  = new Map<Type, Map<String, RegistrableConstructor>>(),
@@ -66,6 +65,9 @@ class _ReflectableFactoryRegistryImpl implements FactoryRegistry {
     RegistrableConstructor constructor = constructorCache["$type.$registrableName"];
     if (constructor == null) {
       constructor = createConstructor(type, registrableName);
+      if (constructorCache.length > CONSTRUCTOR_CACHE_SIZE) {
+        constructorCache.clear();
+      }
       constructorCache["$type.$registrableName"] = constructor;
     }
     return constructor;

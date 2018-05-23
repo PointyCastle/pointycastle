@@ -4,7 +4,6 @@
 
 library pointycastle.src.registry;
 
-import "package:quiver_pattern/regexp.dart";
 
 import "registry_disabled.dart"
   if (dart.library.mirrors) "registry_reflectable.dart";
@@ -32,6 +31,20 @@ class StaticFactoryConfig extends FactoryConfig {
   StaticFactoryConfig(Type type, this.algorithmName) : super(type);
 }
 
+
+// From the PatternCharacter rule here:
+// http://ecma-international.org/ecma-262/5.1/#sec-15.10
+final _specialRegExpChars = new RegExp(r'([\\\^\$\.\|\+\[\]\(\)\{\}])');
+
+/// Escapes special regular exppression characters in [str] so that it can be
+/// used as a literal match inside of a [RegExp].
+///
+/// The special characters are: \ ^ $ . | + [ ] ( ) { }
+/// as defined here: http://ecma-international.org/ecma-262/5.1/#sec-15.10
+String _escapeRegExp(String str) => str.splitMapJoin(_specialRegExpChars,
+    onMatch: (Match m) => '\\${m.group(0)}', onNonMatch: (s) => s);
+
+
 class DynamicFactoryConfig extends FactoryConfig {
   final RegExp regExp;
   final DynamicConstructorFactory factory;
@@ -46,13 +59,13 @@ class DynamicFactoryConfig extends FactoryConfig {
   /// The part after the prefix will be in `match.group(1)`.
   DynamicFactoryConfig.prefix(
       Type type, String prefix, DynamicConstructorFactory factory)
-      : this.regex(type, "^${escapeRegExp(prefix)}(.+)\$", factory);
+      : this.regex(type, "^${_escapeRegExp(prefix)}(.+)\$", factory);
 
   /// A dynamic registry that matches by suffix.
   /// The part before the suffix will be in `match.group(1)`.
   DynamicFactoryConfig.suffix(
       Type type, String suffix, DynamicConstructorFactory factory)
-      : this.regex(type, "^(.+)${escapeRegExp(suffix)}\$", factory);
+      : this.regex(type, "^(.+)${_escapeRegExp(suffix)}\$", factory);
 
   /// Invokes the factory when it matches. Else returns null.
   RegistrableConstructor tryFactory(String algorithmName) {
