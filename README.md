@@ -1,16 +1,16 @@
 Pointy Castle
 =============
 
-A Dart library for encryption and decryption. As of today, most of the classes 
-are ports of Bouncy Castle from Java to Dart. The porting is almost always 
-direct except for some classes that had been added to ease the use of low level 
+A Dart library for encryption and decryption. As of today, most of the classes
+are ports of Bouncy Castle from Java to Dart. The porting is almost always
+direct except for some classes that had been added to ease the use of low level
 data.
 
-To make sure nothing fails, tests and benchmarks for every algorithm are 
-provided. The expected results are taken from the Bouncy Castle Java version 
+To make sure nothing fails, tests and benchmarks for every algorithm are
+provided. The expected results are taken from the Bouncy Castle Java version
 and also from standards, and matched against the results got from Pointy Castle.
 
-# Algorithms 
+# Algorithms
 
 As of the last release, the following algorithms are implemented:
 
@@ -33,7 +33,7 @@ As of the last release, the following algorithms are implemented:
   * SIC
 
 **Paddings:**
-  * PKCS7 
+  * PKCS7
 
 **Digests:**
   * MD2
@@ -76,7 +76,7 @@ As of the last release, the following algorithms are implemented:
 
 # Usage
 
-There are two ways to use the algorithms that PointyCastle provides: with or 
+There are two ways to use the algorithms that PointyCastle provides: with or
 without using the registry.
 
 ## Registry
@@ -86,7 +86,7 @@ the algorithm shorthands like given in the list above.  It also makes it possibl
 to seamlessly chain different algorithms together.  For example:
 
 ```dart
-import "package:pointycastle/pointycastly.dart";
+import "package:pointycastle/pointycastle.dart";
 
 void main() {
   Digest sha256 = new Digest("SHA-256");
@@ -98,9 +98,9 @@ void main() {
 ## Without the registry
 
 Using the registry means that all algorithms will be imported by default, which
-can possibly increase the compiled size of your program.  To avoid this, it is 
+can possibly increase the compiled size of your program.  To avoid this, it is
 possible to import algorithms one by one.  In that case, you can decide to either
-use the classes directly, or still use the registry.  But remember that the 
+use the classes directly, or still use the registry.  But remember that the
 registry only contains the classes that you import.  For example:
 
 ```dart
@@ -117,7 +117,7 @@ void main() {
   // or
   KeyDerivator derivator = new PBKDF2KeyDerivator(
       new HMac(new SHA1Digest(), 64));
-  
+
   // But the registry keeps working for all imported algorithms:
 
   Digest sha256 = new Digest("SHA-256");
@@ -130,12 +130,12 @@ void main() {
 
 Because the registry uses reflectable to register all imported algorithm classes
 and reflectable imports `dart:mirrors`, using the registry depends on the ability
-to import mirrors.  Since the [Flutter](https://flutter.io) frame work 
+to import mirrors.  Since the [Flutter](https://flutter.io) frame work
 [doesn't allow using dart:mirrors](https://github.com/flutter/flutter/issues/1150),
 it's not possible to use the registry with Flutter.
 
-The way to use Pointy Castle in Flutter is the way explained in the previous 
-section.  However, there is a utility library that exports all available 
+The way to use Pointy Castle in Flutter is the way explained in the previous
+section.  However, there is a utility library that exports all available
 algorithms at once.
 
 ```dart
@@ -152,11 +152,9 @@ void main() {
 
 ## Libraries
 
- * `package:pointycastle/pointycastle.dart`: exports the high-level API and the 
+ * `package:pointycastle/pointycastle.dart`: exports the high-level API and the
     registry loaded with all available implementations
- * `package:pointycastle/api.dart`: exports the high-level API and the registry 
+ * `package:pointycastle/api.dart`: exports the high-level API and the registry
     without any implementations
- * `package:pointycastle/export.dart`: exports the API and all implementation 
+ * `package:pointycastle/export.dart`: exports the API and all implementation
     classes
-
-
