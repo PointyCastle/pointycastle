@@ -4,8 +4,6 @@
 
 library pointycastle.test.paddings.ecdsa_signer_test;
 
-import 'package:bignum/bignum.dart';
-
 import "package:pointycastle/pointycastle.dart";
 
 import "../test/signer_tests.dart";
@@ -17,12 +15,12 @@ void main() {
 
   var eccDomain = new ECDomainParameters( "prime192v1" );
 
-  var Qx = new BigInteger("1498602238651628509310686451034731914387602356706565103527");
-  var Qy = new BigInteger("6264116558863692852155702059476882343593676720209154057133");
+  var Qx = BigInt.parse("1498602238651628509310686451034731914387602356706565103527");
+  var Qy = BigInt.parse("6264116558863692852155702059476882343593676720209154057133");
   var Q = eccDomain.curve.createPoint( Qx, Qy );
   var verifyParams = () => new PublicKeyParameter( new ECPublicKey(Q, eccDomain));
 
-  var d = new BigInteger("3062713166230336928689662410859599564103408831862304472446");
+  var d = BigInt.parse("3062713166230336928689662410859599564103408831862304472446");
   var privParams = new PrivateKeyParameter(new ECPrivateKey(d, eccDomain));
   var signParams = () => new ParametersWithRandom(privParams, new NullSecureRandom() );
 
@@ -60,4 +58,4 @@ void main() {
 }
 
 ECSignature _newSignature(String r, String s)
-  => new ECSignature( new BigInteger(r), new BigInteger(s) );
+  => new ECSignature( BigInt.parse(r), BigInt.parse(s) );

@@ -13,8 +13,6 @@ library pointycastle.api;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
-
 import "src/registry/registry.dart";
 
 part "src/api/algorithm.dart";

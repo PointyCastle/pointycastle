@@ -6,8 +6,6 @@
 
 library pointycastle.impl.ec_domain_parameters.secp160k1;
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/ecc/ecc_base.dart";
 import "package:pointycastle/src/registry/registry.dart";
@@ -20,12 +18,12 @@ class ECCurve_secp160k1 extends ECDomainParametersImpl {
 
   factory ECCurve_secp160k1() => constructFpStandardCurve("secp160k1",
     ECCurve_secp160k1._make,
-    q: new BigInteger("fffffffffffffffffffffffffffffffeffffac73", 16),
-    a: new BigInteger("0", 16),
-    b: new BigInteger("7", 16),
-    g: new BigInteger("043b4c382ce37aa192a4019e763036f4f5dd4d7ebb938cf935318fdced6bc28286531733c3f03c4fee", 16),
-    n: new BigInteger("100000000000000000001b8fa16dfab9aca16b6b3", 16),
-    h: new BigInteger("1", 16),
+    q: BigInt.parse("fffffffffffffffffffffffffffffffeffffac73", radix: 16),
+    a: BigInt.parse("0", radix: 16),
+    b: BigInt.parse("7", radix: 16),
+    g: BigInt.parse("043b4c382ce37aa192a4019e763036f4f5dd4d7ebb938cf935318fdced6bc28286531733c3f03c4fee", radix: 16),
+    n: BigInt.parse("100000000000000000001b8fa16dfab9aca16b6b3", radix: 16),
+    h: BigInt.parse("1", radix: 16),
     seed: null
   );
 

@@ -6,21 +6,20 @@ library pointycastle.api.asymmetric;
 
 import "dart:typed_data";
 
-import "package:bignum/bignum.dart";
 import "package:pointycastle/api.dart";
 
 /// Base class for asymmetric keys in RSA
 abstract class RSAAsymmetricKey implements AsymmetricKey {
 
   // The parameters of this key
-  final BigInteger modulus;
-  final BigInteger exponent;
+  final BigInt modulus;
+  final BigInt exponent;
 
   /// Create an asymmetric key for the given domain parameters
   RSAAsymmetricKey(this.modulus, this.exponent);
 
   /// Get modulus [n] = p·q
-  BigInteger get n => modulus;
+  BigInt get n => modulus;
 
 }
 
@@ -28,14 +27,14 @@ abstract class RSAAsymmetricKey implements AsymmetricKey {
 class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 
   // The secret prime factors of n
-  final BigInteger p;
-  final BigInteger q;
+  final BigInt p;
+  final BigInt q;
 
   /// Create an RSA private key for the given parameters.
-  RSAPrivateKey(BigInteger modulus, BigInteger exponent, this.p, this.q) : super(modulus, exponent);
+  RSAPrivateKey(BigInt modulus, BigInt exponent, this.p, this.q) : super(modulus, exponent);
 
   /// Get private exponent [d] = e^-1
-  BigInteger get d => exponent;
+  BigInt get d => exponent;
 
   bool operator ==( other ) {
     if( other==null ) return false;
@@ -51,10 +50,10 @@ class RSAPrivateKey extends RSAAsymmetricKey implements PrivateKey {
 class RSAPublicKey extends RSAAsymmetricKey implements PublicKey {
 
   /// Create an RSA public key for the given parameters.
-  RSAPublicKey(BigInteger modulus, BigInteger exponent) : super(modulus, exponent);
+  RSAPublicKey(BigInt modulus, BigInt exponent) : super(modulus, exponent);
 
   /// Get public exponent [e]
-  BigInteger get e => exponent;
+  BigInt get e => exponent;
 
   bool operator ==( other ) {
     if( other==null ) return false;

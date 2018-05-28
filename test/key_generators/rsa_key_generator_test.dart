@@ -4,8 +4,6 @@
 
 library pointycastle.test.key_generators.rsa_key_generator_test;
 
-import 'package:bignum/bignum.dart';
-
 import 'package:pointycastle/pointycastle.dart';
 
 import "../test/src/fixed_secure_random.dart";
@@ -17,7 +15,7 @@ void main() {
 
   var rnd = new FixedSecureRandom();
 
-  var rsapars = new RSAKeyGeneratorParameters(new BigInteger("65537"), 2048, 12);
+  var rsapars = new RSAKeyGeneratorParameters(BigInt.parse("65537"), 2048, 12);
   var params = new ParametersWithRandom(rsapars, rnd);
 
   var keyGenerator = new KeyGenerator("RSA");
@@ -39,6 +37,7 @@ void main() {
 
 AsymmetricKeyPair _keyPair(String n, String e, String d, String p, String q)
   => new AsymmetricKeyPair(
-      new RSAPublicKey(new BigInteger(n), new BigInteger(e)),
-      new RSAPrivateKey(new BigInteger(n), new BigInteger(d), new BigInteger(p), new BigInteger(q))
+      new RSAPublicKey(BigInt.parse(n), BigInt.parse(e)),
+      new RSAPrivateKey(BigInt.parse(n), BigInt.parse(d), BigInt.parse(p),
+          BigInt.parse(q))
   );

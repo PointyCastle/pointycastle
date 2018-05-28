@@ -7,8 +7,8 @@ library pointycastle.impl.ecc.ecc_base;
 
 import "dart:typed_data";
 
-import 'package:bignum/bignum.dart';
 import "package:pointycastle/ecc/api.dart";
+import "package:pointycastle/src/utils.dart" as utils;
 
 /// Implementation of [ECDomainParameters]
 class ECDomainParametersImpl implements ECDomainParameters {
@@ -17,24 +17,24 @@ class ECDomainParametersImpl implements ECDomainParameters {
   final ECCurve curve;
   final List<int> seed;
   final ECPoint G;
-  final BigInteger n;
-  BigInteger _h;
+  final BigInt n;
+  BigInt _h;
 
   ECDomainParametersImpl( this.domainName, this.curve, this.G, this.n,
       [this._h = null, this.seed = null] ) {
     if(_h == null) {
-      _h = BigInteger.ONE;
+      _h = BigInt.one;
     }
   }
 
-  BigInteger get h => _h;
+  BigInt get h => _h;
 }
 
 
 /// Base implementation for [ECFieldElement]
 abstract class ECFieldElementBase implements ECFieldElement {
 
-  BigInteger toBigInteger();
+  BigInt toBigInteger();
   String get fieldName;
   int get fieldSize;
   int get byteLength => ((fieldSize + 7) ~/ 8);
@@ -105,8 +105,8 @@ abstract class ECPointBase implements ECPoint {
    * @param k The multiplicator.
    * @return <code>k * this</code>.
    */
-  ECPointBase operator *(BigInteger k) {
-    if( k.signum() < 0 ) {
+  ECPointBase operator *(BigInt k) {
+    if( k.sign < 0 ) {
       throw new ArgumentError("The multiplicator cannot be negative");
     }
 
@@ -114,7 +114,7 @@ abstract class ECPointBase implements ECPoint {
       return this;
     }
 
-    if( k.signum() == 0 ) {
+    if( k.sign == 0 ) {
       return curve.infinity;
     }
 
@@ -129,7 +129,7 @@ abstract class ECCurveBase implements ECCurve {
   ECFieldElementBase _a;
   ECFieldElementBase _b;
 
-  ECCurveBase( BigInteger a , BigInteger b ) {
+  ECCurveBase( BigInt a , BigInt b ) {
     this._a = fromBigInteger(a);
     this._b = fromBigInteger(b);
   }
@@ -140,9 +140,9 @@ abstract class ECCurveBase implements ECCurve {
   int get fieldSize;
   ECPointBase get infinity;
 
-  ECFieldElementBase fromBigInteger( BigInteger x );
-  ECPointBase createPoint( BigInteger x, BigInteger y, [bool withCompression=false] );
-  ECPointBase decompressPoint( int yTilde, BigInteger X1 );
+  ECFieldElementBase fromBigInteger( BigInt x );
+  ECPointBase createPoint( BigInt x, BigInt y, [bool withCompression=false] );
+  ECPointBase decompressPoint( int yTilde, BigInt X1 );
 
   /**
    * Decode a point on this curve from its ASN.1 encoding. The different
@@ -182,8 +182,8 @@ abstract class ECCurveBase implements ECCurve {
                 throw new ArgumentError("Incorrect length for uncompressed/hybrid encoding");
             }
 
-            BigInteger X1 = _fromArray(encoded, 1, expectedLength);
-            BigInteger Y1 = _fromArray(encoded, 1 + expectedLength, expectedLength);
+            BigInt X1 = _fromArray(encoded, 1, expectedLength);
+            BigInt Y1 = _fromArray(encoded, 1 + expectedLength, expectedLength);
 
             p = createPoint(X1, Y1, false);
             break;
@@ -195,8 +195,8 @@ abstract class ECCurveBase implements ECCurve {
       return p;
   }
 
-  BigInteger _fromArray( List<int> buf, int off, int length ) {
-    return new BigInteger.fromBytes(1, buf.sublist(off, off+length));
+  BigInt _fromArray( List<int> buf, int off, int length ) {
+    return utils.decodeBigInt(buf.sublist(off, off+length));
   }
 
 }
@@ -209,23 +209,27 @@ abstract class PreCompInfo {
  * Interface for functions encapsulating a point multiplication algorithm for [ECPointBase]. Multiplies [p] by [k], i.e. [p] is
  * added [k] times to itself.
  */
-typedef ECPointBase ECMultiplier( ECPointBase p, BigInteger k, PreCompInfo preCompInfo );
+typedef ECPointBase ECMultiplier( ECPointBase p, BigInt k, PreCompInfo preCompInfo );
+
+bool _testBit(BigInt i, int n) {
+  return i & (BigInt.one << n) != BigInt.zero;
+}
 
 /// Function implementing the NAF (Non-Adjacent Form) multiplication algorithm.
-ECPointBase _FpNafMultiplier(ECPointBase p, BigInteger k, PreCompInfo preCompInfo) {
+ECPointBase _FpNafMultiplier(ECPointBase p, BigInt k, PreCompInfo preCompInfo) {
     // TODO Probably should try to add this
-    // BigInteger e = k.mod(n); // n == order of p
-    BigInteger e = k;
-    BigInteger h = e*BigInteger.THREE;
+    // BigInt e = k.mod(n); // n == order of p
+    BigInt e = k;
+    BigInt h = e * new BigInt.from(3);
 
     ECPointBase neg = -p;
     ECPointBase R = p;
 
-    for( var i=h.bitLength()-2 ; i>0 ; --i ) {
+    for( var i=h.bitLength-2 ; i>0 ; --i ) {
       R = R.twice();
 
-      var hBit = h.testBit(i);
-      var eBit = e.testBit(i);
+      var hBit = _testBit(h, i);
+      var eBit = _testBit(e, i);
 
       if( hBit!=eBit ) {
           R += (hBit ? p : neg);

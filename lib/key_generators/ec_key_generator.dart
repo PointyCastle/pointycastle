@@ -4,8 +4,6 @@
 
 library pointycastle.impl.key_generator.ec_key_generator;
 
-import "package:bignum/bignum.dart";
-
 import "package:pointycastle/api.dart";
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/key_generators/api.dart";
@@ -38,12 +36,12 @@ class ECKeyGenerator implements KeyGenerator {
 
   AsymmetricKeyPair generateKeyPair() {
     var n = _params.n;
-    var nBitLength = n.bitLength();
+    var nBitLength = n.bitLength;
     var d;
 
     do {
       d = _random.nextBigInteger(nBitLength);
-    } while (d == BigInteger.ZERO || (d >= n));
+    } while (d == BigInt.zero || (d >= n));
 
     var Q = _params.G * d;
 
