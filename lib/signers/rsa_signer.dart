@@ -8,6 +8,8 @@ import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/asymmetric/api.dart";
+import "package:pointycastle/asymmetric/pkcs1.dart";
+import "package:pointycastle/asymmetric/rsa.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
@@ -27,7 +29,7 @@ class RSASigner implements Signer {
           return () =>
               new RSASigner(new Digest(digestName), digestIdentifierHex);
         });
-  
+
   static final Map<String, String> _DIGEST_IDENTIFIER_HEXES = {
     "MD2": "06082a864886f70d0202",
     "MD4": "06082a864886f70d0204",
@@ -42,7 +44,7 @@ class RSASigner implements Signer {
     "SHA-512": "0609608648016503040203"
   };
 
-  final AsymmetricBlockCipher _rsa = new AsymmetricBlockCipher("RSA/PKCS1");
+  final AsymmetricBlockCipher _rsa = PKCS1Encoding(RSAEngine());
   final Digest _digest;
   Uint8List _digestIdentifier; // DER encoded with trailing tag (06)+length byte
   bool _forSigning;
