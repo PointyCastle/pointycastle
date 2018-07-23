@@ -41,7 +41,7 @@ class RSAKeyGenerator implements KeyGenerator {
     }
   }
 
-  AsymmetricKeyPair generateKeyPair() {
+  AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateKeyPair() {
     var p, q, n, e;
 
     // p and q values should have a length of half the strength in bits
@@ -67,7 +67,7 @@ class RSAKeyGenerator implements KeyGenerator {
         continue;
       }
 
-      if (e.gcd(p - BigInt.one) == 1) {
+      if (e.gcd(p - BigInt.one) == BigInt.one) {
         break;
       }
     }
@@ -78,32 +78,32 @@ class RSAKeyGenerator implements KeyGenerator {
       for (;;) {
         q = generateProbablePrime(qbitlength, 1, _random);
 
-        if ((q - p).abs().bitLength() < mindiffbits) {
+        if ((q - p).abs().bitLength < mindiffbits) {
           continue;
         }
 
-        if (q.mod(e) == 1) {
+        if (q.modInverse(e) == BigInt.one) {
           continue;
         }
 
-        if (!q.isProbablePrime(_params.certainty)) {
+        if (!_isProbablePrime(q, _params.certainty)) {
           continue;
         }
 
-        if (e.gcd(q - BigInt.one) == 1) {
+        if (e.gcd(q - BigInt.one) == BigInt.one) {
           break;
         }
       }
 
       // calculate the modulus
-      n = p.multiply(q);
+      n = (p * q);
 
-      if (n.bitLength() == _params.bitStrength) {
+      if (n.bitLength == _params.bitStrength) {
         break;
       }
 
       // if we get here our primes aren't big enough, make the largest of the two p and try again
-      p = p.max(q);
+      p = (p.compareTo(q) > 0) ? p : q;
     }
 
     // Swap p and q if necessary
