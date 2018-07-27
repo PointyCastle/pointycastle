@@ -39,19 +39,15 @@ As of the last release, the following algorithms are implemented:
   * MD2
   * MD4
   * MD5
-  * RIPEMD-128
-  * RIPEMD-160
-  * RIPEMD-256
-  * RIPEMD-320
+  * RIPEMD-128|160|256|320
   * SHA-1
-  * SHA-224
-  * SHA-256
-  * SHA-3
-  * SHA-384
-  * SHA-512
-  * SHA-512/t
+  * SHA-224|256|384|512
+  * Keccak-224|256|384|512*
+  * SHA-512/t (t=8 to 376 and 392 to 504 in multiples of 8)
   * Tiger
   * Whirlpool
+
+*_Keccak is currently implemented as SHA3Digest._
 
 **MACs:**
   * HMAC
