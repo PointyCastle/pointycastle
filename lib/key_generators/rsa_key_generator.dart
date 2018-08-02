@@ -84,7 +84,7 @@ class RSAKeyGenerator implements KeyGenerator {
           continue;
         }
 
-        if (q.modInverse(e) == BigInt.one) {
+        if (q % e == BigInt.one) {
           continue;
         }
 
