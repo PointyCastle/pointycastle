@@ -4,33 +4,18 @@
 
 library pointycastle.impl.signer.ecdsa_signer;
 
-import "dart:typed_data";
 import "dart:math";
+import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/src/utils.dart" as utils;
-import "package:pointycastle/src/registry/registry.dart";
 
 bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
 
 class ECDSASigner implements Signer {
-
-  /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(Signer, r"^(.+)/(DET-)?ECDSA$",
-        (_, final Match match) {
-          final String  digestName = match.group(1);
-          final bool withMac = match.group(2) != null;
-          return () {
-            Digest underlyingDigest = new Digest(digestName);
-            Mac mac = withMac ? new Mac("${digestName}/HMAC") : null;
-            return new ECDSASigner(underlyingDigest, mac);
-          };
-        });
-
   ECPublicKey _pbkey;
   ECPrivateKey _pvkey;
   SecureRandom _random;
@@ -46,10 +31,10 @@ class ECDSASigner implements Signer {
    */
   ECDSASigner([this._digest = null, this._kMac = null]);
 
-  String get algorithmName => "${_digest.algorithmName}/${_kMac == null ? "" : "DET-"}ECDSA";
+  String get algorithmName =>
+      "${_digest.algorithmName}/${_kMac == null ? "" : "DET-"}ECDSA";
 
-  void reset() {
-  }
+  void reset() {}
 
   /**
    * Init this [Signer]. The [params] argument can be:
@@ -62,10 +47,10 @@ class ECDSASigner implements Signer {
     if (forSigning) {
       PrivateKeyParameter pvparams;
 
-      if( params is ParametersWithRandom ) {
+      if (params is ParametersWithRandom) {
         _random = params.random;
         pvparams = params.parameters;
-      } else if (_kMac != null ) {
+      } else if (_kMac != null) {
         _random = null;
         pvparams = params;
       } else {
@@ -73,18 +58,19 @@ class ECDSASigner implements Signer {
         pvparams = params;
       }
 
-      if( pvparams is! PrivateKeyParameter ) {
-        throw new ArgumentError("Unsupported parameters type ${pvparams.runtimeType}: should be PrivateKeyParameter");
+      if (pvparams is! PrivateKeyParameter) {
+        throw new ArgumentError(
+            "Unsupported parameters type ${pvparams.runtimeType}: should be PrivateKeyParameter");
       }
       _pvkey = pvparams.key;
-
     } else {
       PublicKeyParameter pbparams;
 
       pbparams = params;
 
-      if( pbparams is! PublicKeyParameter ) {
-        throw new ArgumentError("Unsupported parameters type ${pbparams.runtimeType}: should be PublicKeyParameter");
+      if (pbparams is! PublicKeyParameter) {
+        throw new ArgumentError(
+            "Unsupported parameters type ${pbparams.runtimeType}: should be PublicKeyParameter");
       }
       _pbkey = pbparams.key;
     }
@@ -106,27 +92,28 @@ class ECDSASigner implements Signer {
     }
 
     // 5.3.2
-    do {// generate s
+    do {
+      // generate s
       var k = null;
 
-      do { // generate r
+      do {
+        // generate r
         k = kCalculator.nextK();
 
-        var p = _pvkey.parameters.G*k;
+        var p = _pvkey.parameters.G * k;
 
         // 5.3.3
         var x = p.x.toBigInteger();
 
-        r = x%n;
-      } while(r == BigInt.zero);
+        r = x % n;
+      } while (r == BigInt.zero);
 
       var d = _pvkey.d;
 
-      s = (k.modInverse(n)*(e+(d*r)))%n;
+      s = (k.modInverse(n) * (e + (d * r))) % n;
+    } while (s == BigInt.zero);
 
-    } while(s == BigInt.zero);
-
-    return new ECSignature(r,s);
+    return new ECSignature(r, s);
   }
 
   bool verifySignature(Uint8List message, covariant ECSignature signature) {
@@ -139,12 +126,12 @@ class ECDSASigner implements Signer {
     var s = signature.s;
 
     // r in the range [1,n-1]
-    if( r.compareTo(BigInt.one) < 0 || r.compareTo(n) >= 0 ) {
+    if (r.compareTo(BigInt.one) < 0 || r.compareTo(n) >= 0) {
       return false;
     }
 
     // s in the range [1,n-1]
-    if( s.compareTo(BigInt.one) < 0 || s.compareTo(n) >= 0 ) {
+    if (s.compareTo(BigInt.one) < 0 || s.compareTo(n) >= 0) {
       return false;
     }
 
@@ -159,13 +146,13 @@ class ECDSASigner implements Signer {
     var point = _sumOfTwoMultiplies(G, u1, Q, u2);
 
     // components must be bogus.
-    if( point.isInfinity ) {
+    if (point.isInfinity) {
       return false;
     }
 
     var v = point.x.toBigInteger() % n;
 
-    return v==r;
+    return v == r;
   }
 
   Uint8List _hashMessageIfNeeded(Uint8List message) {
@@ -181,7 +168,7 @@ class ECDSASigner implements Signer {
     var log2n = n.bitLength;
     var messageBitLength = message.length * 8;
 
-    if( log2n >= messageBitLength ) {
+    if (log2n >= messageBitLength) {
       return utils.decodeBigInt(message);
     } else {
       BigInt trunc = utils.decodeBigInt(message);
@@ -192,10 +179,10 @@ class ECDSASigner implements Signer {
     }
   }
 
-  ECPoint _sumOfTwoMultiplies( ECPoint P, BigInt a, ECPoint Q, BigInt b ) {
+  ECPoint _sumOfTwoMultiplies(ECPoint P, BigInt a, ECPoint Q, BigInt b) {
     ECCurve c = P.curve;
 
-    if( c!=Q.curve ) {
+    if (c != Q.curve) {
       throw new ArgumentError("P and Q must be on same curve");
     }
 
@@ -215,32 +202,30 @@ class ECDSASigner implements Signer {
   ECPoint _implShamirsTrick(ECPoint P, BigInt k, ECPoint Q, BigInt l) {
     int m = max(k.bitLength, l.bitLength);
 
-    ECPoint Z = P+Q;
+    ECPoint Z = P + Q;
     ECPoint R = P.curve.infinity;
 
-    for( int i=m-1 ; i>=0 ; --i ) {
+    for (int i = m - 1; i >= 0; --i) {
       R = R.twice();
 
-      if(_testBit(k, i)) {
-        if(_testBit(l, i)) {
-          R = R+Z;
+      if (_testBit(k, i)) {
+        if (_testBit(l, i)) {
+          R = R + Z;
         } else {
-          R = R+P;
+          R = R + P;
         }
       } else {
         if (_testBit(l, i)) {
-          R = R+Q;
+          R = R + Q;
         }
       }
     }
 
     return R;
   }
-
 }
 
 class _RFC6979KCalculator {
-
   Mac _mac;
   Uint8List _K;
   Uint8List _V;
@@ -340,7 +325,6 @@ class _RFC6979KCalculator {
     return v;
   }
 
-
   Uint8List _asUnsignedByteArray(BigInt value) {
     var bytes = utils.encodeBigInt(value);
 
@@ -350,11 +334,9 @@ class _RFC6979KCalculator {
       return new Uint8List.fromList(bytes);
     }
   }
-
 }
 
 class _RandomKCalculator {
-
   BigInt _n;
   SecureRandom _random;
 
@@ -364,9 +346,7 @@ class _RandomKCalculator {
     var k;
     do {
       k = _random.nextBigInteger(_n.bitLength);
-    }
-    while( k==BigInt.zero || k>=_n );
+    } while (k == BigInt.zero || k >= _n);
     return k;
   }
-
 }

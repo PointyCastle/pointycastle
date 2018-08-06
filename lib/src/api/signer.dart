@@ -1,4 +1,3 @@
-
 // Copyright (c) 2013-present, the authors of the Pointy Castle project
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
@@ -7,10 +6,11 @@ part of pointycastle.api;
 
 /// An interface for DSAs (digital signature algorithms)
 abstract class Signer extends Algorithm {
+  /// The [Registry] for [Signer] algorithms.
+  static final registry = Registry<Signer>();
 
   /// Create the signer specified by the standard [algorithmName].
-  factory Signer( String algorithmName ) =>
-      registry.create(Signer, algorithmName) as Signer;
+  factory Signer(String algorithmName) => registry.create(algorithmName);
 
   /// Reset the signer to its original state.
   void reset();
@@ -21,12 +21,11 @@ abstract class Signer extends Algorithm {
    *
    * Use the argument [forSigning] to tell the signer if you want to generate or verify signatures.
    */
-  void init( bool forSigning, CipherParameters params );
+  void init(bool forSigning, CipherParameters params);
 
   /// Sign the passed in [message] (usually the output of a hash function)
-  Signature generateSignature( Uint8List message );
+  Signature generateSignature(Uint8List message);
 
   /// Verify the [message] against the [signature].
-  bool verifySignature( Uint8List message, Signature signature );
-
+  bool verifySignature(Uint8List message, Signature signature);
 }

@@ -7,14 +7,9 @@ library pointycastle.impl.key_generator.ec_key_generator;
 import "package:pointycastle/api.dart";
 import "package:pointycastle/ecc/api.dart";
 import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGenerator implements KeyGenerator {
-
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(KeyGenerator, "EC");
-
   ECDomainParameters _params;
   SecureRandom _random;
 
@@ -45,8 +40,7 @@ class ECKeyGenerator implements KeyGenerator {
 
     var Q = _params.G * d;
 
-    return new AsymmetricKeyPair(new ECPublicKey(Q, _params), new ECPrivateKey(d, _params));
+    return new AsymmetricKeyPair(
+        new ECPublicKey(Q, _params), new ECPrivateKey(d, _params));
   }
-
 }
-

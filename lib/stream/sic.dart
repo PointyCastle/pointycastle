@@ -9,8 +9,6 @@ import "dart:typed_data";
 import "package:pointycastle/api.dart";
 import "package:pointycastle/src/impl/base_stream_cipher.dart";
 import "package:pointycastle/src/ufixnum.dart";
-import "package:pointycastle/src/registry/registry.dart";
-
 
 /**
  * Implementation of SIC mode of operation as a [StreamCipher]. This implementation uses the IV as the initial nonce value and
@@ -19,15 +17,6 @@ import "package:pointycastle/src/registry/registry.dart";
  * of the caller to make sure the counter does not overflow.
  */
 class SICStreamCipher extends BaseStreamCipher {
-
-  /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(StreamCipher, "/SIC",
-        (_, final Match match) => () {
-          String digestName = match.group(1);
-          return new SICStreamCipher(new BlockCipher(digestName));
-        });
-
   final BlockCipher underlyingCipher;
 
   Uint8List _iv;
@@ -45,20 +34,21 @@ class SICStreamCipher extends BaseStreamCipher {
 
   void reset() {
     underlyingCipher.reset();
-    _counter.setAll( 0, _iv );
-    _counterOut.fillRange( 0, _counterOut.length, 0 );
+    _counter.setAll(0, _iv);
+    _counterOut.fillRange(0, _counterOut.length, 0);
     _consumed = _counterOut.length;
   }
 
   void init(bool forEncryption, covariant ParametersWithIV params) {
-    _iv.setAll( 0, params.iv );
+    _iv.setAll(0, params.iv);
     reset();
-    underlyingCipher.init( true, params.parameters );
+    underlyingCipher.init(true, params.parameters);
   }
 
-  void processBytes(Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
-    for( var i=0 ; i<len ; i++ ) {
-      out[outOff+i] = returnByte( inp[inpOff+i] );
+  void processBytes(
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+    for (var i = 0; i < len; i++) {
+      out[outOff + i] = returnByte(inp[inpOff + i]);
     }
   }
 
@@ -69,7 +59,7 @@ class SICStreamCipher extends BaseStreamCipher {
 
   /// Calls [_feedCounter] if all [_counterOut] bytes have been consumed
   void _feedCounterIfNeeded() {
-    if( _consumed>=_counterOut.length ) {
+    if (_consumed >= _counterOut.length) {
       _feedCounter();
     }
   }
@@ -80,7 +70,7 @@ class SICStreamCipher extends BaseStreamCipher {
    * [_counter].
    */
   void _feedCounter() {
-    underlyingCipher.processBlock( _counter, 0, _counterOut, 0 );
+    underlyingCipher.processBlock(_counter, 0, _counterOut, 0);
     _incrementCounter();
     _consumed = 0;
   }
@@ -88,13 +78,11 @@ class SICStreamCipher extends BaseStreamCipher {
   /// Increments [_counter] by 1
   void _incrementCounter() {
     var i;
-    for( i=_counter.lengthInBytes-1 ; i>=0 ; i-- )
-    {
+    for (i = _counter.lengthInBytes - 1; i >= 0; i--) {
       var val = _counter[i];
       val++;
       _counter[i] = val;
-      if( _counter[i]!=0 ) break;
+      if (_counter[i] != 0) break;
     }
   }
-
 }

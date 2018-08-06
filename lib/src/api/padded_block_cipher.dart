@@ -1,4 +1,3 @@
-
 // Copyright (c) 2013-present, the authors of the Pointy Castle project
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
@@ -22,9 +21,12 @@ part of pointycastle.api;
  */
 abstract class PaddedBlockCipher implements BlockCipher {
 
+  /// The [Registry] for [PaddedBlockCipher] algorithms.
+  static final registry = new Registry<PaddedBlockCipher>();
+
   /// Create the padded block cipher specified by the standard [algorithmName].
   factory PaddedBlockCipher(String algorithmName) =>
-      registry.create(PaddedBlockCipher, algorithmName) as PaddedBlockCipher;
+      registry.create(algorithmName);
 
   /// Get the underlying [Padding] used by this cipher.
   Padding get padding;
@@ -54,5 +56,4 @@ abstract class PaddedBlockCipher implements BlockCipher {
    * return 0 if the last block was all padding.
    */
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff);
-
 }
