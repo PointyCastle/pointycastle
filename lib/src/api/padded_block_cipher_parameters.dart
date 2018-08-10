@@ -13,7 +13,7 @@ class PaddedBlockCipherParameters<UnderlyingCipherParameters extends CipherParam
 PaddingCipherParameters extends CipherParameters> implements CipherParameters {
 
   final UnderlyingCipherParameters underlyingCipherParameters;
-  final UnderlyingCipherParameters paddingCipherParameters;
+  final PaddingCipherParameters paddingCipherParameters;
 
   PaddedBlockCipherParameters(this.underlyingCipherParameters, this.paddingCipherParameters);
 
