@@ -7,25 +7,14 @@ library pointycastle.impl.secure_random.block_ctr_random;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
-import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/secure_random_base.dart";
+import "package:pointycastle/src/ufixnum.dart";
 
 /**
  * An implementation of [SecureRandom] that uses a [BlockCipher] with CTR mode to generate random
  * values.
  */
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
-
-  /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(SecureRandom, r"^(.*)/CTR/PRNG$",
-        (_, final Match match) => () {
-          String blockCipherName = match.group(1);
-          BlockCipher blockCipher = new BlockCipher(blockCipherName);
-          return new BlockCtrRandom(blockCipher);
-        });
-
   final BlockCipher cipher;
 
   Uint8List _input;
@@ -51,7 +40,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
   }
 
   int nextUint8() {
-    if( _used==_output.length ) {
+    if (_used == _output.length) {
       cipher.processBlock(_input, 0, _output, 0);
       _used = 0;
       _incrementInput();
@@ -65,7 +54,6 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     do {
       offset--;
       _input[offset] += 1;
-    } while( _input[offset]==0 );
+    } while (_input[offset] == 0);
   }
-
 }

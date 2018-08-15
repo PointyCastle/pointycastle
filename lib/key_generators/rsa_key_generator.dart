@@ -7,17 +7,12 @@ library pointycastle.impl.key_generator.rsa_key_generator;
 import "package:pointycastle/api.dart";
 import "package:pointycastle/asymmetric/api.dart";
 import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/src/registry/registry.dart";
 
 bool _testBit(BigInt i, int n) {
   return (i & (BigInt.one << n)) != BigInt.zero;
 }
 
 class RSAKeyGenerator implements KeyGenerator {
-
-  static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(KeyGenerator, "RSA");
-
   SecureRandom _random;
   RSAKeyGeneratorParameters _params;
 
@@ -57,7 +52,7 @@ class RSAKeyGenerator implements KeyGenerator {
     // (then p-1 and q-1 will not consist of only small factors - see "Pollard's algorithm")
 
     // generate p, prime and (p-1) relatively prime to e
-    for ( ; ; ) {
+    for (;;) {
       p = generateProbablePrime(pbitlength, 1, _random);
 
       if (p % e == BigInt.one) {
@@ -68,44 +63,43 @@ class RSAKeyGenerator implements KeyGenerator {
         continue;
       }
 
-      if (e.gcd(p - BigInt.one) == 1) {
+      if (e.gcd(p - BigInt.one) == BigInt.one) {
         break;
       }
     }
 
     // generate a modulus of the required length
-    for ( ; ; ) {
-
+    for (;;) {
       // generate q, prime and (q-1) relatively prime to e, and not equal to p
-      for ( ; ; ) {
+      for (;;) {
         q = generateProbablePrime(qbitlength, 1, _random);
 
-        if ((q - p).abs().bitLength() < mindiffbits) {
+        if ((q - p).abs().bitLength < mindiffbits) {
           continue;
         }
 
-        if (q.mod(e) == 1) {
+        if (q % e == 1) {
           continue;
         }
 
-        if (!q.isProbablePrime(_params.certainty)) {
+        if (!_isProbablePrime(q, _params.certainty)) {
           continue;
         }
 
-        if (e.gcd(q - BigInt.one) == 1) {
+        if (e.gcd(q - BigInt.one) == BigInt.one) {
           break;
         }
       }
 
       // calculate the modulus
-      n = p.multiply(q);
+      n = (p * q);
 
-      if (n.bitLength() == _params.bitStrength) {
+      if (n.bitLength == _params.bitStrength) {
         break;
       }
 
       // if we get here our primes aren't big enough, make the largest of the two p and try again
-      p = p.max(q);
+      p = (p.compareTo(q) > 0) ? p : q;
     }
 
     // Swap p and q if necessary
@@ -121,11 +115,10 @@ class RSAKeyGenerator implements KeyGenerator {
     var phi = (pSub1 * qSub1);
     var d = e.modInverse(phi);
 
-    return new AsymmetricKeyPair(new RSAPublicKey(n, e), new RSAPrivateKey(n, d, p, q));
+    return new AsymmetricKeyPair(
+        new RSAPublicKey(n, e), new RSAPrivateKey(n, d, p, q));
   }
-
 }
-
 
 /** [List] of low primes */
 final List<BigInt> _lowprimes = [
@@ -289,18 +282,15 @@ bool _millerRabin(BigInt b, int t) {
 /** test primality with certainty >= 1-.5^t */
 bool _isProbablePrime(BigInt b, int t) {
   // Implementation borrowed from bignum.BigIntegerDartvm.
-  var i,
-      x = b.abs();
+  var i, x = b.abs();
   if (b <= _lowprimes.last) {
-    for (i = 0; i < _lowprimes.length; ++i)
-      if (b == _lowprimes[i]) return true;
+    for (i = 0; i < _lowprimes.length; ++i) if (b == _lowprimes[i]) return true;
     return false;
   }
   if (x.isEven) return false;
   i = 1;
   while (i < _lowprimes.length) {
-    var m = _lowprimes[i],
-        j = i + 1;
+    var m = _lowprimes[i], j = i + 1;
     while (j < _lowprimes.length && m < _lplim) m *= _lowprimes[j++];
     m = x % m;
     while (i < j) if (m % _lowprimes[i++] == 0) return false;

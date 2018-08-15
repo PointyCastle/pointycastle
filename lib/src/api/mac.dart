@@ -1,4 +1,3 @@
-
 // Copyright (c) 2013-present, the authors of the Pointy Castle project
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
@@ -7,10 +6,11 @@ part of pointycastle.api;
 
 /// The interface that a MAC (message authentication code) conforms to.
 abstract class Mac extends Algorithm {
+  /// The [Registry] for [Mac] algorithms.
+  static final registry = new Registry<Mac>();
 
   /// Create the MAC specified by the standard [algorithmName].
-  factory Mac(String algorithmName) =>
-      registry.create(Mac, algorithmName) as Mac;
+  factory Mac(String algorithmName) => registry.create(algorithmName);
 
   /// Get this MAC's output size.
   int get macSize;
@@ -43,5 +43,4 @@ abstract class Mac extends Algorithm {
    * offset [outOff]. This method returns the size of the digest.
    */
   int doFinal(Uint8List out, int outOff);
-
 }

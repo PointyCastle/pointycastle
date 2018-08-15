@@ -4,14 +4,15 @@
 
 library pointycastle.test.impl_test;
 
+import 'package:pointycastle/pointycastle.dart';
 import "package:test/test.dart";
 
 import './test/registry_tests.dart';
 
 void main() {
+  initCipher();
 
   group("impl:", () {
-
     test("AsymmetricBlockCipher returns valid implementations", () {
       testAsymmetricBlockCipher("RSA");
       testAsymmetricBlockCipher("RSA/PKCS1");
@@ -60,7 +61,8 @@ void main() {
       testMac("RIPEMD-160/HMAC");
     });
 
-    test("BlockCipher returns valid implementations for modes of operation", () {
+    test("BlockCipher returns valid implementations for modes of operation",
+        () {
       testBlockCipher("AES/CBC");
       testBlockCipher("AES/CFB-64");
       testBlockCipher("AES/CTR");
@@ -104,7 +106,5 @@ void main() {
       testStreamCipher("AES/SIC");
       testStreamCipher("AES/CTR");
     });
-
   });
-
 }

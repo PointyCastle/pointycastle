@@ -8,20 +8,45 @@
  */
 library pointycastle.impl;
 
-
 // cipher implementations
 
 // asymmetric
-export "package:pointycastle/asymmetric/api.dart";
-
-// This one imports all libraries.
 import "package:pointycastle/export.dart";
 
-// ecc
+export "package:pointycastle/asymmetric/api.dart";
 export "package:pointycastle/ecc/api.dart";
-
-// key_derivators
 export "package:pointycastle/key_derivators/api.dart";
-
-// key_generators
 export "package:pointycastle/key_generators/api.dart";
+
+part './src/impl/registration.dart';
+part './src/impl/registration_ecc.dart';
+
+// This one imports all libraries.
+// ecc
+// key_derivators
+// key_generators
+
+bool _initialized = false;
+
+/**
+ * This is the initializer method for this library. It must be called prior to use any of the
+ * implementations.
+ */
+void initCipher() {
+  if (!_initialized) {
+    _initialized = true;
+    _registerAsymmetricBlockCiphers();
+    _registerBlockCiphers();
+    _registerDigests();
+    _registerEccStandardCurves();
+    _registerKeyDerivators();
+    _registerKeyGenerators();
+    _registerMacs();
+    _registerModesOfOperation();
+    _registerPaddedBlockCiphers();
+    _registerPaddings();
+    _registerSecureRandoms();
+    _registerSigners();
+    _registerStreamCiphers();
+  }
+}

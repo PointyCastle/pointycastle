@@ -10,40 +10,9 @@ import "package:pointycastle/api.dart";
 import "package:pointycastle/asymmetric/api.dart";
 import "package:pointycastle/asymmetric/pkcs1.dart";
 import "package:pointycastle/asymmetric/rsa.dart";
-import "package:pointycastle/src/registry/registry.dart";
 
 // TODO: implement full ASN1 encoding (for now I will do a little ad-hoc implementation of just what is needed here)
 class RSASigner implements Signer {
-
-  /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(Signer, "/RSA",
-        (_, Match match) {
-          final String digestName = match.group(1);
-          final String digestIdentifierHex =
-              _DIGEST_IDENTIFIER_HEXES[digestName];
-          if (digestIdentifierHex == null) {
-            throw new RegistryFactoryException(
-              "RSA signing with digest $digestName is not supported");
-          }
-          return () =>
-              new RSASigner(new Digest(digestName), digestIdentifierHex);
-        });
-
-  static final Map<String, String> _DIGEST_IDENTIFIER_HEXES = {
-    "MD2": "06082a864886f70d0202",
-    "MD4": "06082a864886f70d0204",
-    "MD5": "06082a864886f70d0205",
-    "RIPEMD-128": "06052b24030202",
-    "RIPEMD-160": "06052b24030201",
-    "RIPEMD-256": "06052b24030203",
-    "SHA-1": "06052b0e03021a",
-    "SHA-224": "0609608648016503040204",
-    "SHA-256": "0609608648016503040201",
-    "SHA-384": "0609608648016503040202",
-    "SHA-512": "0609608648016503040203"
-  };
-
   final AsymmetricBlockCipher _rsa = PKCS1Encoding(RSAEngine());
   final Digest _digest;
   Uint8List _digestIdentifier; // DER encoded with trailing tag (06)+length byte
@@ -86,7 +55,8 @@ class RSASigner implements Signer {
 
   RSASignature generateSignature(Uint8List message) {
     if (!_forSigning) {
-      throw new StateError("Signer was not initialised for signature generation");
+      throw new StateError(
+          "Signer was not initialised for signature generation");
     }
 
     var hash = new Uint8List(_digest.digestSize);
@@ -102,7 +72,8 @@ class RSASigner implements Signer {
 
   bool verifySignature(Uint8List message, covariant RSASignature signature) {
     if (_forSigning) {
-      throw new StateError("Signer was not initialised for signature verification");
+      throw new StateError(
+          "Signer was not initialised for signature verification");
     }
 
     var hash = new Uint8List(_digest.digestSize);
@@ -110,26 +81,27 @@ class RSASigner implements Signer {
     _digest.update(message, 0, message.length);
     _digest.doFinal(hash, 0);
 
-
     var sig = new Uint8List(_rsa.outputBlockSize);
-    var len = _rsa.processBlock(signature.bytes, 0, signature.bytes.length, sig, 0);
+    var len =
+        _rsa.processBlock(signature.bytes, 0, signature.bytes.length, sig, 0);
     sig = sig.sublist(0, len);
 
     var expected = _derEncode(hash);
 
     if (sig.length == expected.length) {
-      for (var i=0; i<sig.length; i++) {
+      for (var i = 0; i < sig.length; i++) {
         if (sig[i] != expected[i]) {
           return false;
         }
       }
       return true; //return Arrays.constantTimeAreEqual(sig, expected);
 
-    } else if (sig.length == expected.length - 2) { // NULL left out
+    } else if (sig.length == expected.length - 2) {
+      // NULL left out
       var sigOffset = sig.length - hash.length - 2;
       var expectedOffset = expected.length - hash.length - 2;
 
-      expected[1] -= 2;      // adjust lengths
+      expected[1] -= 2; // adjust lengths
       expected[3] -= 2;
 
       var nonEqual = 0;
@@ -139,27 +111,27 @@ class RSASigner implements Signer {
       }
 
       for (int i = 0; i < sigOffset; i++) {
-        nonEqual |= (sig[i] ^ expected[i]);  // check header less NULL
+        nonEqual |= (sig[i] ^ expected[i]); // check header less NULL
       }
 
       return nonEqual == 0;
-
     } else {
       return false;
     }
   }
 
   Uint8List _derEncode(Uint8List hash) {
-    var out = new Uint8List(2+2+_digestIdentifier.length+2+2+hash.length);
+    var out =
+        new Uint8List(2 + 2 + _digestIdentifier.length + 2 + 2 + hash.length);
     var i = 0;
 
     // header
     out[i++] = 48;
-    out[i++] = out.length-2;
+    out[i++] = out.length - 2;
 
     // algorithmIdentifier.header
     out[i++] = 48;
-    out[i++] = _digestIdentifier.length+2;
+    out[i++] = _digestIdentifier.length + 2;
 
     // algorithmIdentifier.bytes
     out.setAll(i, _digestIdentifier);
@@ -180,13 +152,12 @@ class RSASigner implements Signer {
   }
 
   Uint8List _hexStringToBytes(String hex) {
-    var result = new Uint8List(hex.length~/2);
-    for( var i=0 ; i<hex.length ; i+=2 ) {
-      var num = hex.substring(i, i+2);
-      var byte = int.parse( num, radix: 16 );
-      result[i~/2] = byte;
+    var result = new Uint8List(hex.length ~/ 2);
+    for (var i = 0; i < hex.length; i += 2) {
+      var num = hex.substring(i, i + 2);
+      var byte = int.parse(num, radix: 16);
+      result[i ~/ 2] = byte;
     }
     return result;
   }
-
 }
