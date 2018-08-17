@@ -10,52 +10,60 @@ import "package:pointycastle/api.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
 /// Standard ECC curve description
-abstract class ECDomainParameters extends Registrable {
-
+abstract class ECDomainParameters {
   /// Get this domain's standard name.
   String get domainName;
 
   ECCurve get curve;
+
   List<int> get seed;
+
   ECPoint get G;
+
   BigInt get n;
 
   /// Create a curve description from its standard name
-  factory ECDomainParameters( String domainName ) =>
-      registry.create(ECDomainParameters, domainName) as ECDomainParameters;
-
+  factory ECDomainParameters(String domainName) =>
+      registry.create<ECDomainParameters>(domainName);
 }
 
 /// Type for coordinates of an [ECPoint]
 abstract class ECFieldElement {
-
   BigInt toBigInteger();
+
   String get fieldName;
+
   int get fieldSize;
 
   int get byteLength;
 
-  ECFieldElement operator +( ECFieldElement b );
-  ECFieldElement operator -( ECFieldElement b );
-  ECFieldElement operator *( ECFieldElement b );
-  ECFieldElement operator /( ECFieldElement b );
+  ECFieldElement operator +(ECFieldElement b);
+
+  ECFieldElement operator -(ECFieldElement b);
+
+  ECFieldElement operator *(ECFieldElement b);
+
+  ECFieldElement operator /(ECFieldElement b);
 
   ECFieldElement operator -();
 
   ECFieldElement invert();
-  ECFieldElement square();
-  ECFieldElement sqrt();
 
+  ECFieldElement square();
+
+  ECFieldElement sqrt();
 }
 
 /// An elliptic curve point
 abstract class ECPoint {
-
   ECCurve get curve;
+
   ECFieldElement get x;
+
   ECFieldElement get y;
 
   bool get isCompressed;
+
   bool get isInfinity;
 
   bool operator ==(other);
