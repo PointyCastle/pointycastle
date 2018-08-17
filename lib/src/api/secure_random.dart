@@ -14,10 +14,9 @@ part of pointycastle.api;
  * should be seen as "more random" than that returned from a [SecureRandom].
  */
 abstract class SecureRandom extends Algorithm {
-
   /// Create the secure random specified by the standard [algorithmName].
   factory SecureRandom([String algorithmName = ""]) =>
-      registry.create(SecureRandom, algorithmName) as SecureRandom;
+      registry.create<SecureRandom>(algorithmName);
 
   /// Seed the RNG with some entropy (look at package cipher_entropy providing entropy sources).
   void seed(CipherParameters params);
@@ -36,5 +35,4 @@ abstract class SecureRandom extends Algorithm {
 
   /// Get a list of bytes of arbitrary length.
   Uint8List nextBytes(int count);
-
 }

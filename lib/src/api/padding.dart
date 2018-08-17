@@ -1,4 +1,3 @@
-
 // Copyright (c) 2013-present, the authors of the Pointy Castle project
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
@@ -7,13 +6,12 @@ part of pointycastle.api;
 
 /// The interface that a padding conforms to.
 abstract class Padding extends Algorithm {
-
   /// Create the digest specified by the standard [algorithmName].
-  factory Padding( String algorithmName ) =>
-      registry.create(Padding, algorithmName) as Padding;
+  factory Padding(String algorithmName) =>
+      registry.create<Padding>(algorithmName);
 
   /// Initialise the padder. Normally, paddings don't need any init params.
-  void init( [CipherParameters params] );
+  void init([CipherParameters params]);
 
   /**
    * Process a whole block of [data] at once, returning the result in a new byte array. If [pad] is
@@ -33,9 +31,8 @@ abstract class Padding extends Algorithm {
    * [data] should be the same as the last block of plain text. The reason for this is that some
    * modes such as "trailing bit compliment" base the padding on the last byte of plain text.
    */
-  int addPadding( Uint8List data, int offset );
+  int addPadding(Uint8List data, int offset);
 
   /// Get the number of pad bytes present in the block.
-  int padCount( Uint8List data );
-
+  int padCount(Uint8List data);
 }
