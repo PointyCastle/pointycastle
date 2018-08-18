@@ -68,7 +68,6 @@ class DynamicFactoryConfig extends FactoryConfig {
       : this.regex(type, "^(.+)${_escapeRegExp(suffix)}\$", factory);
 
   /// Invokes the factory when it matches. Else returns null.
-  @override
   RegistrableConstructor tryFactory(String algorithmName) {
     Match match = regExp.firstMatch(algorithmName);
     if (match == null) {
