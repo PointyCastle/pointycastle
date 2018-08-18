@@ -9,17 +9,8 @@ import "package:pointycastle/pointycastle.dart";
 import "../test/padding_tests.dart";
 
 void main() {
-
-
-
-  runPaddingTest( new Padding("PKCS7"), null,
-      "123456789", 16,
-      "31323334353637383907070707070707"
-  );
-  runPaddingTest( new Padding("PKCS7"), null,
-      "", 16,
-      "10101010101010101010101010101010"
-  );
-
+  runPaddingTest(new Padding("PKCS7"), null, "123456789", 16,
+      "31323334353637383907070707070707");
+  runPaddingTest(
+      new Padding("PKCS7"), null, "", 16, "10101010101010101010101010101010");
 }
-
