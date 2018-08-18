@@ -41,7 +41,7 @@ class RSAKeyGenerator implements KeyGenerator {
     }
   }
 
-  AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateKeyPair() {
+  AsymmetricKeyPair generateKeyPair() {
     var p, q, n, e;
 
     // p and q values should have a length of half the strength in bits
