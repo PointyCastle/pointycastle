@@ -17,6 +17,8 @@ import "src/registry/registry.dart";
 
 part "src/api/algorithm.dart";
 part "src/api/registry_factory_exception.dart";
+part 'src/api/aead_block_cipher.dart';
+part 'src/api/aead_parameters.dart';
 part "src/api/assymetric_block_cipher.dart";
 part "src/api/assymetric_key.dart";
 part "src/api/assymetric_key_pair.dart";
