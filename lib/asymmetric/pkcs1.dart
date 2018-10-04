@@ -5,10 +5,12 @@
 library pointycastle.impl.asymmetric_block_cipher.pkcs1;
 
 import "dart:typed_data";
+import "dart:math";
 
 import "package:pointycastle/api.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/base_asymmetric_block_cipher.dart";
+import "package:pointycastle/random/fortuna_random.dart";
 
 class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
@@ -36,6 +38,16 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
   void reset() {
   }
 
+
+  Uint8List _seed() {
+    var random = new Random.secure();
+    List<int> seeds = [];
+    for (int i = 0; i < 32; i++) {
+      seeds.add(random.nextInt(255));
+    }
+    return new Uint8List.fromList(seeds);
+  }
+
   void init(bool forEncryption, CipherParameters params) {
     AsymmetricKeyParameter akparams;
 
@@ -45,7 +57,8 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       _random = paramswr.random;
       akparams = paramswr.parameters;
     } else {
-      _random = new SecureRandom();
+      _random = new FortunaRandom();
+      _random.seed(KeyParameter(_seed()));
       akparams = params;
     }
 
