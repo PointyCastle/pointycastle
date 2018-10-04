@@ -42,8 +42,8 @@ As of the last release, the following algorithms are implemented:
   * RIPEMD-128|160|256|320
   * SHA-1
   * SHA-224|256|384|512
-  * Keccak-224|256|384|512*
   * SHA-512/t (t=8 to 376 and 392 to 504 in multiples of 8)
+  * Keccak-224|256|384|512*
   * Tiger
   * Whirlpool
 
