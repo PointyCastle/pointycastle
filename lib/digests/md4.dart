@@ -7,20 +7,18 @@ library pointycastle.impl.digest.md4;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
-import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/md4_family_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/ufixnum.dart";
 
 /// Implementation of MD4 digest
 class MD4Digest extends MD4FamilyDigest implements Digest {
-
   static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "MD4");
+      new StaticFactoryConfig(Digest, "MD4", () => MD4Digest());
 
   static const _DIGEST_LENGTH = 16;
 
-  MD4Digest() :
-    super(Endian.little, 4, 16);
+  MD4Digest() : super(Endian.little, 4, 16);
 
   final algorithmName = "MD4";
   final digestSize = _DIGEST_LENGTH;
@@ -39,16 +37,16 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
     var d = state[3];
 
     // Round 1 - F cycle, 16 times.
-    a = crotl32(a + _F(b, c, d) + buffer[ 0], _S11);
-    d = crotl32(d + _F(a, b, c) + buffer[ 1], _S12);
-    c = crotl32(c + _F(d, a, b) + buffer[ 2], _S13);
-    b = crotl32(b + _F(c, d, a) + buffer[ 3], _S14);
-    a = crotl32(a + _F(b, c, d) + buffer[ 4], _S11);
-    d = crotl32(d + _F(a, b, c) + buffer[ 5], _S12);
-    c = crotl32(c + _F(d, a, b) + buffer[ 6], _S13);
-    b = crotl32(b + _F(c, d, a) + buffer[ 7], _S14);
-    a = crotl32(a + _F(b, c, d) + buffer[ 8], _S11);
-    d = crotl32(d + _F(a, b, c) + buffer[ 9], _S12);
+    a = crotl32(a + _F(b, c, d) + buffer[0], _S11);
+    d = crotl32(d + _F(a, b, c) + buffer[1], _S12);
+    c = crotl32(c + _F(d, a, b) + buffer[2], _S13);
+    b = crotl32(b + _F(c, d, a) + buffer[3], _S14);
+    a = crotl32(a + _F(b, c, d) + buffer[4], _S11);
+    d = crotl32(d + _F(a, b, c) + buffer[5], _S12);
+    c = crotl32(c + _F(d, a, b) + buffer[6], _S13);
+    b = crotl32(b + _F(c, d, a) + buffer[7], _S14);
+    a = crotl32(a + _F(b, c, d) + buffer[8], _S11);
+    d = crotl32(d + _F(a, b, c) + buffer[9], _S12);
     c = crotl32(c + _F(d, a, b) + buffer[10], _S13);
     b = crotl32(b + _F(c, d, a) + buffer[11], _S14);
     a = crotl32(a + _F(b, c, d) + buffer[12], _S11);
@@ -57,39 +55,39 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
     b = crotl32(b + _F(c, d, a) + buffer[15], _S14);
 
     // Round 2 - G cycle, 16 times.
-    a = crotl32(a + _G(b, c, d) + buffer[ 0] + 0x5a827999, _S21);
-    d = crotl32(d + _G(a, b, c) + buffer[ 4] + 0x5a827999, _S22);
-    c = crotl32(c + _G(d, a, b) + buffer[ 8] + 0x5a827999, _S23);
+    a = crotl32(a + _G(b, c, d) + buffer[0] + 0x5a827999, _S21);
+    d = crotl32(d + _G(a, b, c) + buffer[4] + 0x5a827999, _S22);
+    c = crotl32(c + _G(d, a, b) + buffer[8] + 0x5a827999, _S23);
     b = crotl32(b + _G(c, d, a) + buffer[12] + 0x5a827999, _S24);
-    a = crotl32(a + _G(b, c, d) + buffer[ 1] + 0x5a827999, _S21);
-    d = crotl32(d + _G(a, b, c) + buffer[ 5] + 0x5a827999, _S22);
-    c = crotl32(c + _G(d, a, b) + buffer[ 9] + 0x5a827999, _S23);
+    a = crotl32(a + _G(b, c, d) + buffer[1] + 0x5a827999, _S21);
+    d = crotl32(d + _G(a, b, c) + buffer[5] + 0x5a827999, _S22);
+    c = crotl32(c + _G(d, a, b) + buffer[9] + 0x5a827999, _S23);
     b = crotl32(b + _G(c, d, a) + buffer[13] + 0x5a827999, _S24);
-    a = crotl32(a + _G(b, c, d) + buffer[ 2] + 0x5a827999, _S21);
-    d = crotl32(d + _G(a, b, c) + buffer[ 6] + 0x5a827999, _S22);
+    a = crotl32(a + _G(b, c, d) + buffer[2] + 0x5a827999, _S21);
+    d = crotl32(d + _G(a, b, c) + buffer[6] + 0x5a827999, _S22);
     c = crotl32(c + _G(d, a, b) + buffer[10] + 0x5a827999, _S23);
     b = crotl32(b + _G(c, d, a) + buffer[14] + 0x5a827999, _S24);
-    a = crotl32(a + _G(b, c, d) + buffer[ 3] + 0x5a827999, _S21);
-    d = crotl32(d + _G(a, b, c) + buffer[ 7] + 0x5a827999, _S22);
+    a = crotl32(a + _G(b, c, d) + buffer[3] + 0x5a827999, _S21);
+    d = crotl32(d + _G(a, b, c) + buffer[7] + 0x5a827999, _S22);
     c = crotl32(c + _G(d, a, b) + buffer[11] + 0x5a827999, _S23);
     b = crotl32(b + _G(c, d, a) + buffer[15] + 0x5a827999, _S24);
 
     // Round 3 - H cycle, 16 times.
-    a = crotl32(a + _H(b, c, d) + buffer[ 0] + 0x6ed9eba1, _S31);
-    d = crotl32(d + _H(a, b, c) + buffer[ 8] + 0x6ed9eba1, _S32);
-    c = crotl32(c + _H(d, a, b) + buffer[ 4] + 0x6ed9eba1, _S33);
+    a = crotl32(a + _H(b, c, d) + buffer[0] + 0x6ed9eba1, _S31);
+    d = crotl32(d + _H(a, b, c) + buffer[8] + 0x6ed9eba1, _S32);
+    c = crotl32(c + _H(d, a, b) + buffer[4] + 0x6ed9eba1, _S33);
     b = crotl32(b + _H(c, d, a) + buffer[12] + 0x6ed9eba1, _S34);
-    a = crotl32(a + _H(b, c, d) + buffer[ 2] + 0x6ed9eba1, _S31);
+    a = crotl32(a + _H(b, c, d) + buffer[2] + 0x6ed9eba1, _S31);
     d = crotl32(d + _H(a, b, c) + buffer[10] + 0x6ed9eba1, _S32);
-    c = crotl32(c + _H(d, a, b) + buffer[ 6] + 0x6ed9eba1, _S33);
+    c = crotl32(c + _H(d, a, b) + buffer[6] + 0x6ed9eba1, _S33);
     b = crotl32(b + _H(c, d, a) + buffer[14] + 0x6ed9eba1, _S34);
-    a = crotl32(a + _H(b, c, d) + buffer[ 1] + 0x6ed9eba1, _S31);
-    d = crotl32(d + _H(a, b, c) + buffer[ 9] + 0x6ed9eba1, _S32);
-    c = crotl32(c + _H(d, a, b) + buffer[ 5] + 0x6ed9eba1, _S33);
+    a = crotl32(a + _H(b, c, d) + buffer[1] + 0x6ed9eba1, _S31);
+    d = crotl32(d + _H(a, b, c) + buffer[9] + 0x6ed9eba1, _S32);
+    c = crotl32(c + _H(d, a, b) + buffer[5] + 0x6ed9eba1, _S33);
     b = crotl32(b + _H(c, d, a) + buffer[13] + 0x6ed9eba1, _S34);
-    a = crotl32(a + _H(b, c, d) + buffer[ 3] + 0x6ed9eba1, _S31);
+    a = crotl32(a + _H(b, c, d) + buffer[3] + 0x6ed9eba1, _S31);
     d = crotl32(d + _H(a, b, c) + buffer[11] + 0x6ed9eba1, _S32);
-    c = crotl32(c + _H(d, a, b) + buffer[ 7] + 0x6ed9eba1, _S33);
+    c = crotl32(c + _H(d, a, b) + buffer[7] + 0x6ed9eba1, _S33);
     b = crotl32(b + _H(c, d, a) + buffer[15] + 0x6ed9eba1, _S34);
 
     state[0] = clip32(state[0] + a);
@@ -122,8 +120,4 @@ class MD4Digest extends MD4FamilyDigest implements Digest {
   int _G(int u, int v, int w) => (u & v) | (u & w) | (v & w);
 
   int _H(int u, int v, int w) => u ^ v ^ w;
-
 }
-
-
-

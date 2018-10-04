@@ -126,29 +126,6 @@ void main() {
 }
 ```
 
-## Without dart:mirrors or package:reflectable (Flutter)
-
-Because the registry uses reflectable to register all imported algorithm classes
-and reflectable imports `dart:mirrors`, using the registry depends on the ability
-to import mirrors.  Since the [Flutter](https://flutter.io) frame work
-[doesn't allow using dart:mirrors](https://github.com/flutter/flutter/issues/1150),
-it's not possible to use the registry with Flutter.
-
-The way to use Pointy Castle in Flutter is the way explained in the previous
-section.  However, there is a utility library that exports all available
-algorithms at once.
-
-```dart
-import "package:pointycastle/export.dart";
-
-void main() {
-  Digest sha256 = new SHA256Digest();
-  // or
-  KeyDerivator derivator = new PBKDF2KeyDerivator(
-      new HMac(new SHA1Digest(), 64));
-}
-```
-
 
 ## Libraries
 
