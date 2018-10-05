@@ -11,12 +11,11 @@ import "package:pointycastle/src/impl/base_block_cipher.dart";
 
 /// An adapter to convert an [StreamCipher] to a [BlockCipher]
 class StreamCipherAsBlockCipher extends BaseBlockCipher {
-
   final StreamCipher streamCipher;
   final int blockSize;
 
   /// Create a [BlockCipher] from [streamCipher] simulating the given [blockSize]
-  StreamCipherAsBlockCipher( this.blockSize, this.streamCipher );
+  StreamCipherAsBlockCipher(this.blockSize, this.streamCipher);
 
   String get algorithmName => streamCipher.algorithmName;
 
@@ -28,9 +27,8 @@ class StreamCipherAsBlockCipher extends BaseBlockCipher {
     streamCipher.init(forEncryption, params);
   }
 
-  int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     streamCipher.processBytes(inp, inpOff, blockSize, out, outOff);
     return blockSize;
   }
-
 }

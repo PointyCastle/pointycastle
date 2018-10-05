@@ -17,15 +17,15 @@ import "package:pointycastle/src/registry/registry.dart";
  * Practical Random Number Generation in Software (by John Viega).
  */
 class AutoSeedBlockCtrRandom implements SecureRandom {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(SecureRandom, r"^(.*)/CTR/AUTO-SEED-PRNG$",
-        (_, final Match match) => () {
-          String blockCipherName = match.group(1);
-          BlockCipher blockCipher = new BlockCipher(blockCipherName);
-          return new AutoSeedBlockCtrRandom(blockCipher);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.regex(
+      SecureRandom,
+      r"^(.*)/CTR/AUTO-SEED-PRNG$",
+      (_, final Match match) => () {
+            String blockCipherName = match.group(1);
+            BlockCipher blockCipher = new BlockCipher(blockCipherName);
+            return new AutoSeedBlockCtrRandom(blockCipher);
+          });
 
   BlockCtrRandom _delegate;
   final bool _reseedIV;
@@ -33,7 +33,8 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   var _inAutoReseed = false;
   var _autoReseedKeyLength;
 
-  String get algorithmName => "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
+  String get algorithmName =>
+      "${_delegate.cipher.algorithmName}/CTR/AUTO-SEED-PRNG";
 
   AutoSeedBlockCtrRandom(BlockCipher cipher, [this._reseedIV = true]) {
     _delegate = new BlockCtrRandom(cipher);
@@ -53,24 +54,24 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
   }
 
   int nextUint8() => _autoReseedIfNeededAfter(() {
-    return _delegate.nextUint8();
-  });
+        return _delegate.nextUint8();
+      });
 
   int nextUint16() => _autoReseedIfNeededAfter(() {
-    return _delegate.nextUint16();
-  });
+        return _delegate.nextUint16();
+      });
 
   int nextUint32() => _autoReseedIfNeededAfter(() {
-    return _delegate.nextUint32();
-  });
+        return _delegate.nextUint32();
+      });
 
   BigInt nextBigInteger(int bitLength) => _autoReseedIfNeededAfter(() {
-    return _delegate.nextBigInteger(bitLength);
-  });
+        return _delegate.nextBigInteger(bitLength);
+      });
 
   Uint8List nextBytes(int count) => _autoReseedIfNeededAfter(() {
-    return _delegate.nextBytes(count);
-  });
+        return _delegate.nextBytes(count);
+      });
 
   dynamic _autoReseedIfNeededAfter(dynamic closure) {
     if (_inAutoReseed) {
@@ -90,12 +91,12 @@ class AutoSeedBlockCtrRandom implements SecureRandom {
 
     var params;
     if (_reseedIV) {
-      params = new ParametersWithIV(keyParam, nextBytes(_delegate.cipher.blockSize));
+      params =
+          new ParametersWithIV(keyParam, nextBytes(_delegate.cipher.blockSize));
     } else {
       params = keyParam;
     }
 
     _delegate.seed(params);
   }
-
 }

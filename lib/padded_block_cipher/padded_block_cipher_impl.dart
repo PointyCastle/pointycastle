@@ -11,15 +11,15 @@ import "package:pointycastle/src/registry/registry.dart";
 
 /// The standard implementation of [PaddedBlockCipher].
 class PaddedBlockCipherImpl implements PaddedBlockCipher {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(PaddedBlockCipher, r"^(.+)/([^/]+)$",
-        (_, final Match match) => () {
-          Padding padding = new Padding(match.group(2));
-          BlockCipher underlyingCipher = new BlockCipher(match.group(1));
-          return new PaddedBlockCipherImpl(padding, underlyingCipher);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.regex(
+      PaddedBlockCipher,
+      r"^(.+)/([^/]+)$",
+      (_, final Match match) => () {
+            Padding padding = new Padding(match.group(2));
+            BlockCipher underlyingCipher = new BlockCipher(match.group(1));
+            return new PaddedBlockCipherImpl(padding, underlyingCipher);
+          });
 
   final Padding padding;
   final BlockCipher cipher;
@@ -28,7 +28,8 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   PaddedBlockCipherImpl(this.padding, this.cipher);
 
-  String get algorithmName => cipher.algorithmName + "/" + padding.algorithmName;
+  String get algorithmName =>
+      cipher.algorithmName + "/" + padding.algorithmName;
 
   int get blockSize => cipher.blockSize;
 
@@ -51,7 +52,8 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
       outputBlocks = (data.length + blockSize) ~/ blockSize;
     } else {
       if ((data.length % blockSize) != 0) {
-        throw new ArgumentError("Input data length must be a multiple of cipher's block size");
+        throw new ArgumentError(
+            "Input data length must be a multiple of cipher's block size");
       }
       outputBlocks = inputBlocks;
     }
@@ -75,7 +77,8 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
 
   int doFinal(Uint8List inp, int inpOff, Uint8List out, int outOff) {
     if (_encrypting) {
-      var lastInputBlock = new Uint8List(blockSize)..setAll(0, inp.sublist(inpOff));
+      var lastInputBlock = new Uint8List(blockSize)
+        ..setAll(0, inp.sublist(inpOff));
 
       var remainder = inp.length - inpOff;
 
@@ -109,5 +112,4 @@ class PaddedBlockCipherImpl implements PaddedBlockCipher {
       return padOffsetInBlock;
     }
   }
-
 }

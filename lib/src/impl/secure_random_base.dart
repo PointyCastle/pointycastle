@@ -15,7 +15,6 @@ import "package:pointycastle/src/utils.dart" as utils;
  * implemented.
  */
 abstract class SecureRandomBase implements SecureRandom {
-
   int nextUint16() {
     var b0 = nextUint8();
     var b1 = nextUint8();
@@ -27,16 +26,16 @@ abstract class SecureRandomBase implements SecureRandom {
     var b1 = nextUint8();
     var b2 = nextUint8();
     var b3 = nextUint8();
-    return clip32( (b3<<24) | (b2<<16) | (b1<<8) | b0 );
+    return clip32((b3 << 24) | (b2 << 16) | (b1 << 8) | b0);
   }
 
-  BigInt nextBigInteger( int bitLength ) {
+  BigInt nextBigInteger(int bitLength) {
     return utils.decodeBigInt(_randomBits(bitLength));
   }
 
-  Uint8List nextBytes( int count ) {
+  Uint8List nextBytes(int count) {
     var bytes = new Uint8List(count);
-    for( var i=0 ; i<count ; i++ ) {
+    for (var i = 0; i < count; i++) {
       bytes[i] = nextUint8();
     }
     return bytes;
@@ -47,18 +46,17 @@ abstract class SecureRandomBase implements SecureRandom {
       throw new ArgumentError("numBits must be non-negative");
     }
 
-    var numBytes = (numBits+7)~/8; // avoid overflow
+    var numBytes = (numBits + 7) ~/ 8; // avoid overflow
     var randomBits = new Uint8List(numBytes);
 
     // Generate random bytes and mask out any excess bits
     if (numBytes > 0) {
-      for( var i=0 ; i<numBytes ; i++ ){
+      for (var i = 0; i < numBytes; i++) {
         randomBits[i] = nextUint8();
       }
-      int excessBits = 8*numBytes - numBits;
-      randomBits[0] &= (1 << (8-excessBits)) - 1;
+      int excessBits = 8 * numBytes - numBits;
+      randomBits[0] &= (1 << (8 - excessBits)) - 1;
     }
     return randomBits;
   }
-
 }

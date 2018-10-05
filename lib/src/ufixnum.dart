@@ -14,10 +14,38 @@ const _MASK_16 = 0xFFFF;
 const _MASK_32 = 0xFFFFFFFF;
 
 final _MASK32_HI_BITS = [
-  0xFFFFFFFF, 0x7FFFFFFF, 0x3FFFFFFF, 0x1FFFFFFF, 0x0FFFFFFF, 0x07FFFFFF, 0x03FFFFFF, 0x01FFFFFF,
-  0x00FFFFFF, 0x007FFFFF, 0x003FFFFF, 0x001FFFFF, 0x000FFFFF, 0x0007FFFF, 0x0003FFFF, 0x0001FFFF,
-  0x0000FFFF, 0x00007FFF, 0x00003FFF, 0x00001FFF, 0x00000FFF, 0x000007FF, 0x000003FF, 0x000001FF,
-  0x000000FF, 0x0000007F, 0x0000003F, 0x0000001F, 0x0000000F, 0x00000007, 0x00000003, 0x00000001,
+  0xFFFFFFFF,
+  0x7FFFFFFF,
+  0x3FFFFFFF,
+  0x1FFFFFFF,
+  0x0FFFFFFF,
+  0x07FFFFFF,
+  0x03FFFFFF,
+  0x01FFFFFF,
+  0x00FFFFFF,
+  0x007FFFFF,
+  0x003FFFFF,
+  0x001FFFFF,
+  0x000FFFFF,
+  0x0007FFFF,
+  0x0003FFFF,
+  0x0001FFFF,
+  0x0000FFFF,
+  0x00007FFF,
+  0x00003FFF,
+  0x00001FFF,
+  0x00000FFF,
+  0x000007FF,
+  0x000003FF,
+  0x000001FF,
+  0x000000FF,
+  0x0000007F,
+  0x0000003F,
+  0x0000001F,
+  0x0000000F,
+  0x00000007,
+  0x00000003,
+  0x00000001,
   0x00000000
 ];
 
@@ -80,7 +108,6 @@ int rotr8(int x, int n) {
   return ((x >> n) & _MASK_8) | ((x << (8 - n)) & _MASK_8);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 16 bit operations
 //
@@ -108,7 +135,6 @@ int unpack16(dynamic inp, int offset, Endian endian) {
   }
   return (inp as ByteData).getUint16(offset, endian);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 32 bit operations
@@ -195,31 +221,32 @@ int unpack32(dynamic inp, int offset, Endian endian) {
   return (inp as ByteData).getUint32(offset, endian);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 64 bit operations
 //
 class Register64 {
-
   static final Register64 _MAX_VALUE = new Register64(0xFFFFFFFF, 0xFFFFFFFF);
 
   int _hi32;
   int _lo32;
 
-  Register64([dynamic hiOrLo32OrY=0, int lo32=null]) {
+  Register64([dynamic hiOrLo32OrY = 0, int lo32 = null]) {
     set(hiOrLo32OrY, lo32);
   }
 
   int get lo32 => _lo32;
   int get hi32 => _hi32;
 
-  bool operator ==(Object y) => y is Register64 ? (((_hi32 == y._hi32) && (_lo32 == y._lo32))) : false;
-  bool operator < (Register64 y) => ((_hi32 < y._hi32) || ((_hi32 == y._hi32) && (_lo32 < y._lo32)));
+  bool operator ==(Object y) =>
+      y is Register64 ? (((_hi32 == y._hi32) && (_lo32 == y._lo32))) : false;
+  bool operator <(Register64 y) =>
+      ((_hi32 < y._hi32) || ((_hi32 == y._hi32) && (_lo32 < y._lo32)));
   bool operator <=(Register64 y) => ((this < y) || (this == y));
-  bool operator > (Register64 y) => ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));
+  bool operator >(Register64 y) =>
+      ((_hi32 > y._hi32) || ((_hi32 == y._hi32) && (_lo32 > y._lo32)));
   bool operator >=(Register64 y) => ((this > y) || (this == y));
 
-  void set(dynamic hiOrLo32OrY, [int lo32=null]) {
+  void set(dynamic hiOrLo32OrY, [int lo32 = null]) {
     if (lo32 == null) {
       if (hiOrLo32OrY is Register64) {
         _hi32 = hiOrLo32OrY._hi32;
@@ -261,16 +288,18 @@ class Register64 {
 
   void mul(dynamic y) {
     if (y is int) {
-      final lo32 = _lo32*y;
-      final carry = (lo32 ~/ 0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32*y) + carry;
+      final lo32 = _lo32 * y;
+      final carry = (lo32 ~/
+          0x100000000); // TODO: use shift right when bug 17715 is fixed
+      final hi32 = clip32(_hi32 * y) + carry;
 
       _hi32 = clip32(hi32);
       _lo32 = clip32(lo32);
     } else {
-      final lo32 = _lo32*y._lo32;
-      final carry = (lo32 ~/ 0x100000000); // TODO: use shift right when bug 17715 is fixed
-      final hi32 = clip32(_hi32*y._lo32) + clip32(_lo32*y._hi32) + carry;
+      final lo32 = _lo32 * y._lo32;
+      final carry = (lo32 ~/
+          0x100000000); // TODO: use shift right when bug 17715 is fixed
+      final hi32 = clip32(_hi32 * y._lo32) + clip32(_lo32 * y._hi32) + carry;
 
       _hi32 = clip32(hi32);
       _lo32 = clip32(lo32);
@@ -310,9 +339,9 @@ class Register64 {
       _hi32 = shiftl32(_lo32, (n - 32));
       _lo32 = 0;
     } else {
-      _hi32  = shiftl32(_hi32, n);
+      _hi32 = shiftl32(_hi32, n);
       _hi32 |= _lo32 >> (32 - n);
-      _lo32  = shiftl32(_lo32, n);
+      _lo32 = shiftl32(_lo32, n);
     }
   }
 
@@ -324,9 +353,9 @@ class Register64 {
       _lo32 = _hi32 >> (n - 32);
       _hi32 = 0;
     } else {
-      _lo32  = _lo32 >> n;
+      _lo32 = _lo32 >> n;
       _lo32 |= shiftl32(_hi32, 32 - n);
-      _hi32  = _hi32 >> n;
+      _hi32 = _hi32 >> n;
     }
   }
 
@@ -346,9 +375,9 @@ class Register64 {
         // do nothing
       } else {
         var hi32 = _hi32;
-        _hi32  = shiftl32(_hi32, n);
+        _hi32 = shiftl32(_hi32, n);
         _hi32 |= _lo32 >> (32 - n);
-        _lo32  = shiftl32(_lo32, n);
+        _lo32 = shiftl32(_lo32, n);
         _lo32 |= hi32 >> (32 - n);
       }
     }
@@ -370,9 +399,9 @@ class Register64 {
         // do nothing
       } else {
         var hi32 = _hi32;
-        _hi32  = _hi32 >> n;
+        _hi32 = _hi32 >> n;
         _hi32 |= shiftl32(_lo32, (32 - n));
-        _lo32  = _lo32 >> n;
+        _lo32 = _lo32 >> n;
         _lo32 |= shiftl32(hi32, (32 - n));
       }
     }
@@ -385,13 +414,13 @@ class Register64 {
   void pack(dynamic out, int offset, Endian endian) {
     switch (endian) {
       case Endian.big:
-        pack32(hi32, out, offset    , endian);
+        pack32(hi32, out, offset, endian);
         pack32(lo32, out, offset + 4, endian);
         break;
 
       case Endian.little:
         pack32(hi32, out, offset + 4, endian);
-        pack32(lo32, out, offset    , endian);
+        pack32(lo32, out, offset, endian);
         break;
 
       default:
@@ -406,13 +435,13 @@ class Register64 {
   void unpack(dynamic inp, int offset, Endian endian) {
     switch (endian) {
       case Endian.big:
-        _hi32 = unpack32(inp, offset  , endian);
-        _lo32 = unpack32(inp, offset+4, endian);
+        _hi32 = unpack32(inp, offset, endian);
+        _lo32 = unpack32(inp, offset + 4, endian);
         break;
 
       case Endian.little:
-        _hi32 = unpack32(inp, offset+4, endian);
-        _lo32 = unpack32(inp, offset  , endian);
+        _hi32 = unpack32(inp, offset + 4, endian);
+        _lo32 = unpack32(inp, offset, endian);
         break;
 
       default:
@@ -434,25 +463,23 @@ class Register64 {
     }
     sb.write(str);
   }
-
 }
 
 class Register64List {
-
   final List<Register64> _list;
 
-  Register64List.from(List<List<int>> values) :
-    _list = new List<Register64>.generate(
-        values.length, (i) => new Register64(values[i][0], values[i][1]));
+  Register64List.from(List<List<int>> values)
+      : _list = new List<Register64>.generate(
+            values.length, (i) => new Register64(values[i][0], values[i][1]));
 
-  Register64List(int length) :
-    _list = new List<Register64>.generate(length, (_) => new Register64());
+  Register64List(int length)
+      : _list = new List<Register64>.generate(length, (_) => new Register64());
 
   int get length => _list.length;
 
   Register64 operator [](int index) => _list[index];
 
-  void fillRange(int start, int end, dynamic hiOrLo32OrY, [int lo32=null]) {
+  void fillRange(int start, int end, dynamic hiOrLo32OrY, [int lo32 = null]) {
     for (var i = start; i < end; i++) {
       _list[i].set(hiOrLo32OrY, lo32);
     }
@@ -475,5 +502,4 @@ class Register64List {
     sb.write(")");
     return sb.toString();
   }
-
 }

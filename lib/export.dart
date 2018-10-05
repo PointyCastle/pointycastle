@@ -53,7 +53,6 @@ export "package:pointycastle/ecc/ecc_base.dart";
 //TODO resolve naming overlap here:
 //export "package:pointycastle/ecc/ecc_fp.dart" as fp;
 
-
 // key_derivators
 export "package:pointycastle/key_derivators/api.dart";
 export "package:pointycastle/key_derivators/pbkdf2.dart";
