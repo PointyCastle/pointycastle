@@ -28,7 +28,6 @@ import "./digests/whirlpool_benchmark.dart" as whirlpool_benchmark;
 import "./stream/salsa20_benchmark.dart" as salsa20_benchmark;
 
 void main() {
-
   // api
   ufixnum_benchmark.main();
 
@@ -55,5 +54,4 @@ void main() {
 
   // stream ciphers
   salsa20_benchmark.main();
-
 }

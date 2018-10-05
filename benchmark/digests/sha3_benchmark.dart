@@ -13,4 +13,3 @@ main() {
   new DigestBenchmark("SHA-3/384").report();
   new DigestBenchmark("SHA-3/512").report();
 }
-

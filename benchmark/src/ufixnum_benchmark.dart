@@ -21,20 +21,20 @@ void _benchmarkSum() {
   final y32 = 0x80808080;
   final x64 = 0xFF00FF00FF00FF00;
   final y64 = 0x8080808080808080;
-  final dx  = 0xFF00FF00.toDouble();
-  final dy  = 0x08080808.toDouble();
+  final dx = 0xFF00FF00.toDouble();
+  final dy = 0x08080808.toDouble();
   final rx64 = new Register64(0xFF00FF00, 0xFF00FF00);
   final ry64 = new Register64(0x80808080, 0x80808080);
   final bix = BigInt.parse("FF00FF00", radix: 16);
   final biy = BigInt.parse("08080808", radix: 16);
 
-  new OperationBenchmark("sum | smi   ", () => x32 + y32      ).report();
-  new OperationBenchmark("sum | double", () => dx + dy        ).report();
-  new OperationBenchmark("sum | sum8  ", () => sum8(x8, y8)   ).report();
+  new OperationBenchmark("sum | smi   ", () => x32 + y32).report();
+  new OperationBenchmark("sum | double", () => dx + dy).report();
+  new OperationBenchmark("sum | sum8  ", () => sum8(x8, y8)).report();
   new OperationBenchmark("sum | sum32 ", () => sum32(x32, y32)).report();
-  new OperationBenchmark("sum | Reg64 ", () => rx64.sum(ry64) ).report();
-  new OperationBenchmark("sum | bigint", () => x64 + y64      ).report();
-  new OperationBenchmark("sum | bignum", () => bix + biy      ).report();
+  new OperationBenchmark("sum | Reg64 ", () => rx64.sum(ry64)).report();
+  new OperationBenchmark("sum | bigint", () => x64 + y64).report();
+  new OperationBenchmark("sum | bignum", () => bix + biy).report();
 }
 
 void _benchmarkUnpack() {

@@ -9,4 +9,3 @@ import "../benchmark/digest_benchmark.dart";
 main() {
   new DigestBenchmark("SHA-224").report();
 }
-
