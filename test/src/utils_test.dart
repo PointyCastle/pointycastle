@@ -14,13 +14,13 @@ Random random = new Random();
 
 Uint8List randomBytes(int length) {
   return new Uint8List.fromList(new List<int>.generate(length, (_) {
-    return random.nextInt(0xff+1);
+    return random.nextInt(0xff + 1);
   }, growable: false));
 }
 
 main() {
   test("decode encode roundtrip", () {
-    for(int size = 1; size < 100; size++) {
+    for (int size = 1; size < 100; size++) {
       Uint8List bytes = randomBytes(size);
 
       // Remove leading zeroes.

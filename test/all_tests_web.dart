@@ -1,6 +1,5 @@
-
-
-import "adapters/stream_cipher_as_block_cipher_test.dart" as stream_cipher_as_block_cipher_test;
+import "adapters/stream_cipher_as_block_cipher_test.dart"
+    as stream_cipher_as_block_cipher_test;
 import "asymmetric/pkcs1_test.dart" as pkcs1_test;
 import "asymmetric/rsa_test.dart" as rsa_test;
 import "block/aes_fast_test.dart" as aes_fast_test;
@@ -33,7 +32,8 @@ import "modes/ofb_test.dart" as ofb_test;
 import "modes/sic_test.dart" as sic_test;
 import "paddings/padded_block_cipher_test.dart" as padded_block_cipher_test;
 import "paddings/pkcs7_test.dart" as pkcs7_test;
-import "random/auto_seed_block_ctr_random_test.dart" as auto_seed_block_ctr_random_test;
+import "random/auto_seed_block_ctr_random_test.dart"
+    as auto_seed_block_ctr_random_test;
 import "random/block_ctr_random_test.dart" as block_ctr_random_test;
 import "random/fortuna_random_test.dart" as fortuna_random_test;
 import "signers/ecdsa_signer_test.dart" as ecdsa_signer_test;

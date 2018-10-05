@@ -90,5 +90,3 @@ void testStreamCipher(String algorithmName) {
   expect(cipher, new isInstanceOf<StreamCipher>());
   expect(cipher.algorithmName, algorithmName);
 }
-
-
