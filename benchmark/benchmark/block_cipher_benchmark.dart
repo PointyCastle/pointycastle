@@ -13,7 +13,6 @@ import "../benchmark/rate_benchmark.dart";
 typedef CipherParameters CipherParametersFactory();
 
 class BlockCipherBenchmark extends RateBenchmark {
-
   final String _blockCipherName;
   final bool _forEncryption;
   final CipherParametersFactory _cipherParametersFactory;
@@ -21,12 +20,12 @@ class BlockCipherBenchmark extends RateBenchmark {
 
   BlockCipher _blockCipher;
 
-  BlockCipherBenchmark(String blockCipherName, String blockCipherVariant, bool forEncryption,
-      this._cipherParametersFactory) :
-    _blockCipherName = blockCipherName,
-    _forEncryption = forEncryption,
-    super("BlockCipher | $blockCipherName - $blockCipherVariant - "
-      "${forEncryption ? 'encrypt' : 'decrypt' }");
+  BlockCipherBenchmark(String blockCipherName, String blockCipherVariant,
+      bool forEncryption, this._cipherParametersFactory)
+      : _blockCipherName = blockCipherName,
+        _forEncryption = forEncryption,
+        super("BlockCipher | $blockCipherName - $blockCipherVariant - "
+            "${forEncryption ? 'encrypt' : 'decrypt'}");
 
   void setup() {
     _blockCipher = new BlockCipher(_blockCipherName);
@@ -38,5 +37,4 @@ class BlockCipherBenchmark extends RateBenchmark {
     _blockCipher.process(_data);
     addSample(_data.length);
   }
-
 }

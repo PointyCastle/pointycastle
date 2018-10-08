@@ -9,4 +9,3 @@ import "../benchmark/digest_benchmark.dart";
 main() {
   new DigestBenchmark("Whirlpool").report();
 }
-

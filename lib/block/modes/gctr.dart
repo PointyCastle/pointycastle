@@ -13,14 +13,14 @@ import "package:pointycastle/src/ufixnum.dart";
 
 /// Implementation of GOST 28147 OFB counter mode (GCTR) on top of a [BlockCipher].
 class GCTRBlockCipher extends BaseBlockCipher {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(BlockCipher, "/GCTR",
-        (_, final Match match) => () {
-          BlockCipher underlying = new BlockCipher(match.group(1));
-          return new GCTRBlockCipher(underlying);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
+      BlockCipher,
+      "/GCTR",
+      (_, final Match match) => () {
+            BlockCipher underlying = new BlockCipher(match.group(1));
+            return new GCTRBlockCipher(underlying);
+          });
 
   static const C1 = 16843012; //00000001000000010000000100000100
   static const C2 = 16843009; //00000001000000010000000100000001
@@ -36,8 +36,9 @@ class GCTRBlockCipher extends BaseBlockCipher {
   int _N4;
 
   GCTRBlockCipher(this._underlyingCipher) {
-    if( blockSize != 8 ) {
-      throw new ArgumentError("GCTR can only be used with 64 bit block ciphers");
+    if (blockSize != 8) {
+      throw new ArgumentError(
+          "GCTR can only be used with 64 bit block ciphers");
     }
 
     _IV = new Uint8List(_underlyingCipher.blockSize);
@@ -65,54 +66,51 @@ class GCTRBlockCipher extends BaseBlockCipher {
    * @exception IllegalArgumentException if the params argument is
    * inappropriate.
    */
-  void init( bool encrypting, CipherParameters params) {
+  void init(bool encrypting, CipherParameters params) {
     _firstStep = true;
     _N3 = 0;
     _N4 = 0;
 
-    if( params is ParametersWithIV ) {
+    if (params is ParametersWithIV) {
       ParametersWithIV ivParam = params;
       var iv = ivParam.iv;
 
-      if( iv.length < _IV.length ) {
+      if (iv.length < _IV.length) {
         // prepend the supplied IV with zeros (per FIPS PUB 81)
         var offset = _IV.length - iv.length;
-        _IV.fillRange( 0, offset, 0 );
-        _IV.setRange( offset, _IV.length, iv );
+        _IV.fillRange(0, offset, 0);
+        _IV.setRange(offset, _IV.length, iv);
       } else {
-        _IV.setRange(0, _IV.length, iv );
+        _IV.setRange(0, _IV.length, iv);
       }
 
       reset();
 
       // if params is null we reuse the current working key.
-      if( ivParam.parameters != null ) {
+      if (ivParam.parameters != null) {
         _underlyingCipher.init(true, ivParam.parameters);
       }
-    }
-    else
-    {
+    } else {
       // TODO: make this behave in a standard way (as the other modes of operation)
       reset();
 
       // if params is null we reuse the current working key.
-      if( params!=null ) {
+      if (params != null) {
         _underlyingCipher.init(true, params);
       }
     }
   }
 
-  int processBlock( Uint8List inp, int inpOff, Uint8List out, int outOff ) {
-
-    if( (inpOff + blockSize) > inp.length ) {
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) {
+    if ((inpOff + blockSize) > inp.length) {
       throw new ArgumentError("Input buffer too short");
     }
 
-    if( (outOff + blockSize) > out.length ) {
+    if ((outOff + blockSize) > out.length) {
       throw new ArgumentError("Output buffer too short");
     }
 
-    if( _firstStep ) {
+    if (_firstStep) {
       _firstStep = false;
       _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
       _N3 = _bytesToint(_ofbOutV, 0);
@@ -126,24 +124,23 @@ class GCTRBlockCipher extends BaseBlockCipher {
     _underlyingCipher.processBlock(_ofbV, 0, _ofbOutV, 0);
 
     // XOR the ofbV with the plaintext producing the cipher text (and the next input block).
-    for( var i=0 ; i<blockSize ; i++ ) {
+    for (var i = 0; i < blockSize; i++) {
       out[outOff + i] = _ofbOutV[i] ^ inp[inpOff + i];
     }
 
     // change over the input block.
     var offset = _ofbV.length - blockSize;
-    _ofbV.setRange(0, offset, _ofbV.sublist(blockSize) );
-    _ofbV.setRange(offset, _ofbV.length, _ofbOutV );
+    _ofbV.setRange(0, offset, _ofbV.sublist(blockSize));
+    _ofbV.setRange(offset, _ofbV.length, _ofbOutV);
 
     return blockSize;
   }
 
-  int _bytesToint( Uint8List inp, int inpOff ) {
+  int _bytesToint(Uint8List inp, int inpOff) {
     return unpack32(inp, inpOff, Endian.little);
   }
 
-  void _intTobytes(int num, Uint8List out, int outOff ) {
+  void _intTobytes(int num, Uint8List out, int outOff) {
     pack32(num, out, outOff, Endian.little);
   }
-
 }

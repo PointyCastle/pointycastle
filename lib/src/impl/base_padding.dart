@@ -10,7 +10,6 @@ import "package:pointycastle/api.dart";
 
 /// Base implementation of [Padding] which provides shared methods.
 abstract class BasePadding implements Padding {
-
   Uint8List process(bool pad, Uint8List data) {
     if (pad) {
       var out = new Uint8List.fromList(data);
@@ -21,5 +20,4 @@ abstract class BasePadding implements Padding {
       return new Uint8List.fromList(data.sublist(0, len));
     }
   }
-
 }

@@ -8,7 +8,6 @@
  */
 library pointycastle.impl;
 
-
 // cipher implementations
 
 // asymmetric

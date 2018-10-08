@@ -9,7 +9,6 @@ import "package:pointycastle/ecc/api.dart";
 
 /// Abstract [CipherParameters] to init an ECC key generator.
 class ECKeyGeneratorParameters extends KeyGeneratorParameters {
-
   ECDomainParameters _domainParameters;
 
   ECKeyGeneratorParameters(ECDomainParameters domainParameters)
@@ -18,16 +17,14 @@ class ECKeyGeneratorParameters extends KeyGeneratorParameters {
   }
 
   ECDomainParameters get domainParameters => _domainParameters;
-
 }
 
 /// Abstract [CipherParameters] to init an RSA key generator.
 class RSAKeyGeneratorParameters extends KeyGeneratorParameters {
-
   final BigInt publicExponent;
   final int certainty;
 
-  RSAKeyGeneratorParameters(this.publicExponent, int bitStrength, this.certainty)
+  RSAKeyGeneratorParameters(
+      this.publicExponent, int bitStrength, this.certainty)
       : super(bitStrength);
-
 }

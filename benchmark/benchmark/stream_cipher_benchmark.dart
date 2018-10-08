@@ -13,7 +13,6 @@ import "../benchmark/rate_benchmark.dart";
 typedef CipherParameters CipherParametersFactory();
 
 class StreamCipherBenchmark extends RateBenchmark {
-
   final String _streamCipherName;
   final bool _forEncryption;
   final CipherParametersFactory _cipherParametersFactory;
@@ -21,13 +20,15 @@ class StreamCipherBenchmark extends RateBenchmark {
 
   StreamCipher _streamCipher;
 
-  StreamCipherBenchmark(String streamCipherName, String streamCipherVariant, bool forEncryption,
-      this._cipherParametersFactory, [int dataLength = 1024*1024]) :
-    _streamCipherName = streamCipherName,
-    _forEncryption = forEncryption,
-    _data = new Uint8List(dataLength),
-    super("StreamCipher | $streamCipherName ${_formatVariant(streamCipherVariant)}- "
-      "${forEncryption ? 'encrypt' : 'decrypt' }");
+  StreamCipherBenchmark(String streamCipherName, String streamCipherVariant,
+      bool forEncryption, this._cipherParametersFactory,
+      [int dataLength = 1024 * 1024])
+      : _streamCipherName = streamCipherName,
+        _forEncryption = forEncryption,
+        _data = new Uint8List(dataLength),
+        super(
+            "StreamCipher | $streamCipherName ${_formatVariant(streamCipherVariant)}- "
+            "${forEncryption ? 'encrypt' : 'decrypt'}");
 
   void setup() {
     _streamCipher = new StreamCipher(_streamCipherName);
@@ -38,7 +39,6 @@ class StreamCipherBenchmark extends RateBenchmark {
     _streamCipher.process(_data);
     addSample(_data.length);
   }
-
 }
 
 String _formatVariant(String streamCipherVariant) {

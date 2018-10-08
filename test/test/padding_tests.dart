@@ -11,38 +11,27 @@ import "package:pointycastle/pointycastle.dart";
 
 import "./src/helpers.dart";
 
-void runPaddingTest( Padding pad, CipherParameters params,
-                     String unpadData, int padLength, String padData ) {
+void runPaddingTest(Padding pad, CipherParameters params, String unpadData,
+    int padLength, String padData) {
+  group("${pad.algorithmName}:", () {
+    test("addPadding: $unpadData", () {
+      var expectedBytes = createUint8ListFromHexString(padData);
+      var dataBytes = new Uint8List(padLength)..setAll(0, unpadData.codeUnits);
 
-  group( "${pad.algorithmName}:", () {
+      pad.init(params);
+      var ret = pad.addPadding(dataBytes, unpadData.length);
 
-    test( "addPadding: $unpadData", () {
-
-      var expectedBytes = createUint8ListFromHexString( padData );
-      var dataBytes = new Uint8List( padLength )
-        ..setAll( 0, unpadData.codeUnits )
-      ;
-
-      pad.init( params );
-      var ret = pad.addPadding( dataBytes, unpadData.length );
-
-      expect( ret, equals( padLength-unpadData.length ) );
-      expect( dataBytes, equals(expectedBytes) );
-
+      expect(ret, equals(padLength - unpadData.length));
+      expect(dataBytes, equals(expectedBytes));
     });
 
-    test( "padCount: $padData", () {
+    test("padCount: $padData", () {
+      var dataBytes = createUint8ListFromHexString(padData);
 
-      var dataBytes = createUint8ListFromHexString( padData );
+      pad.init(params);
+      var ret = pad.padCount(dataBytes);
 
-      pad.init( params );
-      var ret = pad.padCount( dataBytes );
-
-      expect( ret, equals( padLength-unpadData.length ) );
-
+      expect(ret, equals(padLength - unpadData.length));
     });
-
   });
-
 }
-

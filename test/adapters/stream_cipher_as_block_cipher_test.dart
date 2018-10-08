@@ -12,25 +12,15 @@ import '../test/src/null_stream_cipher.dart';
 import '../test/src/helpers.dart';
 
 void main() {
-
-  var cbc = new StreamCipherAsBlockCipher(16,new NullStreamCipher());
-  group( "StreamCipherAsBlockCipher:", () {
-
-    runBlockCipherTests( cbc, null, [
-
+  var cbc = new StreamCipherAsBlockCipher(16, new NullStreamCipher());
+  group("StreamCipherAsBlockCipher:", () {
+    runBlockCipherTests(cbc, null, [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........",
-      formatBytesAsHexString( createUint8ListFromString (
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........"
-      )),
-
+      formatBytesAsHexString(createUint8ListFromString(
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit ........")),
       "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...",
-      formatBytesAsHexString( createUint8ListFromString (
-        "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ..."
-      )),
-
+      formatBytesAsHexString(createUint8ListFromString(
+          "En un lugar de La Mancha, de cuyo nombre no quiero acordarme ...")),
     ]);
-
   });
-
 }
-

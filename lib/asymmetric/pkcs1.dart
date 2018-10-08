@@ -13,15 +13,15 @@ import "package:pointycastle/src/impl/base_asymmetric_block_cipher.dart";
 import "package:pointycastle/random/fortuna_random.dart";
 
 class PKCS1Encoding extends BaseAsymmetricBlockCipher {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(AsymmetricBlockCipher, "/PKCS1",
-        (_, final Match match) => () {
-          AsymmetricBlockCipher underlyingCipher =
-              new AsymmetricBlockCipher(match.group(1));
-          return new PKCS1Encoding(underlyingCipher);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
+      AsymmetricBlockCipher,
+      "/PKCS1",
+      (_, final Match match) => () {
+            AsymmetricBlockCipher underlyingCipher =
+                new AsymmetricBlockCipher(match.group(1));
+            return new PKCS1Encoding(underlyingCipher);
+          });
 
   static const _HEADER_LENGTH = 10;
 
@@ -35,9 +35,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
 
   String get algorithmName => "${_engine.algorithmName}/PKCS1";
 
-  void reset() {
-  }
-
+  void reset() {}
 
   Uint8List _seed() {
     var random = new Random.secure();
@@ -88,7 +86,8 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
   }
 
-  int processBlock(Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
+  int processBlock(
+      Uint8List inp, int inpOff, int len, Uint8List out, int outOff) {
     if (_forEncryption) {
       return _encodeBlock(inp, inpOff, len, out, outOff);
     } else {
@@ -96,7 +95,8 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
   }
 
-  int _encodeBlock(Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
+  int _encodeBlock(
+      Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     if (inpLen > inputBlockSize) {
       throw new ArgumentError("Input data too large");
     }
@@ -105,11 +105,11 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     var padLength = (block.length - inpLen - 1);
 
     if (_forPrivateKey) {
-      block[0] = 0x01;                        // type code 1
+      block[0] = 0x01; // type code 1
       block.fillRange(1, padLength, 0xFF);
     } else {
-      block[0] = 0x02;                        // type code 2
-      block.setRange(1, padLength, _random.nextBytes(padLength-1));
+      block[0] = 0x02; // type code 2
+      block.setRange(1, padLength, _random.nextBytes(padLength - 1));
 
       // a zero byte marks the end of the padding, so all
       // the pad bytes must be non-zero.
@@ -121,12 +121,13 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     }
 
     block[padLength] = 0x00; // mark the end of the padding
-    block.setRange(padLength+1, block.length, inp.sublist(inpOff));
+    block.setRange(padLength + 1, block.length, inp.sublist(inpOff));
 
     return _engine.processBlock(block, 0, block.length, out, outOff);
   }
 
-  int _decodeBlock(Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
+  int _decodeBlock(
+      Uint8List inp, int inpOff, int inpLen, Uint8List out, int outOff) {
     var block = new Uint8List(_engine.inputBlockSize);
     var len = _engine.processBlock(inp, inpOff, inpLen, block, 0);
     block = block.sublist(0, len);
@@ -161,7 +162,7 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       }
     }
 
-    start++;           // data should start at the next byte
+    start++; // data should start at the next byte
 
     if ((start > block.length) || (start < _HEADER_LENGTH)) {
       throw new ArgumentError("No data found in block, only padding");
@@ -173,5 +174,4 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
     out.setRange(0, rlen, block.sublist(start));
     return rlen;
   }
-
 }

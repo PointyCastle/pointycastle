@@ -12,14 +12,14 @@ import "package:pointycastle/src/impl/base_block_cipher.dart";
 
 /// Implementation of Electronic Code Book (ECB) mode on top of a [BlockCipher].
 class ECBBlockCipher extends BaseBlockCipher {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.suffix(BlockCipher, "/ECB",
-        (_, final Match match) => () {
-          BlockCipher underlying = new BlockCipher(match.group(1));
-          return new ECBBlockCipher(underlying);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.suffix(
+      BlockCipher,
+      "/ECB",
+      (_, final Match match) => () {
+            BlockCipher underlying = new BlockCipher(match.group(1));
+            return new ECBBlockCipher(underlying);
+          });
 
   final BlockCipher _underlyingCipher;
 
@@ -37,7 +37,6 @@ class ECBBlockCipher extends BaseBlockCipher {
     _underlyingCipher.init(forEncryption, params);
   }
 
-  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff)
-    => _underlyingCipher.processBlock(inp, inpOff, out, outOff);
-
+  int processBlock(Uint8List inp, int inpOff, Uint8List out, int outOff) =>
+      _underlyingCipher.processBlock(inp, inpOff, out, outOff);
 }

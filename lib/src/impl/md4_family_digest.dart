@@ -11,7 +11,6 @@ import "package:pointycastle/src/impl/base_digest.dart";
 
 /// Base implementation of MD4 family style digest
 abstract class MD4FamilyDigest extends BaseDigest {
-
   final _byteCount = new Register64(0);
 
   final _wordBuffer = new Uint8List(4);
@@ -25,10 +24,12 @@ abstract class MD4FamilyDigest extends BaseDigest {
   final buffer;
   int bufferOffset;
 
-  MD4FamilyDigest(this._endian, int stateSize, int bufferSize, [int packedStateSize=null]) :
-    _packedStateSize = (packedStateSize == null) ? stateSize : packedStateSize,
-    state = new List<int>(stateSize),
-    buffer = new List<int>(bufferSize) {
+  MD4FamilyDigest(this._endian, int stateSize, int bufferSize,
+      [int packedStateSize = null])
+      : _packedStateSize =
+            (packedStateSize == null) ? stateSize : packedStateSize,
+        state = new List<int>(stateSize),
+        buffer = new List<int>(bufferSize) {
     reset();
   }
 
@@ -104,7 +105,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
 
   /// Process [len] bytes from [inp] starting at [inpOff]
   void _processBytes(Uint8List inp, int inpOff, int len) {
-    while( len > 0 ) {
+    while (len > 0) {
       updateByte(inp[inpOff]);
 
       inpOff++;
@@ -116,7 +117,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   int _processWholeWords(Uint8List inp, int inpOff, int len) {
     int processed = 0;
     while (len > _wordBuffer.length) {
-      _processWord( inp, inpOff );
+      _processWord(inp, inpOff);
 
       inpOff += _wordBuffer.length;
       len -= _wordBuffer.length;
@@ -130,7 +131,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
   int _processUntilNextWord(Uint8List inp, int inpOff, int len) {
     var processed = 0;
 
-    while( (_wordBufferOffset != 0) && (len > 0) ) {
+    while ((_wordBufferOffset != 0) && (len > 0)) {
       updateByte(inp[inpOff]);
 
       inpOff++;
@@ -170,7 +171,7 @@ abstract class MD4FamilyDigest extends BaseDigest {
         break;
 
       case Endian.big:
-        buffer[14]   = bitLength.hi32;
+        buffer[14] = bitLength.hi32;
         buffer[15] = bitLength.lo32;
         break;
 
@@ -184,6 +185,4 @@ abstract class MD4FamilyDigest extends BaseDigest {
       pack32(state[i], out, (outOff + i * 4), _endian);
     }
   }
-
-
 }

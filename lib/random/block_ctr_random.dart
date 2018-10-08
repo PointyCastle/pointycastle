@@ -16,15 +16,15 @@ import "package:pointycastle/src/impl/secure_random_base.dart";
  * values.
  */
 class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
-
   /// Intended for internal use.
-  static final FactoryConfig FACTORY_CONFIG =
-      new DynamicFactoryConfig.regex(SecureRandom, r"^(.*)/CTR/PRNG$",
-        (_, final Match match) => () {
-          String blockCipherName = match.group(1);
-          BlockCipher blockCipher = new BlockCipher(blockCipherName);
-          return new BlockCtrRandom(blockCipher);
-        });
+  static final FactoryConfig FACTORY_CONFIG = new DynamicFactoryConfig.regex(
+      SecureRandom,
+      r"^(.*)/CTR/PRNG$",
+      (_, final Match match) => () {
+            String blockCipherName = match.group(1);
+            BlockCipher blockCipher = new BlockCipher(blockCipherName);
+            return new BlockCtrRandom(blockCipher);
+          });
 
   final BlockCipher cipher;
 
@@ -51,7 +51,7 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
   }
 
   int nextUint8() {
-    if( _used==_output.length ) {
+    if (_used == _output.length) {
       cipher.processBlock(_input, 0, _output, 0);
       _used = 0;
       _incrementInput();
@@ -65,7 +65,6 @@ class BlockCtrRandom extends SecureRandomBase implements SecureRandom {
     do {
       offset--;
       _input[offset] += 1;
-    } while( _input[offset]==0 );
+    } while (_input[offset] == 0);
   }
-
 }

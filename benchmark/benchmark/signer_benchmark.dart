@@ -13,7 +13,6 @@ import "../benchmark/rate_benchmark.dart";
 typedef CipherParameters CipherParametersFactory();
 
 class SignerBenchmark extends RateBenchmark {
-
   final String _signerName;
   final Uint8List _data;
   final CipherParametersFactory _cipherParametersFactory;
@@ -21,12 +20,13 @@ class SignerBenchmark extends RateBenchmark {
 
   Signer _signer;
 
-  SignerBenchmark(String signerName, bool forSigning, this._cipherParametersFactory,
-      [int dataLength = 1024*1024]) :
-    _signerName = signerName,
-    _forSigning = forSigning,
-    _data = new Uint8List(dataLength),
-    super("Signer | $signerName - ${forSigning ? 'sign' : 'verify' }");
+  SignerBenchmark(
+      String signerName, bool forSigning, this._cipherParametersFactory,
+      [int dataLength = 1024 * 1024])
+      : _signerName = signerName,
+        _forSigning = forSigning,
+        _data = new Uint8List(dataLength),
+        super("Signer | $signerName - ${forSigning ? 'sign' : 'verify'}");
 
   void setup() {
     _signer = new Signer(_signerName);
@@ -37,5 +37,4 @@ class SignerBenchmark extends RateBenchmark {
     _signer.generateSignature(_data);
     addSample(_data.length);
   }
-
 }
