@@ -15,6 +15,7 @@ void main() {
     test("AsymmetricBlockCipher returns valid implementations", () {
       testAsymmetricBlockCipher("RSA");
       testAsymmetricBlockCipher("RSA/PKCS1");
+      testAsymmetricBlockCipher("RSA/OAEP");
     });
 
     test("BlockCipher returns valid implementations", () {
