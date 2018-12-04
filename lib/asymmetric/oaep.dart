@@ -32,7 +32,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   SecureRandom _random;
   bool _forEncryption;
 
-  OAEPEncoding(this._engine);
+  OAEPEncoding(this._engine){
+    SHA1Digest().doFinal(defHash, 0);
+  }
 
   String get algorithmName => "${_engine.algorithmName}/OAEP";
 
@@ -253,12 +255,12 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     int counter = 0;
     mgf1Hash.reset();
 
-    while (counter < (length / hashBuf.length)) {
+    while (counter < (length / hashBuf.length).floor()) {
       _ItoOSP(counter, C);
       mgf1Hash.update(Z, zOff, zLen);
       mgf1Hash.update(C, 0, C.length);
       mgf1Hash.doFinal(hashBuf, 0);
-      hashBuf = _arraycopy(hashBuf, 0, mask, counter * hashBuf.length, hashBuf.length);
+      mask = _arraycopy(hashBuf, 0, mask, counter * hashBuf.length, hashBuf.length);
       counter++;
     }
 
@@ -267,7 +269,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
       mgf1Hash.update(Z, zOff, zLen);
       mgf1Hash.update(C, 0, C.length);
       mgf1Hash.doFinal(hashBuf, 0);
-      hashBuf = _arraycopy(hashBuf, 0, mask, counter * hashBuf.length,
+      mask = _arraycopy(hashBuf, 0, mask, counter * hashBuf.length,
           mask.length - (counter * hashBuf.length));
     }
     return mask;
