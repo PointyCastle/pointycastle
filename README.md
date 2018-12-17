@@ -20,6 +20,10 @@ As of the last release, the following algorithms are implemented:
 **Asymmetric block ciphers:**
   * RSA
 
+**Asymmetric block cipher encodings:**
+  * PKCS1
+  * OAEP
+
 **Stream ciphers:**
   * Salsa20
 
