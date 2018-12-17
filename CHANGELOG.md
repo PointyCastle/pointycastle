@@ -1,11 +1,13 @@
 Changelog
 =========
 
-#### Version 1.0.0-rc1 (2018-05-28) (Dart SDK version 2.0.0-dev.57)
+
+#### Version 1.0.0 (2018-12-17) (Dart SDK version 2.0)
 
 * Support Dart 2 and Strong Mode
 * Migrate from `package:bignum.BigInteger` to `dart:core.BigInt`
 * Remove Quiver and fixnum dependency
+* OAEP encoding for block ciphers
 
 
 #### Version 0.10.0 (2016-02-04) (Dart SDK version 0.14.0)
