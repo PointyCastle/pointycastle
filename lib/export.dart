@@ -31,6 +31,7 @@ export "package:pointycastle/block/modes/ofb.dart";
 export "package:pointycastle/block/modes/sic.dart";
 
 // digests
+export "package:pointycastle/digests/blake2b.dart";
 export "package:pointycastle/digests/md2.dart";
 export "package:pointycastle/digests/md4.dart";
 export "package:pointycastle/digests/md5.dart";

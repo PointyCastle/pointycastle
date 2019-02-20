@@ -40,6 +40,7 @@ As of the last release, the following algorithms are implemented:
   * PKCS7
 
 **Digests:**
+  * Blake2b
   * MD2
   * MD4
   * MD5

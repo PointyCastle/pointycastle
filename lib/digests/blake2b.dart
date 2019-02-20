@@ -2,16 +2,18 @@
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
+library pointycastle.impl.digest.blake2b;
+
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
-import "package:pointycastle/src/ufixnum.dart";
 import "package:pointycastle/src/impl/base_digest.dart";
 import "package:pointycastle/src/registry/registry.dart";
+import "package:pointycastle/src/ufixnum.dart";
 
 class Blake2bDigest extends BaseDigest implements Digest {
   static final FactoryConfig FACTORY_CONFIG =
-      new StaticFactoryConfig(Digest, "Blake2b");
+      new StaticFactoryConfig(Digest, "Blake2b", () => Blake2bDigest());
 
   static const _rounds = 12;
   static const _blockSize = 128;
@@ -81,15 +83,15 @@ class Blake2bDigest extends BaseDigest implements Digest {
       _chainValue[4].set(_blake2b_IV[4]);
       _chainValue[5].set(_blake2b_IV[5]);
       if (_salt != null) {
-        _chainValue[4].xor(new Register64()..unpack(_salt, 0, Endianness.LITTLE_ENDIAN));
-        _chainValue[5].xor(new Register64()..unpack(_salt, 8, Endianness.LITTLE_ENDIAN));
+        _chainValue[4].xor(new Register64()..unpack(_salt, 0, Endian.little));
+        _chainValue[5].xor(new Register64()..unpack(_salt, 8, Endian.little));
       }
 
       _chainValue[6].set(_blake2b_IV[6]);
       _chainValue[7].set(_blake2b_IV[7]);
       if (_personalization != null) {
-        _chainValue[6].xor(new Register64()..unpack(_personalization, 0, Endianness.LITTLE_ENDIAN));
-        _chainValue[7].xor(new Register64()..unpack(_personalization, 8, Endianness.LITTLE_ENDIAN));
+        _chainValue[6].xor(new Register64()..unpack(_personalization, 0, Endian.little));
+        _chainValue[7].xor(new Register64()..unpack(_personalization, 8, Endian.little));
       }
     }
   }
@@ -174,7 +176,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
     final packedValue = new Uint8List(8);
     final packedValueData = packedValue.buffer.asByteData();
     for (var i = 0; i < _chainValue.length && (i * 8 < _digestLength); ++i) {
-      _chainValue[i].pack(packedValueData, 0, Endianness.LITTLE_ENDIAN);
+      _chainValue[i].pack(packedValueData, 0, Endian.little);
 
       final start = outOff + i * 8;
       if (i * 8 < _digestLength - 8) {
@@ -211,7 +213,7 @@ class Blake2bDigest extends BaseDigest implements Digest {
     _initializeInternalState();
 
     for (var j = 0; j < 16; ++j) {
-      _m[j].unpack(message, messagePos + j * 8, Endianness.LITTLE_ENDIAN);
+      _m[j].unpack(message, messagePos + j * 8, Endian.little);
     }
 
     for (var round = 0; round < _rounds; ++round) {

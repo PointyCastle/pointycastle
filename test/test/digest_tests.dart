@@ -34,4 +34,13 @@ void _runDigestTest(
   var hexOut = formatBytesAsHexString(out);
 
   expect(hexOut, equals(expectedHexDigestText));
+
+ f or(var i = 0; i < plainText.length; ++i) {
+    digest.updateByte(plainText[i]);
+  }
+  out = new Uint8List(digest.digestSize);;
+  digest.doFinal(out, 0);
+  hexOut = formatBytesAsHexString(out);
+
+  expect(hexOut, equals(expectedHexDigestText));
 }
