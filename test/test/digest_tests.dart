@@ -4,6 +4,8 @@
 
 library pointycastle.test.test.digest_tests;
 
+import 'dart:typed_data';
+
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";
 
@@ -30,6 +32,15 @@ void _runDigestTest(
   var plainText = createUint8ListFromString(plainTextString);
   var out = digest.process(plainText);
   var hexOut = formatBytesAsHexString(out);
+
+  expect(hexOut, equals(expectedHexDigestText));
+
+  for(var i = 0; i < plainText.length; ++i) {
+    digest.updateByte(plainText[i]);
+  }
+  out = new Uint8List(digest.digestSize);;
+  digest.doFinal(out, 0);
+  hexOut = formatBytesAsHexString(out);
 
   expect(hexOut, equals(expectedHexDigestText));
 }
