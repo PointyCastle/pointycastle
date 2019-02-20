@@ -2,6 +2,10 @@ Changelog
 =========
 
 
+#### Version 1.0.1 (2019-02-20)
+
+* Add Blake2b support
+
 #### Version 1.0.0 (2018-12-17) (Dart SDK version 2.0)
 
 * Support Dart 2 and Strong Mode
