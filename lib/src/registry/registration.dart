@@ -1,5 +1,6 @@
 library pointycastle.src.registry.impl;
 
+import 'package:pointycastle/asymmetric/oaep.dart';
 import 'package:pointycastle/asymmetric/pkcs1.dart';
 import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:pointycastle/block/aes_fast.dart';
@@ -101,6 +102,7 @@ void registerFactories(FactoryRegistry registry) {
 }
 
 void _registerAsymmetricCiphers(FactoryRegistry registry) {
+  registry.register(OAEPEncoding.FACTORY_CONFIG);
   registry.register(PKCS1Encoding.FACTORY_CONFIG);
   registry.register(RSAEngine.FACTORY_CONFIG);
 }

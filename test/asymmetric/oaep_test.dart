@@ -5,6 +5,7 @@
 library pointycastle.test.asymmetric.oaep_test;
 
 import "package:pointycastle/pointycastle.dart";
+import 'package:pointycastle/src/registry/registry.dart';
 
 import "../test/asymmetric_block_cipher_tests.dart";
 import "../test/src/null_asymmetric_block_cipher.dart";
@@ -14,6 +15,9 @@ void main() {
 
   var pubpar = () => new ParametersWithRandom(new PublicKeyParameter(new NullPublicKey()), new NullSecureRandom());
   var privpar = () => new ParametersWithRandom(new PrivateKeyParameter(new NullPrivateKey()), new NullSecureRandom());
+
+  registry.register(NullAsymmetricBlockCipher.FACTORY_CONFIG);
+  registry.register(NullSecureRandom.FACTORY_CONFIG);
 
   runAsymmetricBlockCipherTests(new AsymmetricBlockCipher("Null/OAEP"), pubpar, privpar, [
 
