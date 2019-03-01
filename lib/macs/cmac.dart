@@ -125,9 +125,7 @@ class CMac extends BaseMac {
     Uint8List ret = new Uint8List(inp.length);
     int carry = shiftLeft(inp, ret);
 
-    /*
-         * NOTE: This construction is an attempt at a constant-time implementation.
-         */
+    // NOTE: This construction is an attempt at a constant-time implementation.
     int mask = (-carry) & 0xff;
     ret[inp.length - 3] ^= _poly[1] & mask;
     ret[inp.length - 2] ^= _poly[2] & mask;
@@ -275,23 +273,17 @@ class CMac extends BaseMac {
     return _macSize;
   }
 
-  /**
-     * Reset the mac generator.
-     */
+  /// Reset the mac generator.
   @override
   void reset() {
-    /*
-         * clean the buffer.
-         */
+    // clean the buffer.
     for (int i = 0; i < _buf.length; i++) {
       _buf[i] = 0;
     }
 
     _bufOff = 0;
 
-    /*
-         * reset the underlying cipher.
-         */
+    // reset the underlying cipher.
     _cipher.reset();
 
     // Must be done after reset
