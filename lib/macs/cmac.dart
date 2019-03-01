@@ -79,11 +79,6 @@ class CMac extends BaseMac {
   CMac(BlockCipher cipher, int macSizeInBits)
       : this._macSize = macSizeInBits ~/ 8,
         this._cipher = new CBCBlockCipher(cipher) {
-//  CMac(BlockCipher cipher)
-//      : this._macSize = cipher.blockSize,
-//        this._cipher = new CBCBlockCipher(cipher) {
-    //int macSizeInBits = cipher.blockSize * 8;
-
     if ((macSizeInBits % 8) != 0) {
       throw new ArgumentError("MAC size must be multiple of 8");
     }
