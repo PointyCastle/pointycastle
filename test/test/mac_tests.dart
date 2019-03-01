@@ -4,30 +4,37 @@
 
 library pointycastle.test.test.mac_tests;
 
+import "dart:typed_data" show Uint8List;
+
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";
 
 import "./src/helpers.dart";
 
-void runMacTests(Mac mac, List<String> plainDigestTextPairs) {
+class PlainTextDigestPair {
+  PlainTextDigestPair(this.plainText, this.hexDigestText);
+
+  final Uint8List plainText;
+  final String hexDigestText;
+}
+
+void runMacTests(Mac mac, List<PlainTextDigestPair> plainDigestTextPairs) {
   group("${mac.algorithmName}:", () {
     group("digest:", () {
-      for (var i = 0; i < plainDigestTextPairs.length; i += 2) {
-        var plainText = plainDigestTextPairs[i];
-        var digestText = plainDigestTextPairs[i + 1];
+      for (var i = 0; i < plainDigestTextPairs.length; i++) {
+        var plainText = plainDigestTextPairs[i].plainText;
+        var digestText = plainDigestTextPairs[i].hexDigestText;
 
-        test("${formatAsTruncated(plainText)}",
+        test("${formatAsTruncated(plainText.toString())}",
             () => _runMacTest(mac, plainText, digestText));
       }
     });
   });
 }
 
-void _runMacTest(
-    Mac mac, String plainTextString, String expectedHexDigestText) {
+void _runMacTest(Mac mac, Uint8List plainText, String expectedHexDigestText) {
   mac.reset();
 
-  var plainText = createUint8ListFromString(plainTextString);
   var out = mac.process(plainText);
   var hexOut = formatBytesAsHexString(out);
 
