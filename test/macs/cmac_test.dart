@@ -11,9 +11,10 @@ import "package:pointycastle/pointycastle.dart";
 import "../test/mac_tests.dart";
 
 void main() {
+  final mac = new Mac("AES/CMAC");
+
   // Test vectors from AES-CMAC RFC, section 4.
   // https://tools.ietf.org/html/rfc4493
-  final mac = new Mac("AES/CMAC");
   final key = new Uint8List.fromList([
     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, //
     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c, //
