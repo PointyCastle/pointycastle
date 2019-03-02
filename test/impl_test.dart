@@ -59,6 +59,8 @@ void main() {
       testMac("SHA-256/HMAC");
       testMac("RIPEMD-160/HMAC");
       testMac("AES/CMAC");
+      testMac("AES/CBC_CMAC");
+      testMac("AES/CBC_CMAC/PKCS7");
     });
 
     test("BlockCipher returns valid implementations for modes of operation",

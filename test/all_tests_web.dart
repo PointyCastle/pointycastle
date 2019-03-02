@@ -27,6 +27,7 @@ import "key_generators/ec_key_generator_test.dart" as ec_key_generator_test;
 import "key_generators/rsa_key_generator_test.dart" as rsa_key_generator_test;
 import "macs/hmac_test.dart" as hmac_test;
 import "macs/cmac_test.dart" as cmac_test;
+import "macs/cbc_block_cipher_mac_test.dart" as cbc_block_cipher_mac_test;
 import "modes/cbc_test.dart" as cbc_test;
 import "modes/cfb_test.dart" as cfb_test;
 import "modes/ecb_test.dart" as ecb_test;
@@ -74,6 +75,7 @@ void main() {
   rsa_key_generator_test.main();
   hmac_test.main();
   cmac_test.main();
+  cbc_block_cipher_mac_test.main();
   cbc_test.main();
   cfb_test.main();
   ecb_test.main();
