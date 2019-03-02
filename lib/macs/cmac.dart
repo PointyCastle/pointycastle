@@ -37,7 +37,7 @@ class CMac extends BaseMac {
       "/CMAC",
       (_, final Match match) => () {
             BlockCipher cipher = new BlockCipher(match.group(1));
-            return new CMac(cipher, cipher.blockSize * 8);
+            return new CMac.fromCipher(cipher);
           });
 
   Uint8List _poly;
@@ -62,7 +62,7 @@ class CMac extends BaseMac {
      *
      * @param cipher the cipher to be used as the basis of the MAC generation.
      */
-//    CMac(BlockCipher cipher) : CMac(this._cipher, _cipher.blockSize * 8);
+  CMac.fromCipher(BlockCipher cipher) : this(cipher, cipher.blockSize * 8);
 
   /**
      * create a standard MAC based on a block cipher with the size of the
@@ -70,8 +70,9 @@ class CMac extends BaseMac {
      * <p>
      * Note: the size of the MAC must be at least 24 bits (FIPS Publication 81),
      * or 16 bits if being used as a data authenticator (FIPS Publication 113),
-     * and in general should be less than the size of the block cipher as it reduces
-     * the chance of an exhaustive attack (see Handbook of Applied Cryptography).
+     * and in general should be less than the size of the block cipher as it
+     * reduces the chance of an exhaustive attack (see Handbook of Applied
+     * Cryptography).
      *
      * @param cipher        the cipher to be used as the basis of the MAC generation.
      * @param macSizeInBits the size of the MAC in bits, must be a multiple of 8 and &lt;= 128.
