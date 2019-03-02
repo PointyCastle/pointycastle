@@ -193,6 +193,9 @@ class CMac extends BaseMac {
     // Reset existing _buf/_cipher state
     reset();
 
+    // Must be done after reset
+    _cipher.init(true, _params);
+
     //initializes the L, Lu, Lu2 numbers
     Uint8List L = new Uint8List(_ZEROES.length);
     _cipher.processBlock(_ZEROES, 0, L, 0);
