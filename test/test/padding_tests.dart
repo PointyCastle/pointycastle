@@ -4,19 +4,19 @@
 
 library pointycastle.test.test.padding_tests;
 
-import "dart:typed_data";
+import "dart:typed_data" show Uint8List;
 
 import "package:test/test.dart";
 import "package:pointycastle/pointycastle.dart";
 
 import "./src/helpers.dart";
 
-void runPaddingTest(Padding pad, CipherParameters params, String unpadData,
+void runPaddingTest(Padding pad, CipherParameters params, Uint8List unpadData,
     int padLength, String padData) {
   group("${pad.algorithmName}:", () {
-    test("addPadding: $unpadData", () {
+    test("addPadding: ${unpadData.toString()}", () {
       var expectedBytes = createUint8ListFromHexString(padData);
-      var dataBytes = new Uint8List(padLength)..setAll(0, unpadData.codeUnits);
+      var dataBytes = new Uint8List(padLength)..setAll(0, unpadData);
 
       pad.init(params);
       var ret = pad.addPadding(dataBytes, unpadData.length);
