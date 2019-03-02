@@ -56,6 +56,7 @@ As of the last release, the following algorithms are implemented:
 
 **MACs:**
   * HMAC
+  * CMAC
 
 **Signatures:**
   * (DET-)ECDSA
