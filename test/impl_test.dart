@@ -77,6 +77,7 @@ void main() {
 
     test("Padding returns valid implementations", () {
       testPadding("PKCS7");
+      testPadding("ISO7816-4");
     });
 
     test("SecureRandom returns valid implementations", () {

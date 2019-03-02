@@ -38,6 +38,7 @@ As of the last release, the following algorithms are implemented:
 
 **Paddings:**
   * PKCS7
+  * ISO7816-4
 
 **Digests:**
   * Blake2b
