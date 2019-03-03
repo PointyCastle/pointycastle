@@ -20,7 +20,9 @@ class CBCBlockCipherMac extends BaseMac {
       r"^(.+)/CBC_CMAC(/(.+))?$",
       (_, final Match match) => () {
             BlockCipher cipher = new BlockCipher(match.group(1));
-            Padding padding = match.groupCount >= 3 && !match.group(3).isEmpty
+            Padding padding = match.groupCount >= 3 &&
+                    match.group(3) != null &&
+                    !match.group(3).isEmpty
                 ? new Padding(match.group(3))
                 : null;
             return new CBCBlockCipherMac.fromCipherAndPadding(cipher, padding);
