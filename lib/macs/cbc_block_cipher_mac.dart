@@ -111,9 +111,13 @@ class CBCBlockCipherMac extends BaseMac {
   }
 
   @override
-  void init(covariant KeyParameter keyParams) {
-    final zeroIV = new Uint8List(keyParams.key.length);
-    this._params = new ParametersWithIV(keyParams, zeroIV);
+  void init(CipherParameters params) {
+    if (params is ParametersWithIV) {
+      this._params = params;
+    } else if (params is KeyParameter) {
+      final zeroIV = new Uint8List(params.key.length);
+      this._params = new ParametersWithIV(params, zeroIV);
+    }
 
     reset();
 
