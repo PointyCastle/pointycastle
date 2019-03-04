@@ -211,6 +211,8 @@ class CBCBlockCipherMac extends BaseMac {
     // reset the underlying cipher.
     _cipher.reset();
 
-    _cipher.init(true, _params);
+    if (_params != null) {
+      _cipher.init(true, _params);
+    }
   }
 }
