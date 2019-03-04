@@ -190,10 +190,7 @@ class CMac extends BaseMac {
     final zeroIV = new Uint8List(keyParams.key.length);
     this._params = new ParametersWithIV(keyParams, zeroIV);
 
-    // Reset existing _buf/_cipher state
-    reset();
-
-    // Must be done after reset
+    // Initialize before computing L, Lu, Lu2
     _cipher.init(true, _params);
 
     //initializes the L, Lu, Lu2 numbers
@@ -201,6 +198,9 @@ class CMac extends BaseMac {
     _cipher.processBlock(_ZEROES, 0, L, 0);
     _Lu = _doubleLu(L);
     _Lu2 = _doubleLu(_Lu);
+
+    // Reset _buf/_cipher state after computing L, Lu, Lu2
+    reset();
   }
 
   @override
