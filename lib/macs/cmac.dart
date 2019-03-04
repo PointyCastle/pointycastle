@@ -285,7 +285,8 @@ class CMac extends BaseMac {
     // reset the underlying cipher.
     _cipher.reset();
 
-    // Must be done after reset
-    _cipher.init(true, _params);
+    if (_params != null) {
+      _cipher.init(true, _params);
+    }
   }
 }
