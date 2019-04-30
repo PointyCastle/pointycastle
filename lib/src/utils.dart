@@ -18,12 +18,13 @@ BigInt decodeBigInt(List<int> bytes) {
 var _byteMask = new BigInt.from(0xff);
 
 /// Encode a BigInt into bytes using big-endian encoding.
-Uint8List encodeBigInt(BigInt number) {
+Uint8List encodeBigInt(BigInt number,[int fitSize]) {
   // Not handling negative numbers. Decide how you want to do that.
   int size = (number.bitLength + 7) >> 3;
-  var result = new Uint8List(size);
+  fitSize=fitSize??size; //use fitSize if defined otherwise use computed size
+  var result = new Uint8List(fitSize);
   for (int i = 0; i < size; i++) {
-    result[size - i - 1] = (number & _byteMask).toInt();
+    result[fitSize - i - 1] = (number & _byteMask).toInt();
     number = number >> 8;
   }
   return result;
