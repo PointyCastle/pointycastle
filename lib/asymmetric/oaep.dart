@@ -26,13 +26,14 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
   final Digest _hash;
   Digest mgf1Hash;
-  Uint8List defHash = Uint8List(SHA1Digest().digestSize);
+  Uint8List defHash;
 
   final AsymmetricBlockCipher _engine;
   SecureRandom _random;
   bool _forEncryption;
 
   OAEPEncoding(this._engine, this._hash: Digest){
+    defHash = Uint8List(_hash.digestSize)
     _hash.doFinal(defHash, 0);
   }
 
