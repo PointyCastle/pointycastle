@@ -33,7 +33,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   bool _forEncryption;
 
   OAEPEncoding(this._engine, this.hash){
-    defHash = Uint8List(hash.digestSize)
+    defHash = Uint8List(hash.digestSize);
     hash.doFinal(defHash, 0);
   }
 
