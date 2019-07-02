@@ -24,7 +24,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
             return new OAEPEncoding(underlyingCipher);
           });
 
-  final Digest _hash;
+  final Digest hash;
   Digest mgf1Hash;
   Uint8List defHash;
 
@@ -32,9 +32,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   SecureRandom _random;
   bool _forEncryption;
 
-  OAEPEncoding(this._engine, this._hash: Digest){
-    defHash = Uint8List(_hash.digestSize)
-    _hash.doFinal(defHash, 0);
+  OAEPEncoding(this._engine, this.hash){
+    defHash = Uint8List(hash.digestSize)
+    hash.doFinal(defHash, 0);
   }
 
   String get algorithmName => "${_engine.algorithmName}/OAEP";
