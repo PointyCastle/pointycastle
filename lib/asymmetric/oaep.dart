@@ -11,7 +11,7 @@ import "package:pointycastle/api.dart";
 import "package:pointycastle/src/registry/registry.dart";
 import "package:pointycastle/src/impl/base_asymmetric_block_cipher.dart";
 import "package:pointycastle/random/fortuna_random.dart";
-import "package:pointycastle/digests/sha1.dart";
+import "package:pointycastle/digests/digest.dart";
 
 class OAEPEncoding extends BaseAsymmetricBlockCipher {
   /// Intended for internal use.
@@ -24,7 +24,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
             return new OAEPEncoding(underlyingCipher);
           });
 
-  Digest hash = SHA1Digest();
+  final Digest _hash;
   Digest mgf1Hash;
   Uint8List defHash = Uint8List(SHA1Digest().digestSize);
 
@@ -32,8 +32,8 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
   SecureRandom _random;
   bool _forEncryption;
 
-  OAEPEncoding(this._engine){
-    SHA1Digest().doFinal(defHash, 0);
+  OAEPEncoding(this._engine, this._hash: Digest){
+    _hash.doFinal(defHash, 0);
   }
 
   String get algorithmName => "${_engine.algorithmName}/OAEP";
