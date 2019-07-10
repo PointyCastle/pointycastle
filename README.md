@@ -1,3 +1,13 @@
+**!!! Important Message !!!**
+
+The only maintainer of this library,
+[@stevenroose](https://github.com/stevenroose), is no longer able to actively
+maintain this library.  If anyone would be willing to take over maintainership,
+I would be glad to discuss that.  (Don't worry I won't give `pub` push access to
+anyone without having enough confidence in their good intentions.)  Until then,
+please only make issues for real bugs instead of feature requests.  PRs are
+still welcome, but I can't guarantee that I will have the time to review them.
+
 Pointy Castle
 =============
 
