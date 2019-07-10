@@ -76,6 +76,7 @@ import 'package:pointycastle/key_generators/rsa_key_generator.dart';
 import 'package:pointycastle/macs/hmac.dart';
 import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
+import 'package:pointycastle/paddings/iso7816d4.dart';
 import 'package:pointycastle/random/auto_seed_block_ctr_random.dart';
 import 'package:pointycastle/random/block_ctr_random.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
@@ -204,6 +205,7 @@ void _registerPaddedBlockCiphers(FactoryRegistry registry) {
 
 void _registerPaddings(FactoryRegistry registry) {
   registry.register(PKCS7Padding.FACTORY_CONFIG);
+  registry.register(ISO7816d4Padding.FACTORY_CONFIG);
 }
 
 void _registerRandoms(FactoryRegistry registry) {
