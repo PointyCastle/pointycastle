@@ -67,6 +67,8 @@ export "package:pointycastle/key_generators/rsa_key_generator.dart";
 
 // macs
 export "package:pointycastle/macs/hmac.dart";
+export "package:pointycastle/macs/cmac.dart";
+export "package:pointycastle/macs/cbc_block_cipher_mac.dart";
 
 // paddings
 export "package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart";

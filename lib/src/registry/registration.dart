@@ -74,6 +74,8 @@ import 'package:pointycastle/key_derivators/scrypt.dart';
 import 'package:pointycastle/key_generators/ec_key_generator.dart';
 import 'package:pointycastle/key_generators/rsa_key_generator.dart';
 import 'package:pointycastle/macs/hmac.dart';
+import 'package:pointycastle/macs/cmac.dart';
+import 'package:pointycastle/macs/cbc_block_cipher_mac.dart';
 import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
 import 'package:pointycastle/paddings/iso7816d4.dart';
@@ -197,6 +199,8 @@ void _registerKeyGenerators(FactoryRegistry registry) {
 
 void _registerMacs(FactoryRegistry registry) {
   registry.register(HMac.FACTORY_CONFIG);
+  registry.register(CMac.FACTORY_CONFIG);
+  registry.register(CBCBlockCipherMac.FACTORY_CONFIG);
 }
 
 void _registerPaddedBlockCiphers(FactoryRegistry registry) {
