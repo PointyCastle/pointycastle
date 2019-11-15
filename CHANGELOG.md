@@ -2,6 +2,13 @@ Changelog
 =========
 
 
+#### Version 1.0.2 (2019-11-15)
+
+* Add non-Keccak SHA3 support
+* Add CMAC support ("AES/CMAC")
+* Add ISO7816-4 padding support
+* Fixes in CBCBlockCipherMac and CMac
+
 #### Version 1.0.1 (2019-02-20)
 
 * Add Blake2b support
