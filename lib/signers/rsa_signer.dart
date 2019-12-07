@@ -107,11 +107,18 @@ class RSASigner implements Signer {
     _digest.reset();
     _digest.update(message, 0, message.length);
     _digest.doFinal(hash, 0);
-
     var sig = new Uint8List(_rsa.outputBlockSize);
-    var len =
-        _rsa.processBlock(signature.bytes, 0, signature.bytes.length, sig, 0);
-    sig = sig.sublist(0, len);
+
+    try {
+      final len =
+      _rsa.processBlock(signature.bytes, 0, signature.bytes.length, sig, 0);
+      sig = sig.sublist(0, len);
+    } on ArgumentError {
+      // Signature was tampered with so the RSA "decrypted" block is totally
+      // different to the original, causing [PKCS1Encoding._decodeBlock] to
+      // throw an exception because it does not recognise it.
+      return false;
+    }
 
     var expected = _derEncode(hash);
 
