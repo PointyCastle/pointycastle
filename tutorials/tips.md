@@ -65,6 +65,6 @@ registry) and the library names are long.
 
 Try looking in the one of the combined libraries for classes:
 
-- [pointycastle.pointycastle](https://pub.dev/documentation/pointycastle/latest/pointycastle.pointycastle/pointycastle.pointycastle-library.html)
-- [pointycastle.api](https://pub.dev/documentation/pointycastle/latest/pointycastle.api/pointycastle.api-library.html)
 - [pointycastle.export](https://pub.dev/documentation/pointycastle/latest/pointycastle.export/pointycastle.export-library.html)
+- [pointycastle.api](https://pub.dev/documentation/pointycastle/latest/pointycastle.api/pointycastle.api-library.html)
+- [pointycastle.pointycastle](https://pub.dev/documentation/pointycastle/latest/pointycastle.pointycastle/pointycastle.pointycastle-library.html)

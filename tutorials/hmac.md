@@ -12,7 +12,7 @@ a secret key and the message data.
 
 To calculate a HMAC:
 
-1. Instantiate an implementation of HMAC, providing it the Digest implementation to use.
+1. Instantiate an implementation of `Hmac`, providing it the `Digest` implementation to use.
 2. Initialize it with the HMAC key.
 2. Provide it the bytes to calculate the HMAC over.
 
@@ -50,19 +50,19 @@ void main(List<String> args) {
 
 If using the registry, invoke the `Mac` factory with the name of the
 HMAC algorithm. The name of the HMAC algorithm is the name of the
-digest algorithm followed by "/HMAC" (e.g. "HMAC/SHA-1").
+digest algorithm followed by "/HMAC" (e.g. "SHA-1/HMAC").
 
 ```
 import 'package:pointycastle/pointycastle.dart';
 
-final hmac = new Mac("HMAC/SHA-256");
+final hmac = new Mac("SHA-256/HMAC");
 ```
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries that
-contain the HMAC and digest algorithm implementation classes and
-instantiate the objects directly.
+If the registry is not used, explicitly import the libraries with the
+`HMac` class and the digest algorithm class.  and instantiate the
+objects directly.
 
 ```
 import "package:pointycastle/api.dart";
@@ -102,7 +102,7 @@ must be found and explicitly provided.
 
 ### Set the key
 
-Before processing the data, initialize the HMAC object with the HMAC key
+Before processing the data, initialize the `HMac` object with the HMAC key
 as a key parameter.
 
 ```
