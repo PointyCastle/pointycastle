@@ -1,4 +1,11 @@
-/// Tests for Multiple Precision Integer (mpint) encoding and decoding.
+/// Demonstration of RSA
+///
+/// - key generation
+/// - signing and verification
+/// - encrypting and decrypting
+///
+/// Invoke with "-v" to print extra information.
+/// Invoke with "-l" to use longer plaintext.
 
 import 'dart:convert';
 import 'dart:math';
@@ -22,6 +29,20 @@ import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:pointycastle/asymmetric/pkcs1.dart';
 
 //================================================================
+// Test data
+
+const shortPlaintext = 'What hath God wrought!';
+
+const longPlaintext = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+in culpa qui officia deserunt mollit anim id est laborum.''';
+
+//================================================================
+// Key generation
 
 //----------------------------------------------------------------
 /// Generate an RSA key pair.
@@ -56,6 +77,9 @@ AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
 
   return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(myPublic, myPrivate);
 }
+
+//================================================================
+// Signing and verifying
 
 //----------------------------------------------------------------
 /// Use an RSA private key to create a signature.
@@ -95,26 +119,30 @@ bool rsaVerify(
 
   verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey));
 
-  try {
-    return verifier.verifySignature(signedData, sig);
-  } on ArgumentError {
-    return false; // required for Pointy Castle 1.0.1
-  }
+  return verifier.verifySignature(signedData, sig);
 }
+
+//================================================================
+// Encryption and decryption
+
+//----------------------------------------------------------------
+/// Schemes to use to encrypt/decrypt
+///
+/// rsa = use RSAEngine without an Asymmetric Block Cipher.
+
+enum AsymBlockCipherToUse { rsa, pkcs1, oaep }
 
 //----------------------------------------------------------------
 
-enum AsymmetricBlockCipherToUse { rsa, pkcs1, oaep }
-
-AsymmetricBlockCipher _createBlockCipher(AsymmetricBlockCipherToUse scheme) {
+AsymmetricBlockCipher _createBlockCipher(AsymBlockCipherToUse scheme) {
   switch (scheme) {
-    case AsymmetricBlockCipherToUse.rsa:
+    case AsymBlockCipherToUse.rsa:
       return RSAEngine();
       break;
-    case AsymmetricBlockCipherToUse.pkcs1:
+    case AsymBlockCipherToUse.pkcs1:
       return PKCS1Encoding(RSAEngine());
       break;
-    case AsymmetricBlockCipherToUse.oaep:
+    case AsymBlockCipherToUse.oaep:
       return OAEPEncoding(RSAEngine());
       break;
   }
@@ -122,11 +150,13 @@ AsymmetricBlockCipher _createBlockCipher(AsymmetricBlockCipherToUse scheme) {
 }
 
 Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt,
-    AsymmetricBlockCipherToUse scheme) {
+    AsymBlockCipherToUse scheme) {
   AsymmetricBlockCipher encryptor = _createBlockCipher(scheme);
 
   encryptor.init(
-      true, PublicKeyParameter<RSAPublicKey>(myPublic)); // true=encrypt
+    true,
+    PublicKeyParameter<RSAPublicKey>(myPublic),
+  ); // true=encrypt
 
   return _processInBlocks(encryptor, dataToEncrypt);
 }
@@ -134,11 +164,13 @@ Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt,
 //----------------------------------------------------------------
 
 Uint8List rsaDecrypt(RSAPrivateKey myPrivate, Uint8List cipherText,
-    AsymmetricBlockCipherToUse scheme) {
+    AsymBlockCipherToUse scheme) {
   AsymmetricBlockCipher decryptor = _createBlockCipher(scheme);
 
   decryptor.init(
-      false, PrivateKeyParameter<RSAPrivateKey>(myPrivate)); // false=decrypt
+    false,
+    PrivateKeyParameter<RSAPrivateKey>(myPrivate),
+  ); // false=decrypt
 
   return _processInBlocks(decryptor, cipherText);
 }
@@ -194,6 +226,9 @@ SecureRandom getSecureRandom() {
 }
 
 //----------------------------------------------------------------
+// Modify one bit.
+//
+// Returns a new Uint8List with the modified bytes.
 
 Uint8List tamperWithData(Uint8List original) {
 // Tampered with data does not verify
@@ -204,16 +239,16 @@ Uint8List tamperWithData(Uint8List original) {
   return tamperedData;
 }
 
-//################################################################
+//----------------------------------------------------------------
+// Print out the RSA key pair
 
 String dumpRsaKeys(AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> k,
     {bool verbose = false}) {
   final bitLength = k.privateKey.modulus.bitLength;
-  final buf = StringBuffer('RSA key (bit-length: $bitLength)\n');
+  final buf = StringBuffer('RSA key generated (bit-length: $bitLength)');
 
   if (verbose) {
     buf.write('''
-Public key:
   e = ${k.publicKey.exponent}
   n = ${k.publicKey.modulus}
 Private:
@@ -286,14 +321,10 @@ bool isUint8ListEqual(Uint8List a, Uint8List b) {
 
 //================================================================
 
-void _testSignAndVerify(
-    AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> rsaPair, bool verbose) {
-  const textToSign = 'What hath God wrought!';
-  final bytesToSign = utf8.encode(textToSign);
-
+void _testSignAndVerify(AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> rsaPair,
+    Uint8List bytesToSign, bool verbose) {
   final signatureBytes = rsaSign(rsaPair.privateKey, bytesToSign);
   if (verbose) {
-    print('Signed text: "$textToSign"');
     print('Signature:\n${bin2hex(signatureBytes, wrap: 64)}');
   }
 
@@ -305,11 +336,22 @@ void _testSignAndVerify(
   if (rsaVerify(
       rsaPair.publicKey, tamperWithData(bytesToSign), signatureBytes)) {
     print('fail: signature verifies when data was modified');
+  } else {
+    print('Signature verify: detected tampered text successfully');
   }
 
-  if (rsaVerify(
-      rsaPair.publicKey, bytesToSign, tamperWithData(signatureBytes))) {
-    print('fail: signature verifies when signature was modified');
+  try {
+    if (rsaVerify(
+        rsaPair.publicKey, bytesToSign, tamperWithData(signatureBytes))) {
+      print('fail: signature verifies when signature was modified');
+    } else {
+      print('Signature verify: detected tampered signature successfully');
+    }
+  } catch (e, st) {
+    print("fail: signature validation: threw exception: ${e.runtimeType}");
+    if (verbose) {
+      print('$e\n$st\n');
+    }
   }
 }
 
@@ -317,52 +359,82 @@ void _testSignAndVerify(
 
 void _testEncryptAndDecrypt(
     AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> rsaPair,
-    AsymmetricBlockCipherToUse scheme,
+    AsymBlockCipherToUse scheme,
+    Uint8List plaintext,
     bool verbose) {
-  const plaintext = 'abc';
-  const plaintext2 = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-in culpa qui officia deserunt mollit anim id est laborum.''';
-  final plainBytes = utf8.encode(plaintext);
-
-  final cipherText = rsaEncrypt(rsaPair.publicKey, plainBytes, scheme);
-  if (verbose) {
-    //print('\nPlaintext:\n"$plaintext"');
-    print('Ciphertext:\n${bin2hex(cipherText, wrap: 64)}');
-  }
-
-  final decryptedBytes = rsaDecrypt(rsaPair.privateKey, cipherText, scheme);
-
-  if (isUint8ListEqual(decryptedBytes, plainBytes)) {
+  try {
     if (verbose) {
-      print('Decrypted:\n"${utf8.decode(decryptedBytes)}"');
+      print('\nEncrypting with $scheme:');
     }
-    print('Decrypt ($scheme): success');
-  } else {
-    print(plainBytes);
-    print(decryptedBytes);
-    print('Decrypted:\n"${utf8.decode(decryptedBytes, allowMalformed: true)}"');
-    print('fail: decrypted does not match plaintext');
+    final cipherText = rsaEncrypt(rsaPair.publicKey, plaintext, scheme);
+    if (verbose) {
+      //print('\nPlaintext:\n"$plaintext"');
+      print('Ciphertext:\n${bin2hex(cipherText, wrap: 64)}');
+    }
+
+    final decryptedBytes = rsaDecrypt(rsaPair.privateKey, cipherText, scheme);
+
+    if (isUint8ListEqual(decryptedBytes, plaintext)) {
+      if (verbose) {
+        print('Decrypted:\n"${utf8.decode(decryptedBytes)}"');
+      }
+      print('Decrypt ($scheme): success');
+    } else {
+      print(plaintext);
+      print(decryptedBytes);
+      print(
+          'Decrypted:\n"${utf8.decode(decryptedBytes, allowMalformed: true)}"');
+      print('fail: decrypted does not match plaintext');
+    }
+  } catch (e, st) {
+    print('fail: threw unexpected exception: ${e.runtimeType}');
+    if (verbose) {
+      print('$e\n$st\n');
+    }
   }
 }
 //----------------------------------------------------------------
 
-void main() {
-  bool verbose = false;
+void main(List<String> args) {
+  var longText = false;
+  var verbose = false;
+  for (final arg in args) {
+    switch (arg) {
+      case '--long':
+      case '-l':
+        longText = true;
+        break;
+      case '--help':
+      case '-h':
+        print('Usage: rsa-demo [-l] [-v] [-h]');
+        return;
+        break;
+      case '--verbose':
+      case '-v':
+        verbose = true;
+        break;
+      default:
+        print('Usage error: unknown argument: $arg (-h for help)');
+        return;
+    }
+  }
+
   // Generate an RSA key pair
 
   final rsaPair = generateRSAkeyPair(getSecureRandom(), bitLength: 1024);
-  print(dumpRsaKeys(rsaPair, verbose: false));
+  print(dumpRsaKeys(rsaPair, verbose: verbose));
 
   // Use the key pair
 
-  _testSignAndVerify(rsaPair, verbose);
+  final plaintext = (longText) ? longPlaintext : shortPlaintext;
+  if (verbose) {
+    print('Plaintext: $plaintext\n');
+  }
+  final bytes = utf8.encode(plaintext);
 
-  _testEncryptAndDecrypt(rsaPair, AsymmetricBlockCipherToUse.rsa, verbose);
-  _testEncryptAndDecrypt(rsaPair, AsymmetricBlockCipherToUse.pkcs1, verbose);
-  _testEncryptAndDecrypt(rsaPair, AsymmetricBlockCipherToUse.oaep, verbose);
+  _testSignAndVerify(rsaPair, bytes, verbose);
+
+  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.rsa, bytes, verbose);
+  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.pkcs1, bytes, verbose);
+  _testEncryptAndDecrypt(rsaPair, AsymBlockCipherToUse.oaep, bytes, verbose);
 }
