@@ -16,6 +16,9 @@ import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
 
+// Code convention: variable names starting with underscores are examples only,
+// and should be implementated according to the needs of the program.
+
 //----------------------------------------------------------------
 
 Uint8List aesCbcEncrypt(
@@ -360,6 +363,11 @@ in culpa qui officia deserunt mollit anim id est laborum.
 //----------------------------------------------------------------
 
 void main(List<String> args) {
+  if (args.contains('-h') || args.contains('--help')) {
+    print('Usage: aes-cbc-direct');
+    return;
+  }
+
   katTest();
   encryptAndDecryptTest(128);
   encryptAndDecryptTest(192);

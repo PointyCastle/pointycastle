@@ -11,7 +11,7 @@ import 'package:pointycastle/pointycastle.dart';
 //----------------------------------------------------------------
 /// Demonstrate the use of `process` to provide the data completely.
 
-Uint8List sha256Digest(Uint8List dataToDigest) {
+Uint8List completeExample(Uint8List dataToDigest) {
   Digest d = new Digest("SHA-256");
 
   final hash = d.process(dataToDigest);
@@ -204,22 +204,38 @@ String bin2hex(Uint8List bytes, {String separator, int wrap}) {
 }
 //----------------------------------------------------------------
 
-void main() {
-  const data = 'Hello world!';
+void main(List<String> args) {
+  if (args.contains('-h') || args.contains('--help')) {
+    print('Usage: digest-demo');
+    return;
+  }
 
-  print('SHA-256 digest of "$data":');
+  // Calculate digest with complete data
+  //
+  // Note: the progressive example is hardcoded to produce the digest of
+  // "Hello world!", so there is no point in changing the "data" if you want
+  // to see they both produce the same result.
 
-  final hash1 = sha256Digest(utf8.encode(data));
+  const dataForComplete = 'Hello world!';
+
+  print('SHA-256 digest of "$dataForComplete":');
+  final hash1 = completeExample(utf8.encode(dataForComplete));
   print('   with complete data: ${bin2hex(hash1)}');
+
+  // Calculate digest by providing the data progressively
 
   final hash2 = progressiveExample();
   print('with progressive data: ${bin2hex(hash1)}');
+
+  // Prove they both produce the same digest value
 
   for (int x = 0; x < hash1.length; x++) {
     if (hash1[x] != hash2[x]) {
       print('Error: hashes are different');
     }
   }
+
+  // Other examples
 
   resetExample();
 

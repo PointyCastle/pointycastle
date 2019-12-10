@@ -8,6 +8,9 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 
+// Code convention: variable names starting with underscores are examples only,
+// and should be implementated according to the needs of the program.
+
 //----------------------------------------------------------------
 
 Uint8List aesCbcEncrypt(
@@ -352,6 +355,11 @@ in culpa qui officia deserunt mollit anim id est laborum.
 //----------------------------------------------------------------
 
 void main(List<String> args) {
+  if (args.contains('-h') || args.contains('--help')) {
+    print('Usage: aes-cbc-registry');
+    return;
+  }
+
   katTest();
   encryptAndDecryptTest(128);
   encryptAndDecryptTest(192);

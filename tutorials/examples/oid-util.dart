@@ -1,4 +1,4 @@
-/// Prints an Object Identifier.
+/// Converts an Object Identifier from one format to another.
 ///
 /// Shows the BER encoding for a dotted OID or decodes a BER encoding and
 /// shows its value as a dotted OID.
@@ -6,6 +6,9 @@
 /// Example:
 ///     oid-util 2.16.840.1.101.3.4.2.1
 ///     oid-util 0609608648016503040201
+///
+/// This program was written to check some of the "magic values" in the
+/// Pointy Castle source code.
 
 import 'dart:typed_data';
 
@@ -162,7 +165,7 @@ Uint8List encodeBERObjectIdentifier(String oidStr, {int tag = 0x06}) {
 
         var v = component;
         while (0 < v) {
-          code.add( (v & 0x7F) | 0x80); // 7-bits and the continue flag set
+          code.add((v & 0x7F) | 0x80); // 7-bits and the continue flag set
           v >>= 7;
         }
         code[0] &= 0x7F; // clear flag on least-significant-byte
@@ -210,7 +213,7 @@ Uint8List encodeBERObjectIdentifier(String oidStr, {int tag = 0x06}) {
 //----------------------------------------------------------------
 
 int main(List<String> args) {
-  if (args.isNotEmpty) {
+  if (args.isNotEmpty && !args.contains('-h') && !args.contains('--help')) {
     for (final str in args) {
       try {
         if (str.contains('.')) {
@@ -229,8 +232,9 @@ int main(List<String> args) {
     }
   } else {
     print('Usage: oid-util values...');
-    print('  values is either a dotted OID (e.g. "2.16.840.1.101.3.4.2.1") or');
-    print('  BER encoding of an OID in hex (e.g. "0609608648016503040201")');
+    print('  values are either dotted OIDs (e.g. "2.16.840.1.101.3.4.2.1") or');
+    print('  DER encoding of OIDs in hex (e.g. "0609608648016503040201")');
+    print('  This program convert from one format to the other.');
   }
   return 0;
 }

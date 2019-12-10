@@ -27,6 +27,11 @@ Uint8List sha256Digest(Uint8List dataToDigest) {
 }
 
 void main(List<String> args) {
+  if (args.contains('-h') || args.contains('--help')) {
+    print('Usage: digest-direct {stringsToDigest}');
+    return;
+  }
+
   final valuesToDigest = (args.isNotEmpty) ? args : ['Hello world!'];
 
   for (final data in valuesToDigest) {

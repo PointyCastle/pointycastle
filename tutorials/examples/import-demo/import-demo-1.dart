@@ -1,39 +1,35 @@
-// Demonstrates import of "api.dart" and individual libraries - partial registry
+/// Demonstrates different approaches to importing Pointy Castle libraries.
+///
+/// - import-demo-1.dart - import "package:pointycastle/pointycastle.dart";
+///                        can only used registry
+/// - import-demo-2.dart - import "package:pointycastle/export.dart";
+///                        can use registry and all constructors
+/// - import-demo-3.dart - import "package:pointycastle/api.dart" plus
+///                        individual libraries; can use registry and
+///                        constructors from individually imported libraries
+/// - import-demo-4.dart - import "package:pointycastle/api.dart" plus
+///                        individual libraries; same as 3, but tries
+///                        to use the registry for classes that have NOT
+///                        been individually imported. This should not
+///                        work, but strangely does.
+///
+/// The useRegistry and explicit functions are the same in all examples,
+/// but they can or cannot be used depending on what imports were used.
+///
+/// To see the differences between the examples, run "diff" on the files.
 
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-// Try commenting out the following imports and the invocation of explicit()
-// The program will produce "Method not found" errors at runtime.
-/*
-import "package:pointycastle/asymmetric/api.dart";
-import "package:pointycastle/block/aes_fast.dart";
-import "package:pointycastle/digests/md5.dart";
-import "package:pointycastle/digests/sha1.dart";
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/digests/sha512.dart";
-import "package:pointycastle/key_derivators/api.dart";
-import "package:pointycastle/key_derivators/pbkdf2.dart";
-import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/key_generators/rsa_key_generator.dart";
-import "package:pointycastle/macs/hmac.dart";
-import "package:pointycastle/signers/rsa_signer.dart";
-import 'package:pointycastle/block/modes/cbc.dart';
-import 'package:pointycastle/paddings/pkcs7.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
-*/
-import "package:pointycastle/asymmetric/api.dart";
-import "package:pointycastle/key_derivators/api.dart";
-import "package:pointycastle/key_generators/api.dart";
+import "package:pointycastle/pointycastle.dart";
 
 void main() {
-  usingRegistry();
-  //explicit();
+  useRegistry();
+  // useConstructors(); // cannot use: can only use the registry
 }
 
-void usingRegistry() {
+void useRegistry() {
   final sha256 = Digest("SHA-256");
   final sha1 = Digest("SHA-1");
   final md5 = Digest("MD5");
@@ -50,7 +46,7 @@ void usingRegistry() {
 
   final _sGen = Random.secure();
   final _seed =
-  Uint8List.fromList(List.generate(32, (n) => _sGen.nextInt(255)));
+      Uint8List.fromList(List.generate(32, (n) => _sGen.nextInt(255)));
   final secRnd = SecureRandom("Fortuna")..seed(KeyParameter(_seed));
 
   // AES-CBC encryption
@@ -109,14 +105,8 @@ Verifies: $sigOk
 ''');
 }
 
-//----------------------------------------------------------------
-
-final _data = utf8.encode('Hello world!');
-
-final _secret = utf8.encode('p@ssw0rd');
-
-/*
-void explicit() {
+/* BEGIN: useConstructors commented out
+void useConstructors() {
   // Digest
 
   final sha256 = SHA256Digest();
@@ -195,7 +185,13 @@ ${bin2hex(_signature.bytes, wrap: 64)}
 Verifies: $sigOk
 ''');
 }
-*/
+     END: useConstructors commented out */
+
+//----------------------------------------------------------------
+
+final _data = utf8.encode('Hello world!');
+
+final _secret = utf8.encode('p@ssw0rd');
 
 //----------------------------------------------------------------
 /// Represent bytes in hexadecimal
