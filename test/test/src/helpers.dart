@@ -63,6 +63,8 @@ Uint8List createUint8ListFromString(String s) {
 }
 
 Uint8List createUint8ListFromHexString(String hex) {
+  hex = hex.replaceAll(RegExp(r'\s'), ''); // remove all whitespace, if any
+
   var result = new Uint8List(hex.length ~/ 2);
   for (var i = 0; i < hex.length; i += 2) {
     var num = hex.substring(i, i + 2);
