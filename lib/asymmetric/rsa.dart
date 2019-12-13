@@ -79,17 +79,19 @@ class RSAEngine extends BaseAsymmetricBlockCipher {
   BigInt _convertInput(Uint8List inp, int inpOff, int len) {
     var inpLen = inp.length;
 
-    if (inpLen > (inputBlockSize + 1)) {
-      throw new ArgumentError("Input too large for RSA cipher");
+    if (inpLen < inpOff + len) {
+      throw new ArgumentError.value(inpOff, "inpOff",
+          "Not enough data for RSA cipher (length=$len, available=$inpLen)");
     }
 
-    if ((inpLen == (inputBlockSize + 1)) && !_forEncryption) {
-      throw new ArgumentError("Input too large for RSA cipher");
+    if (inputBlockSize < len) {
+      throw new ArgumentError.value(len, "len",
+          "Too large for maximum RSA cipher input block size ($inputBlockSize)");
     }
 
     var res = utils.decodeBigInt(inp.sublist(inpOff, inpOff + len));
     if (res >= _key.modulus) {
-      throw new ArgumentError("Input too large for RSA cipher");
+      throw new ArgumentError("Input block too large for RSA key size");
     }
 
     return res;

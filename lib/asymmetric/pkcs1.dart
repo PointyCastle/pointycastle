@@ -168,10 +168,9 @@ class PKCS1Encoding extends BaseAsymmetricBlockCipher {
       throw new ArgumentError("No data found in block, only padding");
     }
 
-    var result = new Uint8List(block.length - start);
-
     var rlen = (block.length - start);
-    out.setRange(0, rlen, block.sublist(start));
+    var result = new Uint8List(rlen);
+    out.setRange(outOff, outOff + rlen, block.sublist(start));
     return rlen;
   }
 }
