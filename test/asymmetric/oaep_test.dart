@@ -154,30 +154,35 @@ void rsaOaepStandardTests() {
   // Decryption
 
   // c mod p (c is the integer value of C):
+  // ignore: unused_local_variable
   final cModP = createUint8ListFromHexString(
       'de 63 d4 72 35 66 fa a7 59 bf e4 08 82 1d d5 25 72 ec 92 85 4d df 87 a2'
       'b6 64 d4 4d aa 37 ca 34 6a 05 20 3d 82 ff 2d e8 e3 6c ec 1d 34 f9 8e b6'
       '05 e2 a7 d2 6d e7 af 36 9c e4 ec ae 14 e3 56 33');
 
   // c mod q:
+  // ignore: unused_local_variable
   final cModQ = createUint8ListFromHexString(
       'a2 d9 24 de d9 c3 6d 62 3e d9 a6 5b 5d 86 2c fb ec 8b 19 9c 64 27 9c 54'
       '14 e6 41 19 6e f1 c9 3c 50 7a 9b 52 13 88 1a ad 05 b4 cc fa 02 8a c1 ec'
       '61 42 09 74 bf 16 25 83 6b 0b 7d 05 fb b7 53 36');
 
   // m1 =cdP modp=(cmodp)dP modp:
+  // ignore: unused_local_variable
   final m1 = createUint8ListFromHexString(
       '89 6c a2 6c d7 e4 87 1c 7f c9 68 a8 ed ea 11 e2 71 82 4f 0e 03 65 52 17'
       '94 f1 e9 e9 43 b4 a4 4b 57 c9 e3 95 a1 46 74 78 f5 26 49 6b 4b b9 1f 1c'
       'ba ea 90 0f fc 60 2c f0 c6 63 6e ba 84 fc 9f f7');
 
   //m2 =cdQ modq=(cmodq)dQ modq:
+  // ignore: unused_local_variable
   final m2 = createUint8ListFromHexString(
       '4e bb 22 75 85 f0 c1 31 2d ca 19 e0 b5 41 db 14 99 fb f1 4e 27 0e 69 8e'
       '23 9a 8c 27 a9 6c da 9a 74 09 74 de 93 7b 5c 9c 93 ea d9 46 2c 65 75 02'
       '1a 23 d4 64 99 dc 9f 6b 35 89 75 59 60 8f 19 be');
 
   // h=(m1 −m2)qInvmodp:
+  // ignore: unused_local_variable
   final h = createUint8ListFromHexString(
       '01 2b 2b 24 15 0e 76 e1 59 bd 8d db 42 76 e0 7b fa c1 88 e0 8d 60 47 cf'
       '0e fb 8a e2 ae bd f2 51 c4 0e bc 23 dc fd 4a 34 42 43 94 ad a9 2c fc be'
@@ -307,6 +312,40 @@ void rsaOaepStandardTests() {
     // The decrypted message should be the expected test [message] value
 
     expect(decrypted, equals(message));
+  });
+
+  //----------------------------------------------------------------
+
+  test('tampered ciphertext detected', () {
+    final decryptor = OAEPEncoding(RSAEngine()); // without using the registry
+
+    decryptor.init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+    // Try tampering with every bit in the ciphertext (128 bytes = 1024 bits)
+
+    for (var bitPos = 0; bitPos < ciphertext.length * 8; bitPos++) {
+      // Create a copy of the ciphertext that has been tampered with
+
+      final tamperedCiphertext = Uint8List.fromList(ciphertext);
+      tamperedCiphertext[bitPos ~/ 8] ^= 0x01 << (bitPos % 8); // flip a bit
+
+      // Try to decrypt it: expecting it to always fail
+
+      try {
+        final outBuf = Uint8List(decryptor.outputBlockSize);
+
+        // ignore: unused_local_variable
+        final _outputSize = decryptor.processBlock(
+            tamperedCiphertext, 0, tamperedCiphertext.length, outBuf, 0);
+        fail('tampered with ciphertext still decrypted');
+
+        // final decrypted = outBuf.sublist(0, outputSize);
+        // expect(decrypted, equals(message));
+
+      } on ArgumentError catch (e) {
+        expect(e.message, equals('decoding error'));
+      }
+    }
   });
 }
 
