@@ -393,6 +393,13 @@ Note: RFC 2437 says, "OAEP is recommended for new applications;
 PKCS #1 is included only for compatibility with existing applications, and
 is not recommended for new applications."
 
+Pointy Castle implements the _Encoding Method for Encryption OAEP_
+(EME-OAEP) from PKCS #1 version 2.0. The EME-OAEP in PKCS #1 version
+2.1 was changed in a non-backward compatible way. Therefore, a program
+written using Point Castle's implementation of OAEP cannot
+interoperate with other programs that use OAEP from PKCS #1 version
+2.1 or later.
+
 The following functions encrypt and decrypt data using RSA with OAEP:
 
 ```dart
@@ -528,20 +535,19 @@ should also be used.
 
 When encrypting in the OAEP asymmetric block cipher mode, the maximum
 input block size is 41 bytes smaller than the maximum input block size
-of the underlying RSA engine (when it uses SHA-1).
+of the underlying RSA engine (Pointy Castle's implementation of OAEP
+is hard-coded to use SHA-1 as its hash function).
 
-For each input block, another block is produced that is always the
-maximum block size of the underlying RSA engine. This larger block
-contains:
+For each input block, a block using the OAEP Encoding Method for
+Encryption (EME-OAEP) is created. The EME-OAEP block is always the
+maximum block size of the underlying RSA engine. The Mask Generation
+Function used to create the block is the default MGF1 function. The
+EME-OAEP block is encrypted by the underlying RSA engine (as described
+below).
 
-- random seed bytes (20 bytes);
-- SHA-1 digest of the parameters (20 bytes);
-- sentinal (one 0x01 byte); and
-- all the bytes from the input block.
-
-Masks are calculated and applied to change each of these bytes. Then
-this larger block is encrypted by the underlying RSA engine (as
-described below).
+As mentioned before, Pointy Castle implements OAEP from PKCS #1
+version 2.0. This is not compatible with OAEP from PKCS #1 version 2.1
+or later.
 
 #### PKCS #1
 
