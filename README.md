@@ -149,11 +149,12 @@ final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
 
 #### Registry vs without registry
 
-Using the registry means that all algorithms will be imported by default, which
-can possibly increase the compiled size of your program.  To avoid this, it is
-possible to import algorithms one by one.  In that case, you can decide to either
-use the classes directly, or still use the registry.  But remember that the
-registry only contains the classes that you import.
+Using the registry means that all algorithms will be imported by
+default, which can increase the compiled size of your program.
+
+To avoid this, instantiate all classes directly by using the
+constructors. But which classes can be instantiated with its
+constructor will depend on which libraries have been imported.
 
 ### Importing libraries
 
