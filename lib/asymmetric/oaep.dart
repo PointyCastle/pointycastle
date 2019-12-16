@@ -338,16 +338,6 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     bool wrongData = (block.length < (2 * defHash.length) + 1);
 
-    // Copy block to itself (Why? To prevent timing attacks?)
-
-    if (block.length <= block.length) {
-      block = _arraycopy(
-          block, 0, block, block.length - block.length, block.length);
-    } else {
-      block = _arraycopy(block, 0, block, 0, block.length);
-      wrongData = true;
-    }
-
     // 5.4 Calculate _seedMask_ = MGF(maskedDB, hLen)
     //
     // The _maskedDB_ comes from [block] starting at _hLen_ to the end.
