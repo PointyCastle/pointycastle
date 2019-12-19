@@ -18,7 +18,7 @@ To calculate a HMAC:
 
 This program calculates the HMAC SHA-256:
 
-```
+```dart
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -81,7 +81,7 @@ must be found and explicitly provided.
 Before processing the data, initialize the `HMac` object with the HMAC key
 as a key parameter.
 
-```
+```dart
 Uint8List keyBytes = ...
 
 hmac.init(KeyParameter(keyBytes));
@@ -97,7 +97,7 @@ If all the data is available as a single sequence of bytes, pass it to
 the `process` method to obtain the HMAC. The input data must be a
 `Uint8List`, and the calculated HMAC is returned in a new `Uint8List`.
 
-```
+```dart
 final Uint8List data = ...
 
 final hmacValue = hmac.process(data);
@@ -123,7 +123,7 @@ The destination, after the offset position, must be large enough to
 hold the HMAC.  The number of bytes required depends on the HMAC
 algorithm being used, and can be found using the `macSize` getter.
 
-```
+```dart
 final chunk1 = utf8.encode('cellophane');
 final chunk2 = utf8.encode('world');
 
@@ -148,7 +148,7 @@ Normally, reset does not need to be explicitly done because it is done
 automatically by the `process` and `doFinal` methods.  This is only
 required if previously provided data is abandoned.
 
-```
+```dart
 final part1 = utf8.encode('Hello ');
 final part2 = utf8.encode('world!');
 

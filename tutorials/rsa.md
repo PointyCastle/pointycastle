@@ -68,6 +68,8 @@ SecureRandom exampleSecureRandom() {
   return secureRandom;
 }
 
+...
+
 final pair = generateRSAkeyPair(exampleSecureRandom());
 final public = pair.publicKey;
 final private = pair.privateKey;
@@ -103,7 +105,7 @@ The RSA key generator must be initialized with both an
 This is done by creating a `ParametersWithRandom` with the two, and
 passing that to the key generator `init` method.
 
-```
+```dart
 SecureRandom mySecureRandom = ...
 
 final rsaParams = RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64);
@@ -126,7 +128,7 @@ The `RSAKeyGeneratorParameters` has:
 Invoke the `generateKeyPair` method on the `RSAKeyGenrator` to
 generate the key pair.
 
-```
+```dart
 final pair = keyGen.generateKeyPair();
 
 final myPublic = pair.publicKey as RSAPublicKey;
@@ -167,7 +169,7 @@ To verify a signature:
 The following functions creates a signature and verifies a signature
 using SHA-256 as the digest algorithm:
 
-```
+```dart
 import "package:pointycastle/export.dart";
 
 Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
@@ -214,7 +216,7 @@ If using the registry, invoke the `Signer` factory with the name of
 the digest algorithm and signing algorithm (e.g. "SHA-256/RSA" or
 "SHA-1/RSA").
 
-```
+```dart
 final signer = Signer('SHA-256/RSA');
 ```
 
@@ -224,7 +226,7 @@ If the registry is not used, instantiate the `RSASigner` constructor,
 passing in a digest implemenetation object and the identifier for that
 digest algorithm.
 
-```
+```dart
 final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
 ```
 
@@ -275,13 +277,13 @@ parameter is an RSA key.
 
 For signing, use true and the private key.
 
-```
+```dart
   signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 ```
 
 For verifying, use false and the public key.
 
-```
+```dart
   verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey));
 ```
 
@@ -293,7 +295,7 @@ the `generateSignature` method.
 It returns an `RSASignature`, from which the bytes making up the
 signature can be obtained using the `bytes` getter.
 
-```
+```dart
 Uint8List dataToSign = ...
 
 final sig = signer.generateSignature(dataToSign);

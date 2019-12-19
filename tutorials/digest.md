@@ -98,7 +98,7 @@ the `process` method to obtain the digest. The input data must be a
 single `Uint8List`, and the calculated digest is returned in a new
 `Uint8List`.
 
-```
+```dart
 final Uint8List dataToDigest = ...
 
 final hash = d.process(dataToDigest);
@@ -124,7 +124,7 @@ The destination, after the offset position, must be large enough to
 hold the digest.  The number of bytes required depends on the digest
 algorithm being used, and can be found using the `digestSize` getter.
 
-```
+```dart
 final chunk1 = utf8.encode('cellophane');
 final chunk2 = utf8.encode('world');
 
@@ -149,7 +149,7 @@ Normally, reset does not need to be explicitly done because it is done
 automatically by the `process` and `doFinal` methods.  This is only
 required if previously provided data is abandoned.
 
-```
+```dart
 final part1 = utf8.encode('Hello ');
 final part2 = utf8.encode('world!');
 
