@@ -17,8 +17,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/sha256.dart";
+import "package:pointycastle/export.dart";
 
 Uint8List sha256Digest(Uint8List dataToDigest) {
   final d = SHA256Digest();

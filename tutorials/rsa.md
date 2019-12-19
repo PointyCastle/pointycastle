@@ -31,10 +31,7 @@ This is a function to generate an RSA key pair:
 import 'dart:math';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import "package:pointycastle/key_generators/api.dart";
-import 'package:pointycastle/random/fortuna_random.dart';
+import "package:pointycastle/export.dart";
 
 AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
     SecureRandom secureRandom,
@@ -71,12 +68,12 @@ SecureRandom exampleSecureRandom() {
   return secureRandom;
 }
 
+...
+
 final pair = generateRSAkeyPair(exampleSecureRandom());
 final public = pair.publicKey;
 final private = pair.privateKey;
 ```
-
-### Secure random number generator
 
 The key generator requires an instance of `SecureRandom`. The above
 example shows the use of the Fortuna random number generator
@@ -95,13 +92,9 @@ final keyGen = KeyGenerator('RSA');
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries and instantiate the `RSAKeyGenerator` directly.
+If the registry is not used, invoke the `RSAKeyGenerator` constructor.
 
 ```dart
-import "package:pointycastle/api.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import "package:pointycastle/key_generators/api.dart";
-
 final keyGen = RSAKeyGenerator();
 ```
 
@@ -112,7 +105,7 @@ The RSA key generator must be initialized with both an
 This is done by creating a `ParametersWithRandom` with the two, and
 passing that to the key generator `init` method.
 
-```
+```dart
 SecureRandom mySecureRandom = ...
 
 final rsaParams = RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64);
@@ -135,7 +128,7 @@ The `RSAKeyGeneratorParameters` has:
 Invoke the `generateKeyPair` method on the `RSAKeyGenrator` to
 generate the key pair.
 
-```
+```dart
 final pair = keyGen.generateKeyPair();
 
 final myPublic = pair.publicKey as RSAPublicKey;
@@ -176,11 +169,8 @@ To verify a signature:
 The following functions creates a signature and verifies a signature
 using SHA-256 as the digest algorithm:
 
-```
-import "package:pointycastle/api.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/signers/rsa_signer.dart";
+```dart
+import "package:pointycastle/export.dart";
 
 Uint8List rsaSign(RSAPrivateKey privateKey, Uint8List dataToSign) {
 
@@ -209,6 +199,15 @@ bool rsaVerify(
 }
 ```
 
+### Standards supported
+
+Pointy Castle implements PKCS #1 version 2.0 signature and
+verification. Specifically, it implements the _RSASSA-PKCS1-v1_5_
+signature scheme with appendix from section 8.1 of [RFC
+2437](https://tools.ietf.org/html/rfc2437#section-8.1): which defines
+how the digest algorithm identifier and digest value is encoded, and
+how that encoding is then signed using RSA.
+
 ### Implementation
 
 #### Using the registry
@@ -217,18 +216,18 @@ If using the registry, invoke the `Signer` factory with the name of
 the digest algorithm and signing algorithm (e.g. "SHA-256/RSA" or
 "SHA-1/RSA").
 
-```
+```dart
 final signer = Signer('SHA-256/RSA');
 ```
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries and
-instantiate the objects directly. Instantiate a Digest object and pass
-it as the first argument to the constructor for the `RSASigner`.
+If the registry is not used, instantiate the `RSASigner` constructor,
+passing in a digest implemenetation object and the identifier for that
+digest algorithm.
 
-```
-  final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
+```dart
+final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
 ```
 
 The second parameter identifies the signing algorithm being used, and
@@ -278,13 +277,13 @@ parameter is an RSA key.
 
 For signing, use true and the private key.
 
-```
+```dart
   signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 ```
 
 For verifying, use false and the public key.
 
-```
+```dart
   verifier.init(false, PublicKeyParameter<RSAPublicKey>(publicKey));
 ```
 
@@ -296,7 +295,7 @@ the `generateSignature` method.
 It returns an `RSASignature`, from which the bytes making up the
 signature can be obtained using the `bytes` getter.
 
-```
+```dart
 Uint8List dataToSign = ...
 
 final sig = signer.generateSignature(dataToSign);
@@ -313,59 +312,27 @@ method.
 It returns true if the signature is valid, otherwise it should return
 false.
 
+```dart
+final sig = RSASignature(signatureBytes);
+
+final sigOk = verifier.verifySignature(signedData, sig);
+```
+
 Note: in Pointy Castle 1.0.2 and earlier, `verifySignature` returns
 false if the data had been modified, but will usually throw an
-`ArgumentError` if the signature had been modified.
+`ArgumentError` if the signature had been modified. The exception
+should be caught and treated as the signature failed to verify.
 
-```
+```dart
 final sig = RSASignature(signatureBytes);
 
 bool sigOk;
 try {
   sigOk = verifier.verifySignature(signedData, sig);
 } on ArgumentError {
-  sigOk = false;
+  sigOk = false; // required for Pointy Castle 1.0.2 and earlier
 }
 ```
-
-### Internal details
-
-It is useful to know what is contained in the signature bytes, 
-if the program needs to interoperate with another program
-that was not implemented with Pointy Castle.
-
-The signature is created from: the digest of the data, and the digest
-algorithm identifier OID.
-
-After calculating the digest over the data, a DER encoding is created
-of an ASN.1 Object whose tag is 48 (0x30) which contains a sequence
-of:
-
-- (tag 0x30) ASN.1 OBJECT IDENTIFIER with the algorithm identifier
-- (tag 0x05) ASN.1 NULL
-- (tag 0x04) ASN.1 OCTET STRING containing the digest bytes
-
-The value of the algorithm identifier is the Object Identifier that
-was provided to the `init` method (as a hexadecimal string), but
-ignoring its tag and always using 0x30 as the tag.
-
-A block is created, whose size depends on the bit-length of the RSA
-keys. The first byte of the block is a type code byte with the value
-of 0x01, followed by as many 0xFF padding bytes as needed, a single
-end-of-padding 0x00 byte, and finally the DER bytes.
-
-The block is then processed with the private key. That is, the bytes
-are interpreted as a large integer, the RSA formula is applied to that
-large integer and numbers from the private key, and the resulting
-number represented as bytes. Those final bytes are the bytes that make
-up the signature.
-
-When verifying a signature, a digest is calculated on the data that
-was supposedly signed. A calculated block is created in the same way
-(which is why verifier must be initialized with the same algorithm
-identifier OID). The signature being verified is processed with the
-public key, to produced a recovered block.  If the recovered block are
-the same as the calculated block, then the signature is valid.
 
 ## RSA encryption and decryption
 
@@ -383,26 +350,11 @@ To decrypt using RSA and an asymmetric block cipher:
 3. Invoke the object's `processBlock` method with the ciphertext blocks
    to produce the plaintext blocks.
 
-
-Pointy Castle has implementations of these asymmetric block ciphers:
-
-- Optimal Asymmetric Encryption Padding (OAEP), implemented by the `OAEPEncoding` class
-- PKCS #1, implemented by the `PKCS1Encoding` class.
-
-Note: RFC 2437 says, "OAEP is recommended for new applications;
-PKCS #1 is included only for compatibility with existing applications, and
-is not recommended for new applications."
-
-Pointy Castle implements the _Encoding Method for Encryption OAEP_
-(EME-OAEP) from PKCS #1 version 2.0. The EME-OAEP in PKCS #1 version
-2.1 was changed in a non-backward compatible way. Therefore, a program
-written using Point Castle's implementation of OAEP cannot
-interoperate with other programs that use OAEP from PKCS #1 version
-2.1 or later.
-
-The following functions encrypt and decrypt data using RSA with OAEP:
+For example,
 
 ```dart
+import "package:pointycastle/export.dart";
+
 Uint8List rsaEncrypt(RSAPublicKey myPublic, Uint8List dataToEncrypt) {
   final encryptor = OAEPEncoding(RSAEngine())
     ..init(true, PublicKeyParameter<RSAPublicKey>(myPublic)); // true=encrypt
@@ -442,32 +394,50 @@ Uint8List _processInBlocks(AsymmetricBlockCipher engine, Uint8List input) {
 }
 ```
 
+### Standards supported
+
+Pointy Castle implements PKCS #1 version 2.0 encryption and
+decryption. Specifically, it implements the RSAES-OAEP and
+RSAES-PKCS1-v1_5 encryption schemes from section 7 of [RFC
+2437](https://tools.ietf.org/html/rfc2437#section-7): which defines
+how the plaintext data is encoded, and how that encoding is then
+encrypted using RSA.
+
+- RSA Encryption Scheme Optimal Asymmetric Encryption Padding
+  (RSAES-OAEP) is implemented by the `OAEPEncoding` class.
+
+- RSA Encryption Scheme from PKCS #1 version 1.5 (RSAES-PKCS1-v1_5),
+  is implemented by the `PKCS1Encoding` class.
+
+**Important:** RSAES-OAEP was changed in PKCS #1 version 2.1, in a way
+that is not compatible with it in version 2.0. Therefore, Pointy
+Castle's implementation of OAEP cannot interoperate with programs that
+expect OAEP from PKCS #1 version 2.1 or later.
+
+RFC 2437 says, "RSAES-OAEP is recommended for new applications;
+RSAES-PKCS1-v1_5 is included only for compatibility with existing
+applications, and is not recommended for new applications."
+
 ### Implementation
 
 #### Using the registry
 
 If using the registry, invoke the `AsymmetricBlockCipher` factory with
-the name of the asymmetric block cipher: "RSA/OAEP", "RSA/PKCS1" or
-"RSA".
+the name of the asymmetric block cipher: "RSA/OAEP" or "RSA/PKCS1".
 
 ```dart
-final encryptor = AsymmetricBlockCipher('RSA/OAEP');
+final p = AsymmetricBlockCipher('RSA/OAEP');
+
+// final p = AsymmetricBlockCipher('RSA/PKCS1);
 ```
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries and instantiate the object directly.
-
-When creating the `PKCS1Encoding` and `OAEPEncoding`, the `RSAEngine`
-needs to be provided to its constructor.
+If the registry is not used, invoke the constructor for
+`PKCS1Encoding` or `OAEPEncoding`, providing an instance of the
+`RSAEngine` as a parameter.
 
 ```dart
-import "package:pointycastle/api.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/asymmetric/oaep.dart';
-import 'package:pointycastle/asymmetric/pkcs1.dart';
-import 'package:pointycastle/asymmetric/rsa.dart';
-
 final p = OAEPEncoding(RSAEngine());
 
 // final p = PKCS1Encoding(RSAEngine());
@@ -497,9 +467,9 @@ The data being encrypted/decrypted must be processed in blocks. Each
 input block is processed into an output block.
 
 The maximum size of a block can be obtained from the `inputBlockSize`
-and `outputBlockSize` getters. They have different values, and
-therefore care must be taken to use the correct size when stepping
-through the input and output.
+and `outputBlockSize` getters. They usually have different values, so
+care must be taken to use the correct size when stepping through the
+input and output.
 
 The values are a _maximum_, so the input blocks can be smaller. But
 it usually only makes sense for the final block to be smaller, and all
@@ -514,8 +484,8 @@ The `processBlock` method has five arguments:
 - offset into the output where the block starts writing from
 
 It returns the number of bytes written. Which is especially important
-for the last block, which can be smaller than the maximum output block
-size.
+when the last block is smaller than the maximum size. Always use the
+returned output size to know how much of the output is valid.
 
 If the ciphertext cannot be decrypted, an `ArgumentError` is thrown.
 The message associated with the `ArgumentError` can be ignored, since
@@ -527,56 +497,4 @@ was thrown), it does not guarantee the result is the same as the
 plaintext that was encrypted. Encryption is designed to provides
 confidentiality, and not integrity.  If data integrity is important,
 additional mechanisms -- such as digests, HMACs or signatures --
-should also be used.
-
-### Internal details
-
-#### OAEP
-
-When encrypting in the OAEP asymmetric block cipher mode, the maximum
-input block size is 41 bytes smaller than the maximum input block size
-of the underlying RSA engine (Pointy Castle's implementation of OAEP
-is hard-coded to use SHA-1 as its hash function).
-
-For each input block, a block using the OAEP Encoding Method for
-Encryption (EME-OAEP) is created. The EME-OAEP block is always the
-maximum block size of the underlying RSA engine. The Mask Generation
-Function used to create the block is the default MGF1 function. The
-EME-OAEP block is encrypted by the underlying RSA engine (as described
-below).
-
-As mentioned before, Pointy Castle implements OAEP from PKCS #1
-version 2.0. This is not compatible with OAEP from PKCS #1 version 2.1
-or later.
-
-#### PKCS #1
-
-When encrypting in the PKCS #1 asymmetric block cipher mode, the
-maximum input block size is always 10 bytes smaller than the maximum
-input block size of the underlying RSA engine.
-
-From each input block, another block is produced that is always the
-maximum block size of the underlying RSA engine. This larger block
-contains:
-
-- a type code byte of 0x02;
-- random non-zero padding bytes (at least eight bytes);
-- end-of-padding zero byte (0x00); and
-- all the bytes from the input block.
-
-This expanded block is encrypted by the underlying RSA engine (as
-described in the next section).
-
-#### RSA
-
-The `RSAEngine` encrypts by interpreting every byte of the entire
-input block as a large integer.  The RSA formula is applied to that
-large integer and the numbers from the public key, and the resulting
-number represented as bytes. Those final bytes are the bytes that make
-up the output block.
-
-The `RSAEngine` must always be used with a padding scheme, such as
-OAEP or PKCS #1 described above. RSA is a deterministic algorithm
-which is vulnerable to various forms of attack if padding (and
-preferably randomness) is added.
-
+should used in conjunction with encryption.

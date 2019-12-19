@@ -19,7 +19,7 @@ Initialization Vector (IV).
 
 There are three algorithms in the AES family: AES-128, AES-192 and
 AES-256, corresponding to the length of the keys in bits. For all the
-algorithms, the block size is always 128-bits (32 byte).
+algorithms, the block size is always 128-bits (32 bytes).
 
 To encrypt using AES-CBC:
 
@@ -40,9 +40,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/block/aes_fast.dart";
-import 'package:pointycastle/block/modes/cbc.dart';
+import "package:pointycastle/export.dart";
 
 Uint8List aesCbcEncrypt(Uint8List key, Uint8List iv, Uint8List paddedPlaintext) {
   // Create a CBC block cipher with AES, and initialize with key and IV
@@ -110,15 +108,10 @@ final aesCbc = BlockCipher('AES/CBC');
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries and
-instantiate the objects directly. Instantiate the AES object and then
-pass it in as the underlying cipher to the block cipher constructor.
+If the registry is not used, invoke the block cipher's constructor,
+passing in the AES implementation as a parameter.
 
 ```dart
-import "package:pointycastle/api.dart";
-import "package:pointycastle/block/aes_fast.dart";
-import 'package:pointycastle/block/modes/cbc.dart';
-
 final aesCbc = CBCBlockCipher(AESFastEngine());
 ```
 
