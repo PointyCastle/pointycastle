@@ -12,21 +12,10 @@ import 'dart:math';
 import 'dart:typed_data';
 
 // For using the registry:
-
 //import 'package:pointycastle/pointycastle.dart';
 
 // When not using the registry:
-
-import "package:pointycastle/api.dart";
-import 'package:pointycastle/asymmetric/api.dart';
-import 'package:pointycastle/asymmetric/oaep.dart';
-import 'package:pointycastle/asymmetric/rsa.dart';
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/key_generators/api.dart";
-import "package:pointycastle/key_generators/rsa_key_generator.dart";
-import "package:pointycastle/signers/rsa_signer.dart";
-import 'package:pointycastle/random/fortuna_random.dart';
-import 'package:pointycastle/asymmetric/pkcs1.dart';
+import "package:pointycastle/export.dart";
 
 //================================================================
 // Test data

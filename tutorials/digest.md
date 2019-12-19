@@ -24,12 +24,11 @@ To calculate a digest value:
 
 This program calculates the SHA-265 digest of text strings:
 
-```
-import 'dart:convert;
+```dart
+import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/sha256.dart";
+import "package:pointycastle/export.dart";
 
 Uint8List sha256Digest(Uint8List dataToDigest) {
 
@@ -47,6 +46,9 @@ void main(List<String> args) {
 }
 ```
 
+Note: these overview examples do not use the registry. For information
+on how to use the registry, see the following details.
+
 ## Details
 
 ### Implementation
@@ -56,9 +58,7 @@ void main(List<String> args) {
 If using the registry, invoke the `Digest` factory with the name of
 the digest algorithm.
 
-```
-import 'package:pointycastle/pointycastle.dart';
-
+```dart
 final d = new Digest("SHA-256");
 ```
 
@@ -70,29 +70,24 @@ Note: these examples store the digest object in "d", since they could
 be for any digest algorithm. But it is better to give the variable a
 more meaningful name, such as "sha256".
 
+Some digest implementations should not be instantiated using the
+registry, because additional parameters need to be passed to their
+constructors. These include: `Blake2bDigest`, `SHA3Digest` and
+`SHA512tDigest`.
+
 #### Without the registry
 
-If the registery is not used, explicitly import the library that
-contains the implementation class and instantiate the object directly.
+If the registery is not used, invoke the digest implementation's
+constructor.
 
-```
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/sha256.dart";
-
+```dart
 final d = new SHA256Digest(); // SHA-256
 ```
 
 All of the available digest classes of are listed as the implementers
 of the
 [Digest](https://pub.dev/documentation/pointycastle/latest/pointycastle.api/Digest-class.html)
-class. Each digest implementation is in a libary under
-"pointycastle.impl.digest..."  and is imported from under
-"package:pointycastle/digests/...".
-
-Some digest implementations need to be instantiated directly (instead
-of using the registry), because parameters need to be passed to their
-constructors. These include: `Blake2bDigest`, `SHA3Digest` and
-`SHA512tDigest`.
+abstract class.
 
 ### Providing the data to digest
 

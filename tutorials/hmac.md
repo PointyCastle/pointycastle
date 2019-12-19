@@ -22,9 +22,7 @@ This program calculates the HMAC SHA-256:
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/macs/hmac.dart";
+import "package:pointycastle/export.dart";
 
 Uint8List hmacSha256(Uint8List hmacKey, Uint8List data) {
   final hmac = HMac(SHA256Digest(), 64) // for HMAC SHA-256, block length must be 64
@@ -52,40 +50,18 @@ If using the registry, invoke the `Mac` factory with the name of the
 HMAC algorithm. The name of the HMAC algorithm is the name of the
 digest algorithm followed by "/HMAC" (e.g. "SHA-1/HMAC").
 
-```
-import 'package:pointycastle/pointycastle.dart';
-
+```dart
 final hmac = new Mac("SHA-256/HMAC");
 ```
 
 #### Without the registry
 
-If the registry is not used, explicitly import the libraries with the
-`HMac` class and the digest algorithm class.  and instantiate the
-objects directly.
+If the registry is not used, invoke the `HMac` constructor, passing it
+the digest implementation to use and a block length for that digest
+algorithm.
 
-```
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/macs/hmac.dart";
-
+```dart
 final hmacSha256 = HMac(SHA256Digest(), 64); // for HMAC SHA-256, block length must be 64
-```
-
-The `HMac` constructor has two parameters: the digest object and the
-block length. For example, the block length must be 64 for MD4, MD5,
-SHA-1, SHA-224, SHA-256, Tiger and Whirlpool; and must be 128 for
-SHA-384 and SHA 512.
-
-Example of other digest algorithms:
-
-```
-import "package:pointycastle/api.dart";
-import "package:pointycastle/digests/md2.dart";
-import "package:pointycastle/digests/md5.dart";
-import "package:pointycastle/digests/sha1.dart";
-import "package:pointycastle/digests/sha512.dart";
-import "package:pointycastle/macs/hmac.dart";
 
 final hmacSha1 = HMac(SHA1Digest(), 64); // for HMAC SHA-1, block length must be 64
 final hmacSha512 = HMac(SHA512Digest(), 128); // for HMAC SHA-512, block length must be 128
@@ -178,7 +154,7 @@ final part2 = utf8.encode('world!');
 
 final result = Uint8List(hmac.macSize);
 
-// Without rest
+// Without reset
 
 hmac.update(part1, 0, part1.length);
 hmac.update(part2, 0, part2.length);
@@ -187,7 +163,7 @@ hmac.doFinal(result, 0); // result contains HMAC of "Hello world!"
 // With reset
 
 hmac.update(part1, 0, part1.length);
-hmac.reset();
+hmac.reset(); // *** reset discards the data from part1
 hmac.update(part2, 0, part2.length);
 hmac.doFinal(result, 0); // result contains HMAC of "world!"
 ```

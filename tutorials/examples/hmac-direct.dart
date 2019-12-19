@@ -11,14 +11,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import "package:pointycastle/api.dart";
-import "package:pointycastle/macs/hmac.dart";
-
-import "package:pointycastle/digests/md2.dart";
-import "package:pointycastle/digests/md5.dart";
-import "package:pointycastle/digests/sha1.dart";
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/digests/sha512.dart";
+import "package:pointycastle/export.dart";
 
 Uint8List hmacSha1(Uint8List hmacKey, Uint8List data) {
   final hmac = HMac(SHA256Digest(), 64) // HMAC SHA-256 must use block length of 64

@@ -106,9 +106,12 @@ classes can all be instantiated with a single name
 (e.g. "HMAC/SHA-256" or "SHA-1/HMAC/PBKDF2"), and they are
 automatically combined together with the correct values.
 
-For example,
+To use the registry, either import `pointycastle.dart` or
+`export.dart`.  For example,
 
 ```dart
+import "package:pointycastle/pointycastle.dart";
+
 final sha256 = Digest("SHA-256");
 final sha1 = Digest("SHA-1");
 final md5 = Digest("MD5");
@@ -131,9 +134,11 @@ If an algorithm involves multiple algorithm implementation classes,
 they each have to be individually instantiated and combined together
 with the correct values.
 
-For example,
+To use the constructors, import `export.dart`.  For example,
 
 ``` dart
+import "package:pointycastle/export.dart";
+
 final sha256 = SHA256Digest();
 final sha1 = SHA1Digest();
 final md5 = MD5Digest();
@@ -152,102 +157,31 @@ final signer = RSASigner(SHA256Digest(), '0609608648016503040201');
 Using the registry means that all algorithms will be imported by
 default, which can increase the compiled size of your program.
 
-To avoid this, instantiate all classes directly by using the
-constructors. But which classes can be instantiated with its
-constructor will depend on which libraries have been imported.
+To avoid this, instantiate **all** classes directly by using their
+constructors.
 
 ### Importing libraries
 
-A program can take one of these three approaches for importing Point
-Castle libraries:
+There are two main approaches for importing Point Castle libraries:
 
-- only import pointycastle.dart;
-- only import exports.dart; or
-- import api.dart and individual libraries as needed.
+- only import _pointycastle.dart_ (which includes the high-level API and
+  the interfaces); or
+- only import _export.dart_ (which includes the high-level API, interfaces
+  and all the implementation classes).
+  
+It is also possible to import _api.dart_ (the high-level API) and
+selectively import individual implementation classes as they are
+needed. But this method requires a lot more programmer effort, and no
+longer has any advantage over simply importing _export.dart_ and
+relying Dart's tree shaking to leave out code that is not needed.
 
-#### Only import pointycastle.dart
+The registry can be used with any of these approaches. The different
+approaches only affects access to the implementation classes.
 
-The "pointycastle.dart" file exports:
-
-- the high-level API; and
-- implementations of the interfaces.
-
-But it does not export any of the algorithm implementation classes.
-
-``` dart
-import "package:pointycastle/pointycastle.dart";
-```
-
-With this import, **none** of the implementation classes can be
-instantiated directly.  The program can only use the registry.
-
-For example,
-
-``` dart
-final sha256 = Digest("SHA-256");
-// final md5 = MD5Digest(); // not available
-final p = Padding("PKCS7");
-// final s = FortunaRandom(); // not available
-```
-
-#### Only import exports.dart
-
-The "export.dart" file exports:
-
-- the high-level API,
-- implementations of the interfaces; and
-- every algorithm implementation class.
-
-That is, everything!
-
-``` dart
-import "package:pointycastle/export.dart";
-```
-
-With this import, **all** of the implementation classes can be
-instantiated directly.  The program can also use the registry.
-
-
-For example, this works without any additional imports:
-
-``` dart
-final sha256 = Digest("SHA-256");
-final md5 = MD5Digest();
-final p = Padding("PKCS7");
-final s = FortunaRandom();
-```
-
-#### Import api.dart and individual libraries
-
-The "api.dart" exports only:
-
-- the high-level API.
-
-It does not include the implementations of the interfaces, nor any
-algorithm implementation class.
-
-``` dart
-import "package:pointycastle/api.dart";
-// additional imports will be needed
-```
-
-With this import, only **some** of the implementation classes can be
-instantiated directly (i.e. those that are also explicitly imported).
-The program can also use the registry.
-
-For example, the following only works because of the additional imports:
-
-``` dart
-// In addition to "package:pointycastle/api.dart":
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/digests/md5.dart"
-import 'package:pointycastle/paddings/pkcs7.dart';
-
-final sha256 = Digest("SHA-256");
-final md5 = MD5Digest();
-final p = Padding("PKCS7");
-// final s = FortunaRandom(); // not available without 'package:pointycastle/random/fortuna_random.dart'
-```
+Therefore, when avoiding the code size overheads of the registry, be
+careful not to accidentally use the registry. Since the single use of
+a factory from the registry will cause the entire registry to be
+loaded.
 
 ## Tutorials
 
