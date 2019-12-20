@@ -80,7 +80,7 @@ class RSASigner implements Signer {
     _rsa.init(forSigning, params);
   }
 
-  RSASignature generateSignature(Uint8List message) {
+  RSASignature generateSignature(Uint8List message, {bool normalize = false}) {
     if (!_forSigning) {
       throw new StateError(
           "Signer was not initialised for signature generation");

@@ -10,7 +10,7 @@ import "package:pointycastle/pointycastle.dart";
 import "./src/helpers.dart";
 
 void runSignerTests(Signer signer, CipherParameters signParams(),
-    CipherParameters verifyParams(), List messageSignaturePairs) {
+    CipherParameters verifyParams(), List messageSignaturePairs, {bool normalize = false}) {
   group("${signer.algorithmName}:", () {
     group("generateSignature:", () {
       for (var i = 0; i < messageSignaturePairs.length; i += 2) {
@@ -20,7 +20,7 @@ void runSignerTests(Signer signer, CipherParameters signParams(),
         test(
             "${formatAsTruncated(message)}",
             () => _runGenerateSignatureTest(
-                signer, signParams, message, signature));
+                signer, signParams, message, signature, normalize: normalize));
       }
     });
 
@@ -39,11 +39,11 @@ void runSignerTests(Signer signer, CipherParameters signParams(),
 }
 
 void _runGenerateSignatureTest(Signer signer, CipherParameters params(),
-    String message, Signature expectedSignature) {
+    String message, Signature expectedSignature, {bool normalize = false}) {
   signer.reset();
   signer.init(true, params());
 
-  var signature = signer.generateSignature(createUint8ListFromString(message));
+  var signature = signer.generateSignature(createUint8ListFromString(message), normalize: normalize);
 
   expect(signature, expectedSignature);
 }
