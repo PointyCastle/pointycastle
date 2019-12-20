@@ -192,7 +192,7 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // bytes). (Not sure why it is a member variable instead of a variable
     // local to this method.)
 
-    // 5. Create the _DB_ data block.
+    // 5. Calculate _DB_ = pHash || PS || 01 || M
     //
     // It is the concatenation of _pHash_, _PS_, 0x01 and the message.
     // Note: RFC 2437 also includes "other padding", but that is an error that
@@ -203,23 +203,18 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     var block = new Uint8List(inputBlockSize + 1 + 2 * defHash.length);
 
-    //
-    // copy in the message
+    // M: copy the message into the end of the block.
     //
     // block.setRange(inpOff, block.length - inpLen, inp.sublist(inpLen));
     block = _arraycopy(inp, inpOff, block, block.length - inpLen, inpLen);
 
-    //
-    // add sentinel
+    // 01: add the sentinel byte
     //
     block[block.length - inpLen - 1] = 0x01;
 
-    //
-    // as the block is already zeroed - there's no need to add PS (the >= 0 pad of 0)
-    //
+    // PS: since a new Uint8List is initialized with 0x00, PS is already zeroed
 
-    //
-    // add the hash of the encoding params.
+    // pHash: add the hash of the encoding params.
     //
     block = _arraycopy(defHash, 0, block, defHash.length, defHash.length);
 
@@ -251,9 +246,9 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
 
     block = _arraycopy(seed, 0, block, 0, defHash.length);
 
-    // 9. Calculate _seedMask_ = MGF(maskDB, hLen)
+    // 9. Calculate _seedMask_ = MGF(maskedDB, hLen)
     //
-    // The _maskDB_ comes from [block], starting at offset _hLen_ to the end.
+    // The _maskedDB_ comes from [block], starting at offset _hLen_ to the end.
     // The result _seedMask_ is stored into [mask] (replacing the _dbMask_ which
     // is no longer needed).
 
