@@ -6,6 +6,7 @@ Changelog
 * Fixed OAEPEncoding and PKCS1Encoding to use provided output offset value.
 * Fixed RSA block length and offset checks in RSAEngine.processBlock.
 * Fixed RSASigner.verifySignature to return false when signature is bad.
+* Fixed randomly occuring bug with OAEP decoding.
 
 #### Version 1.0.2 (2019-11-15)
 

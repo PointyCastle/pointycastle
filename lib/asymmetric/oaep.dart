@@ -322,12 +322,37 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
       throw ArgumentError.value(inpLen, 'inpLen', 'decryption error');
     }
 
-    // 2, 3, 4. RSA decryption
-    // This saves the _EM_ into [block].
+    // 2, 3. RSA decryption
 
-    var block = new Uint8List(_engine.inputBlockSize);
-    var len = _engine.processBlock(inp, inpOff, inpLen, block, 0);
-    block = block.sublist(0, len);
+    var block = new Uint8List(_engine.outputBlockSize);
+
+    var decryptFailed = false;
+    try {
+      var len = _engine.processBlock(inp, inpOff, inpLen, block, 0);
+
+      // 4. EM = I2OSP(m, k-1)
+
+      if (len < block.length) {
+        // Decrypted bytes is shorter than expected. Add 0x00 bytes at the
+        // beginning of the block (i.e. ensure it is k-1 long). This is needed
+        // when there were 0x00 in the leading bytes of the block that was
+        // originally encrypted.
+
+        // Note: do not use [_arrayCopy] or [SetRange], since the source and
+        // destination may overlap. Those methods will corrupt the data.
+
+        // Copy [len] data bytes from beginning of block to its end. I.e. from
+        // block[block.length - 1] <- block[len - 1] through to
+        // block[block.len - len] <- block[0]
+        for (var x = 0; x < len; x++) {
+          block[block.length - 1 - x] = block[len - 1 - x];
+        }
+        // Put 0x00 in those beginning bytes. Important: do this AFTER copying
+        block.fillRange(0, block.length - len, 0x00);
+      }
+    } on ArgumentError {
+      decryptFailed = true;
+    }
 
     // 5. EME-OAEP decoding
     //
@@ -408,10 +433,10 @@ class OAEPEncoding extends BaseAsymmetricBlockCipher {
     // The data-start-is-wrong if the rest of the [block] contains all 0x00
     // bytes or that first non-zero byte is not 0x01.
 
-    bool dataStartWrong = (start > (block.length - 1)) | (block[start] != 1);
+    bool dataStartWrong = (start > (block.length - 1)) | (block[start] != 0x01);
     start++;
 
-    if (defHashWrong | wrongData | dataStartWrong) {
+    if (decryptFailed || defHashWrong || wrongData || dataStartWrong) {
       block.fillRange(0, block.length, 0);
       throw new ArgumentError("decoding error");
     }
