@@ -1,4 +1,4 @@
-**!!! Important Message !!!**
+# **!!! Important Message !!!**
 
 This project is being relicensed from a combination of the
 "GNU LESSER GENERAL PUBLIC LICENSE 3.0" and "Mozilla Public License 2.0"
@@ -7,6 +7,8 @@ to the Bouncy Castle license. The new license can be read in the LICENSE file.
 Subsequent to this change, this library will be transitioned into the
 Bouncy Castle project. The Bouncy Castle team will take over the maintenance
 and development of this library.
+
+See https://github.com/bcgit/pc-dart for the new code.
 
 
 Pointy Castle
