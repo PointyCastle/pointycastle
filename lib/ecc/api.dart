@@ -7,6 +7,7 @@ library pointycastle.api.ecc;
 import "dart:typed_data";
 
 import "package:pointycastle/api.dart";
+import "package:pointycastle/key_generators/api.dart";
 import "package:pointycastle/src/registry/registry.dart";
 
 /// Standard ECC curve description
@@ -130,6 +131,27 @@ class ECPrivateKey extends ECAsymmetricKey implements PrivateKey {
     return (other.parameters == this.parameters) && (other.d == this.d);
   }
 
+  /// Restore privatekey from stored hex string
+  static ECPrivateKey fromStored(String storedPriKey, ECDomainParameters domainParams){
+    ECDomainParameters _params = domainParams;
+    BigInt theD = BigInt.parse(storedPriKey, radix: 16);
+    return new ECPrivateKey(theD, _params);
+  }
+
+  /// return Hex string of d, can easily store or transfer on internet
+  String hexString() => this.d.toRadixString(16);
+
+  /// Generate publickey from private key
+  ECPublicKey generatePubkey(){
+    var Q = this.parameters.G * this.d;
+    return new ECPublicKey(Q, this.parameters);
+  }
+
+  Uint8List generateSecret(ECPublicKey pubkey) {
+    var secret = pubkey.Q * this.d;
+    return secret.getEncoded();
+  }
+
   int get hashCode {
     return parameters.hashCode + d.hashCode;
   }
@@ -147,6 +169,17 @@ class ECPublicKey extends ECAsymmetricKey implements PublicKey {
     if (other == null) return false;
     if (other is! ECPublicKey) return false;
     return (other.parameters == this.parameters) && (other.Q == this.Q);
+  }
+
+  /// return Uint8List so can easily stored or transfer on internet
+  Uint8List getEncoded(){
+    return this.Q.getEncoded();
+  }
+
+  /// restore public key from Uint8List from stored string or internet
+  static ECPublicKey fromStored(Uint8List theQ, ECDomainParameters domainParams){
+    ECPoint Q = domainParams.curve.decodePoint(theQ);
+    return new ECPublicKey(Q, domainParams);
   }
 
   int get hashCode {
